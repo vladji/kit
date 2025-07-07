@@ -1,3 +1,18 @@
 {
-  "extends": "@react-native/typescript-config"
+  "extends": "@react-native/typescript-config",
+  "compilerOptions": {
+    "resolveJsonModule": true,
+    "baseUrl": ".",
+    "paths": {
+      "*": [
+        "src/*"
+      ]
+    },
+    "skipLibCheck": true
+  },
+  "exclude": [
+    "node_modules",
+    "metro.config.cjs",
+    "babel.config.cjs"
+  ]
 }
