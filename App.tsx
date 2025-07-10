@@ -1,23 +1,32 @@
-import { BadgeDollarSign } from "lucide-react-native";
-import { StatusBar, StyleSheet, useColorScheme, View } from "react-native";
+import React from 'react';
+import ErrorBoundary from 'react-native-error-boundary';
+import { SafeAreaProvider } from 'react-native-safe-area-context';
+import { ContextProvider } from 'app/providers/Context';
+import { LocaleProvider } from 'app/providers/Locale';
+import { TanStackQuery } from 'app/providers/TanStackQuery';
+import { UserInitialize } from 'app/providers/UserInitialize';
+import RootRouter from 'app/router/RootRouter';
+import { AppLayout } from 'widgets/AppLayout';
+import { ErrorFallback } from 'widgets/ErrorFallback';
 
-function App() {
-  const isDarkMode = useColorScheme() === "dark";
-
+function App(): React.JSX.Element {
   return (
-    <View style={styles.container}>
-      <StatusBar barStyle={isDarkMode ? "light-content" : "dark-content"} />
-      <View>
-        <BadgeDollarSign />
-      </View>
-    </View>
+    <ErrorBoundary FallbackComponent={ErrorFallback}>
+      <ContextProvider>
+        <LocaleProvider>
+          <TanStackQuery>
+            <SafeAreaProvider>
+              <UserInitialize>
+                <AppLayout>
+                  <RootRouter />
+                </AppLayout>
+              </UserInitialize>
+            </SafeAreaProvider>
+          </TanStackQuery>
+        </LocaleProvider>
+      </ContextProvider>
+    </ErrorBoundary>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
-});
 
 export default App;
