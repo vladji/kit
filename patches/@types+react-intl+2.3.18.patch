@@ -1,0 +1,13 @@
+diff --git a/node_modules/@types/react-intl/index.d.ts b/node_modules/@types/react-intl/index.d.ts
+index 1012bdb..258c266 100644
+--- a/node_modules/@types/react-intl/index.d.ts
++++ b/node_modules/@types/react-intl/index.d.ts
+@@ -141,7 +141,7 @@ declare namespace ReactIntl {
+ 
+     namespace FormattedMessage {
+         interface MessageDescriptor {
+-            id: string;
++            id?: string;
+             description?: string;
+             defaultMessage?: string;
+         }
