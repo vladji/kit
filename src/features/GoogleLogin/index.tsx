@@ -1,5 +1,6 @@
 import { StyleSheet, TouchableOpacity } from 'react-native';
 import { FormattedMessage } from 'react-intl';
+import { GoogleIcon } from 'shared/assets/icons/GoogleIcon.tsx';
 import { ComponentSize, Sizes } from 'shared/styles/constants/sizes.ts';
 import { useStyles } from 'shared/styles/useStyles.ts';
 import { Typography } from 'shared/ui/Typography';
@@ -16,7 +17,7 @@ export const GoogleLogin = () => {
       style={[styles.button, colors('borderColor').border]}
       onPress={onPress}
     >
-      {/*<GoogleIcon />*/}
+      <GoogleIcon />
       <Typography weight="600">
         <FormattedMessage defaultMessage="Войти с Google" />
       </Typography>

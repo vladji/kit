@@ -1,5 +1,6 @@
 import { StyleSheet, TouchableOpacity } from 'react-native';
 import { FormattedMessage } from 'react-intl';
+import { AppleIcon } from 'shared/assets/icons/AppleIcon.tsx';
 import { ComponentSize, Sizes } from 'shared/styles/constants/sizes.ts';
 import { useStyles } from 'shared/styles/useStyles.ts';
 import { Typography } from 'shared/ui/Typography';
@@ -16,7 +17,7 @@ export const AppleLogin = () => {
       style={[styles.button, colors('borderColor').border]}
       onPress={onPress}
     >
-      {/*<AppleIcon />*/}
+      <AppleIcon />
       <Typography weight="600">
         <FormattedMessage defaultMessage="Войти с Apple" />
       </Typography>

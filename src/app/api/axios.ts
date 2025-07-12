@@ -17,13 +17,14 @@ api.interceptors.response.use(
     return response.data;
   },
   async (error) => {
-    const errorStatus = error.response?.status;
-    const errorStatusText = error.response?.statusText;
-    const responseMessage = error.response?.data?.message;
+    const errorStatus = error.response?.status || '';
+    const errorStatusText = error.response?.statusText || '';
+    const responseMessage =
+      error.response?.data?.message || error.toString() || '';
 
-    const errorMessage = `${errorStatus}\n${errorStatusText || ''}\n${
-      responseMessage || ''
-    }`;
+    const errorMessage = `${errorStatus}
+    \n${errorStatusText || ''}
+    \n${responseMessage}`;
 
     Alert.alert('Error', errorMessage);
 
