@@ -1,5 +1,5 @@
 import { ReactNode, useEffect } from 'react';
-// import BootSplash from 'react-native-bootsplash';
+import BootSplash from 'react-native-bootsplash';
 import { AppContext } from 'app/context';
 import { useAppContext } from 'app/context/useAppContext.ts';
 
@@ -9,7 +9,7 @@ export const ContextProvider = ({ children }: { children: ReactNode }) => {
 
   useEffect(() => {
     const hideSplashScreen = async () => {
-      // await BootSplash.hide({ fade: true });
+      await BootSplash.hide({ fade: true });
       return null;
     };
 
