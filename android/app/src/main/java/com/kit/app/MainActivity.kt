@@ -1,4 +1,4 @@
-package com.kit
+package com.kit.app
 
 import com.facebook.react.ReactActivity
 import com.facebook.react.ReactActivityDelegate
