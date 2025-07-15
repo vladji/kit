@@ -4,8 +4,15 @@ import { AppContext } from 'app/context';
 import { useAppContext } from 'app/context/useAppContext.ts';
 
 export const ContextProvider = ({ children }: { children: ReactNode }) => {
-  const { contextLoading, locale, setLocale, theme, setTheme } =
-    useAppContext();
+  const {
+    contextLoading,
+    locale,
+    setLocale,
+    theme,
+    setTheme,
+    userAuthProfile,
+    setUserAuthProfile,
+  } = useAppContext();
 
   useEffect(() => {
     const hideSplashScreen = async () => {
@@ -19,7 +26,16 @@ export const ContextProvider = ({ children }: { children: ReactNode }) => {
   }, [contextLoading]);
 
   return (
-    <AppContext value={{ locale, setLocale, theme, setTheme }}>
+    <AppContext
+      value={{
+        locale,
+        setLocale,
+        theme,
+        setTheme,
+        userAuthProfile,
+        setUserAuthProfile,
+      }}
+    >
       {children}
     </AppContext>
   );

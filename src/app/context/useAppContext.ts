@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useState } from 'react';
 import { ColorSchemeName } from 'react-native';
+import { FirebaseAuthTypes } from '@react-native-firebase/auth';
 import { DEFAULT_LOCALE } from 'app/config/constants.ts';
 import { setInitialLocale, setInitialTheme } from 'app/context/utils.ts';
 import { Locales } from 'app/locales/types.ts';
@@ -10,6 +11,8 @@ export const useAppContext = () => {
   const [contextLoading, setContextLoading] = useState<boolean>(true);
   const [localeState, setLocaleState] = useState<Locales>(DEFAULT_LOCALE);
   const [themeState, setThemeState] = useState<ColorSchemeName>('light');
+  const [userAuthProfile, setUserAuthProfile] =
+    useState<FirebaseAuthTypes.User | null>(null);
 
   const setLocale = useCallback(async (locale: Locales) => {
     setLocaleState(locale);
@@ -40,5 +43,7 @@ export const useAppContext = () => {
     setLocale,
     theme: themeState,
     setTheme,
+    userAuthProfile,
+    setUserAuthProfile,
   };
 };

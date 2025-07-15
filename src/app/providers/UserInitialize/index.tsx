@@ -9,8 +9,11 @@ import { getStoreValue, setStoreValue } from 'app/store/lib/asyncStore.ts';
 import { StoreKeys } from 'app/store/model/types.ts';
 import { useGetUserByUniqueId } from 'entities/user/api/useGetUserByUniqueId.ts';
 import { usePostCreateUser } from 'entities/user/api/usePostCreateUser.ts';
+import { useAuth } from 'entities/user/model/useAuth.ts';
 
 export const UserInitialize = ({ children }: { children: ReactNode }) => {
+  useAuth();
+
   const { getUserByUniqueId } = useGetUserByUniqueId();
   const { postCreateUser } = usePostCreateUser();
 

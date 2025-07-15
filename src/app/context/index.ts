@@ -1,5 +1,6 @@
 import { createContext } from 'react';
 import { ColorSchemeName } from 'react-native';
+import { FirebaseAuthTypes } from '@react-native-firebase/auth';
 import { DEFAULT_LOCALE } from 'app/config/constants.ts';
 import { Locales } from 'app/locales/types.ts';
 
@@ -8,6 +9,8 @@ interface AppContextProps {
   setLocale: (locale: Locales) => Promise<void>;
   theme: ColorSchemeName;
   setTheme: (theme: ColorSchemeName) => void;
+  userAuthProfile: FirebaseAuthTypes.User | null;
+  setUserAuthProfile: (user: FirebaseAuthTypes.User | null) => void;
 }
 
 export const AppContext = createContext<AppContextProps>({
@@ -15,4 +18,6 @@ export const AppContext = createContext<AppContextProps>({
   setLocale: () => Promise.resolve(),
   theme: 'light',
   setTheme: () => {},
+  userAuthProfile: null,
+  setUserAuthProfile: () => {},
 });
