@@ -24,5 +24,3 @@ export const setStoreValue = async <T>(
     return null;
   }
 };
-
-// AsyncStorage.clear();
