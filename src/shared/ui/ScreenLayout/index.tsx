@@ -8,12 +8,14 @@ interface Props {
   children: ReactNode;
   headerTitle?: ReactElement;
   hasHorizonInsets?: boolean;
+  hasBackButton?: boolean;
 }
 
 export const ScreenLayout: FC<Props> = ({
   children,
   headerTitle,
   hasHorizonInsets = true,
+  hasBackButton = false,
 }) => {
   const { colors } = useStyles();
   const paddingHorizontal = hasHorizonInsets
@@ -22,7 +24,9 @@ export const ScreenLayout: FC<Props> = ({
 
   return (
     <>
-      {!!headerTitle && <ScreenHeader title={headerTitle} />}
+      {!!headerTitle && (
+        <ScreenHeader title={headerTitle} hasBackButton={hasBackButton} />
+      )}
       <View
         style={[
           paddingHorizontal,
