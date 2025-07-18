@@ -2,7 +2,7 @@ import { FC, ReactElement } from 'react';
 import { StyleSheet, TouchableOpacity, View } from 'react-native';
 import { NavigationProp, useNavigation } from '@react-navigation/native';
 import { ArrowLeft } from 'lucide-react-native';
-import { RootRouterProps } from 'app/router/RootRouter/types.ts';
+import { RootRouterParams } from 'app/router/RootRouter/types.ts';
 import { SHADOW } from 'shared/styles/constants/colors.ts';
 import { ComponentSize } from 'shared/styles/constants/sizes.ts';
 import { useStyles } from 'shared/styles/useStyles.ts';
@@ -14,7 +14,7 @@ interface Props {
 }
 
 export const ScreenHeader: FC<Props> = ({ title, hasBackButton = false }) => {
-  const { goBack } = useNavigation<NavigationProp<RootRouterProps>>();
+  const { goBack } = useNavigation<NavigationProp<RootRouterParams>>();
   const { colors } = useStyles();
 
   return (

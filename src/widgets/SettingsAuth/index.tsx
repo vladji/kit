@@ -1,20 +1,25 @@
 import { useCallback, useState } from 'react';
 import { View } from 'react-native';
+import { REACT_CHAT_ROOT_ADMIN } from '@env';
 import { NavigationProp, useNavigation } from '@react-navigation/native';
 import { FormattedMessage } from 'react-intl';
-import { RootRouter, RootRouterProps } from 'app/router/RootRouter/types.ts';
+import { RootRouter, RootRouterParams } from 'app/router/RootRouter/types.ts';
 import { Login } from 'features/Login';
 import { MenuButton } from 'shared/ui/MenuButton';
 
 export const SettingsAuth = () => {
-  const { navigate } = useNavigation<NavigationProp<RootRouterProps>>();
+  const { navigate } = useNavigation<NavigationProp<RootRouterParams>>();
   const [showLogin, setShowLogin] = useState(false);
   const toggleShowLogin = useCallback(() => {
     setShowLogin((prev) => !prev);
   }, []);
 
-  const onCreateStore = () => {
-    navigate(RootRouter.CreateStore);
+  const onCreateStorePress = () => {
+    navigate(RootRouter.CreateStoreRoute);
+  };
+
+  const onSupportPress = () => {
+    navigate(RootRouter.ChatRoute, { params: { to: REACT_CHAT_ROOT_ADMIN } });
   };
 
   return (
@@ -23,10 +28,10 @@ export const SettingsAuth = () => {
         <MenuButton onPress={toggleShowLogin}>
           <FormattedMessage defaultMessage="Войти" />
         </MenuButton>
-        <MenuButton onPress={onCreateStore}>
+        <MenuButton onPress={onCreateStorePress}>
           <FormattedMessage defaultMessage="Зарегистрироваться как бизнес" />
         </MenuButton>
-        <MenuButton noBorder>
+        <MenuButton onPress={onSupportPress} noBorder>
           <FormattedMessage defaultMessage="Связаться с поддержкой" />
         </MenuButton>
       </View>

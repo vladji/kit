@@ -1,8 +1,10 @@
 export enum RootRouter {
   BottomTabs = 'BottomTabs',
-  CreateStore = 'CreateStore',
+  CreateStoreRoute = 'CreateStoreRoute',
+  ChatRoute = 'ChatRoute',
 }
 
-export interface RootRouterProps {
-  CreateStore: unknown;
+export interface RootRouterParams {
+  CreateStoreRoute: unknown;
+  ChatRoute: { params: { to: string } };
 }
