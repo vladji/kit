@@ -27,13 +27,7 @@ export const ScreenLayout: FC<Props> = ({
       {!!headerTitle && (
         <ScreenHeader title={headerTitle} hasBackButton={hasBackButton} />
       )}
-      <View
-        style={[
-          paddingHorizontal,
-          styles.wrapper,
-          colors('backgroundColor').main,
-        ]}
-      >
+      <View style={[paddingHorizontal, styles.wrapper, colors().main]}>
         {children}
       </View>
     </>

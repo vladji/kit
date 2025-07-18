@@ -27,7 +27,12 @@ export const Typography: FC<Props> = ({
     fontSize: size ?? style.fontSize,
   };
 
-  return <Text {...props} style={[style, fontColors.main, dynamicStyles]} />;
+  return (
+    <Text
+      {...props}
+      style={[style, fontColors.main, dynamicStyles, props.style]}
+    />
+  );
 };
 
 const styles = StyleSheet.create({

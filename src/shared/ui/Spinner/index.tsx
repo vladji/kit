@@ -2,8 +2,6 @@ import { ActivityIndicator, StyleSheet, View } from 'react-native';
 import { BRAND_COLOR } from 'shared/styles/constants/colors.ts';
 import { useStyles } from 'shared/styles/useStyles.ts';
 
-// import { BlurredView } from 'shared/ui/BlurredView';
-
 interface Props {
   isVisible?: boolean;
 }
