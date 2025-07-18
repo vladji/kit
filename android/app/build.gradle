@@ -117,4 +117,7 @@ dependencies {
     } else {
         implementation jscFlavor
     }
+
+    debugImplementation("com.facebook.flipper:flipper:0.212.0")
+    debugImplementation("com.facebook.flipper:flipper-network-plugin:0.212.0")
 }
