@@ -1,27 +1,32 @@
-import { useContext, useMemo } from 'react';
-import { AppContext } from 'app/context';
+import { useMemo } from 'react';
 import {
+  ACCENT_DARK,
+  ACCENT_LIGHT,
+  BORDER_COLOR,
   BRAND_COLOR,
+  BRAND_LIGHT,
   DARK_COLOR,
   DARK_TEXT_COLOR,
   LIGHT_COLOR,
+  MUTED_DARK_THEME,
+  MUTED_LIGHT_THEME,
 } from 'shared/styles/constants/colors.ts';
+import { useIsLightTheme } from 'shared/styles/useIsLightTheme.ts';
 
 export const useStyles = () => {
-  const { theme } = useContext(AppContext);
-  const isLight = theme === 'light';
+  const isLight = useIsLightTheme();
 
   return useMemo(() => {
     const colors = (prop?: 'backgroundColor' | 'borderColor') => {
       const styleProp = prop ?? 'backgroundColor';
       return {
         brand: { [styleProp]: BRAND_COLOR },
-        brandLight: { [styleProp]: '#69fff8' },
-        accentLight: { [styleProp]: '#b18121' },
-        accentDark: { [styleProp]: '#71450e' },
+        brandLight: { [styleProp]: BRAND_LIGHT },
+        accentLight: { [styleProp]: ACCENT_LIGHT },
+        accentDark: { [styleProp]: ACCENT_DARK },
         main: { [styleProp]: isLight ? LIGHT_COLOR : DARK_COLOR },
-        muted: { [styleProp]: isLight ? '#737373' : '#9f9f9f' },
-        border: { borderColor: '#c6c6c6' },
+        muted: { [styleProp]: isLight ? MUTED_LIGHT_THEME : MUTED_DARK_THEME },
+        border: { borderColor: BORDER_COLOR },
       };
     };
 
@@ -29,7 +34,7 @@ export const useStyles = () => {
       main: { color: isLight ? DARK_TEXT_COLOR : '#fff' },
       light: { color: '#fff' },
       dark: { color: DARK_TEXT_COLOR },
-      muted: { color: isLight ? '#737373' : '#9f9f9f' },
+      muted: { color: isLight ? MUTED_LIGHT_THEME : MUTED_DARK_THEME },
     };
 
     return {
