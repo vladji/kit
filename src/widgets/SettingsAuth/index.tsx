@@ -6,7 +6,7 @@ import { RootRouter, RootRouterProps } from 'app/router/RootRouter/types.ts';
 import { Login } from 'features/Login';
 import { MenuButton } from 'shared/ui/MenuButton';
 
-export const Auth = () => {
+export const SettingsAuth = () => {
   const { navigate } = useNavigation<NavigationProp<RootRouterProps>>();
   const [showLogin, setShowLogin] = useState(false);
   const toggleShowLogin = useCallback(() => {

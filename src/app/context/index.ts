@@ -11,6 +11,8 @@ interface AppContextProps {
   setTheme: (theme: ColorSchemeName) => void;
   userAuthProfile: FirebaseAuthTypes.User | null;
   setUserAuthProfile: (user: FirebaseAuthTypes.User | null) => void;
+  rootAdmin: boolean;
+  setRootAdmin: (value: boolean) => void;
 }
 
 export const AppContext = createContext<AppContextProps>({
@@ -20,4 +22,6 @@ export const AppContext = createContext<AppContextProps>({
   setTheme: () => {},
   userAuthProfile: null,
   setUserAuthProfile: () => {},
+  rootAdmin: false,
+  setRootAdmin: () => {},
 });

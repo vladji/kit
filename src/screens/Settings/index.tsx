@@ -1,18 +1,13 @@
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import { FormattedMessage } from 'react-intl';
-import { MenuButton } from 'shared/ui/MenuButton';
+import { DevSettings } from 'screens/Settings/DevSettings.tsx';
 import { ScreenLayout } from 'shared/ui/ScreenLayout';
-import { Auth } from 'widgets/Auth';
+import { SettingsAuth } from 'widgets/SettingsAuth';
 
 export const SettingsScreen = () => {
   return (
     <ScreenLayout headerTitle={<FormattedMessage defaultMessage="Настройки" />}>
-      <Auth />
-      {__DEV__ && (
-        <MenuButton onPress={() => AsyncStorage.clear()} noBorder>
-          <FormattedMessage defaultMessage="Clean storage" />
-        </MenuButton>
-      )}
+      <SettingsAuth />
+      {__DEV__ && <DevSettings />}
     </ScreenLayout>
   );
 };

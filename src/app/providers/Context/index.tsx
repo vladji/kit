@@ -12,6 +12,8 @@ export const ContextProvider = ({ children }: { children: ReactNode }) => {
     setTheme,
     userAuthProfile,
     setUserAuthProfile,
+    rootAdmin,
+    setRootAdmin,
   } = useAppContext();
 
   useEffect(() => {
@@ -34,6 +36,8 @@ export const ContextProvider = ({ children }: { children: ReactNode }) => {
         setTheme,
         userAuthProfile,
         setUserAuthProfile,
+        rootAdmin,
+        setRootAdmin,
       }}
     >
       {children}
