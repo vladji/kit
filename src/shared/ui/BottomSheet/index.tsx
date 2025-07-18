@@ -27,10 +27,12 @@ import { Spinner } from 'shared/ui/Spinner';
 import { Typography } from 'shared/ui/Typography';
 
 type Animation = ({
-  value,
+  topValue,
+  bottomValue,
   onClose,
 }: {
-  value: number;
+  topValue: number;
+  bottomValue: number;
   onClose?: () => void;
 }) => void;
 
@@ -57,13 +59,14 @@ export const BottomSheet = memo(
     const { bottom: safeBottom } = useSafeAreaInsets();
 
     const top = useSharedValue(screenHeight);
+    const bottom = useSharedValue(-screenHeight);
     const translateY = useSharedValue(0);
     const paddingBottom = useSharedValue(0);
 
     const animation = useCallback<Animation>(
-      ({ value, onClose }) => {
+      ({ topValue, bottomValue, onClose }) => {
         top.value = withTiming(
-          value,
+          topValue,
           { duration: ANIMATION_DURATION * 1.2 },
           () => {
             if (onClose) {
@@ -71,6 +74,10 @@ export const BottomSheet = memo(
             }
           },
         );
+
+        bottom.value = withTiming(bottomValue, {
+          duration: ANIMATION_DURATION * 1.2,
+        });
       },
       [top],
     );
@@ -95,7 +102,8 @@ export const BottomSheet = memo(
 
           if (gestureState.dy > 50) {
             animation({
-              value: screenHeight,
+              topValue: screenHeight,
+              bottomValue: -screenHeight,
               onClose: () => {
                 translateY.value = 0;
                 onClose();
@@ -107,12 +115,13 @@ export const BottomSheet = memo(
     }, [translateY, paddingBottom, screenHeight, onClose, animation]);
 
     const onShow = useCallback(() => {
-      animation({ value: 0 });
+      animation({ topValue: 0, bottomValue: 0 });
     }, [animation]);
 
     const onRequestClose = useCallback(() => {
       animation({
-        value: screenHeight,
+        topValue: screenHeight,
+        bottomValue: -screenHeight,
         onClose: () => {
           onClose();
         },
@@ -134,6 +143,7 @@ export const BottomSheet = memo(
     const sheetLayoutAnimationStyle = useAnimatedStyle(() => {
       return {
         top: top.value,
+        bottom: bottom.value,
       };
     });
 
@@ -150,11 +160,7 @@ export const BottomSheet = memo(
         <TouchableWithoutFeedback onPress={onRequestClose}>
           <Animated.View style={[backgroundAnimationStyle, styles.background]}>
             <Animated.View
-              style={[
-                styles.sheetLayout,
-                { height: screenHeight },
-                sheetLayoutAnimationStyle,
-              ]}
+              style={[styles.sheetLayout, sheetLayoutAnimationStyle]}
             >
               <Animated.View
                 style={[styles.sheet, colors().main, sheetAnimationStyle]}
@@ -191,13 +197,12 @@ const styles = StyleSheet.create({
     position: 'absolute',
     left: 0,
     right: 0,
+    justifyContent: 'flex-end',
+    paddingLeft: Sizes.Mini,
+    paddingRight: Sizes.Mini,
     backgroundColor: TRANSPARENT,
   },
   sheet: {
-    position: 'absolute',
-    bottom: 0,
-    left: Sizes.Mini,
-    right: Sizes.Mini,
     paddingTop: Sizes.Default,
     borderTopRightRadius: Sizes.Default,
     borderTopLeftRadius: Sizes.Default,
