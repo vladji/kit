@@ -1,7 +1,9 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { StoreKeys } from 'app/store/model/types.ts';
+import { AsyncStorageKeys } from 'app/storage/model/types.ts';
 
-export const getStoreValue = async <T>(key: StoreKeys): Promise<T | null> => {
+export const getAsyncStorageValue = async <T>(
+  key: AsyncStorageKeys,
+): Promise<T | null> => {
   try {
     const value = await AsyncStorage.getItem(key);
     if (value !== null) {
@@ -13,8 +15,8 @@ export const getStoreValue = async <T>(key: StoreKeys): Promise<T | null> => {
   }
 };
 
-export const setStoreValue = async <T>(
-  key: StoreKeys,
+export const setAsyncStorageValue = async <T>(
+  key: AsyncStorageKeys,
   value: T,
 ): Promise<void | null> => {
   try {

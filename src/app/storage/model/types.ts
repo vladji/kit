@@ -1,4 +1,4 @@
-export enum StoreKeys {
+export enum AsyncStorageKeys {
   Locale = 'locale',
   Theme = 'theme',
   UniqueId = 'uniqueId',

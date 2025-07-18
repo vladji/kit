@@ -1,8 +1,8 @@
 import { ColorSchemeName } from 'react-native';
 import { Locales } from 'app/locales/types.ts';
 import { getDefaultLocale } from 'app/locales/utils.ts';
-import { getStoreValue } from 'app/store/lib/asyncStore.ts';
-import { StoreKeys } from 'app/store/model/types.ts';
+import { getAsyncStorageValue } from 'app/storage/lib/asyncStorage.ts';
+import { AsyncStorageKeys } from 'app/storage/model/types.ts';
 
 type SetInitialLocale = ({
   localeState,
@@ -16,7 +16,9 @@ export const setInitialLocale: SetInitialLocale = async ({
   localeState,
   setLocale,
 }) => {
-  const initialLocale = await getStoreValue<Locales>(StoreKeys.Locale);
+  const initialLocale = await getAsyncStorageValue<Locales>(
+    AsyncStorageKeys.Locale,
+  );
 
   if (initialLocale === null) {
     const defaultLocale = await getDefaultLocale();
@@ -40,7 +42,9 @@ export const setInitialTheme: SetInitialTheme = async ({
   themeState,
   setTheme,
 }) => {
-  const initialTheme = await getStoreValue<ColorSchemeName>(StoreKeys.Theme);
+  const initialTheme = await getAsyncStorageValue<ColorSchemeName>(
+    AsyncStorageKeys.Theme,
+  );
 
   if (initialTheme === null) {
     await setTheme('light');

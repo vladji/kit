@@ -5,8 +5,11 @@ import {
   getManufacturer,
   getUniqueId,
 } from 'react-native-device-info';
-import { getStoreValue, setStoreValue } from 'app/store/lib/asyncStore.ts';
-import { StoreKeys } from 'app/store/model/types.ts';
+import {
+  getAsyncStorageValue,
+  setAsyncStorageValue,
+} from 'app/storage/lib/asyncStorage.ts';
+import { AsyncStorageKeys } from 'app/storage/model/types.ts';
 import { useGetUserByUniqueId } from 'entities/user/api/useGetUserByUniqueId.ts';
 import { usePostCreateUser } from 'entities/user/api/usePostCreateUser.ts';
 import { UserProps } from 'entities/user/model/types.ts';
@@ -41,21 +44,23 @@ export const UserInitialize = ({ children }: { children: ReactNode }) => {
 
   useEffect(() => {
     const authUser = async () => {
-      const storeUniqueId = await getStoreValue<string>(StoreKeys.UniqueId);
-      console.log('storeUniqueId', storeUniqueId);
+      const uniqueIdStorage = await getAsyncStorageValue<string>(
+        AsyncStorageKeys.UniqueId,
+      );
 
-      if (!storeUniqueId) {
+      if (!uniqueIdStorage) {
         const uniqueId = await getUniqueId();
         let response = await getUserByUniqueId({ uniqueId });
-        console.log('response-get', response);
 
         if (!response.user) {
           response = await createUser(uniqueId);
-          console.log('response-create', response);
         }
 
         if (response.user?.uniqueId) {
-          await setStoreValue(StoreKeys.UniqueId, response.user.uniqueId);
+          await setAsyncStorageValue(
+            AsyncStorageKeys.UniqueId,
+            response.user.uniqueId,
+          );
         }
       }
     };

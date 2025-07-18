@@ -4,8 +4,8 @@ import { FirebaseAuthTypes } from '@react-native-firebase/auth';
 import { DEFAULT_LOCALE } from 'app/config/constants.ts';
 import { setInitialLocale, setInitialTheme } from 'app/context/utils.ts';
 import { Locales } from 'app/locales/types.ts';
-import { setStoreValue } from 'app/store/lib/asyncStore.ts';
-import { StoreKeys } from 'app/store/model/types.ts';
+import { setAsyncStorageValue } from 'app/storage/lib/asyncStorage.ts';
+import { AsyncStorageKeys } from 'app/storage/model/types.ts';
 
 export const useAppContext = () => {
   const [contextLoading, setContextLoading] = useState<boolean>(true);
@@ -13,15 +13,16 @@ export const useAppContext = () => {
   const [themeState, setThemeState] = useState<ColorSchemeName>('light');
   const [userAuthProfile, setUserAuthProfile] =
     useState<FirebaseAuthTypes.User | null>(null);
+  const [rootAdmin, setRootAdmin] = useState(false);
 
   const setLocale = useCallback(async (locale: Locales) => {
     setLocaleState(locale);
-    await setStoreValue(StoreKeys.Locale, locale);
+    await setAsyncStorageValue(AsyncStorageKeys.Locale, locale);
   }, []);
 
   const setTheme = useCallback(async (theme: ColorSchemeName) => {
     setThemeState(theme);
-    await setStoreValue(StoreKeys.Theme, theme);
+    await setAsyncStorageValue(AsyncStorageKeys.Theme, theme);
   }, []);
 
   useEffect(() => {
@@ -45,5 +46,7 @@ export const useAppContext = () => {
     setTheme,
     userAuthProfile,
     setUserAuthProfile,
+    rootAdmin,
+    setRootAdmin,
   };
 };
