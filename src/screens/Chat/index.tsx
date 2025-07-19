@@ -3,12 +3,12 @@ import { ScrollView, StyleSheet, TouchableOpacity, View } from 'react-native';
 import { RouteProp, useRoute } from '@react-navigation/native';
 import { Send } from 'lucide-react-native';
 import { FormattedMessage } from 'react-intl';
+import { getSocket } from 'app/providers/Socket/socket.ts';
 import { ChatRouteParams } from 'app/router/RootRouter/types.ts';
 import { useGetMessages } from 'entities/Chat/api/useGetMessages.ts';
-import { getSocket } from 'entities/Chat/lib/socket.ts';
 import { composeChatId } from 'entities/Chat/lib/utils.ts';
 import { ChatMessageProps } from 'entities/Chat/model/types.ts';
-import { useSenderData } from 'entities/Chat/model/useSenderData.ts';
+import { useChatMember } from 'entities/Chat/model/useChatMember.ts';
 import { LIGHT_COLOR, TRANSPARENT } from 'shared/styles/constants/colors.ts';
 import { ComponentSize, Sizes } from 'shared/styles/constants/sizes.ts';
 import { useStyles } from 'shared/styles/useStyles.ts';
@@ -24,8 +24,8 @@ export const ChatScreen = () => {
     params: { to },
   } = useRoute<RouteProp<{ params: ChatRouteParams }>>();
 
-  const { uniqueId } = useSenderData();
-  const chatId = composeChatId({ from: uniqueId, to });
+  const { member } = useChatMember();
+  const chatId = composeChatId({ from: member, to });
 
   const [messages, setMessages] = useState<ChatMessageProps[]>([]);
   const [text, setText] = useState('');
@@ -37,6 +37,8 @@ export const ChatScreen = () => {
 
   useEffect(() => {
     const socket = getSocket();
+    if (!socket) return;
+
     socket.on('private_message', (msg) => {
       if (msg.chatId === chatId) {
         setMessages((prev) => [...prev, msg]);
@@ -51,7 +53,7 @@ export const ChatScreen = () => {
   const sendMessage = () => {
     const socket = getSocket();
     socket.emit('private_message', {
-      from: uniqueId,
+      from: member,
       to,
       text,
     });

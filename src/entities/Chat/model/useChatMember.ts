@@ -4,18 +4,17 @@ import { AppContext } from 'app/context';
 import { useGetAsyncStorage } from 'app/storage/lib/useGetAsyncStorage.ts';
 import { AsyncStorageKeys } from 'app/storage/model/types.ts';
 
-export const useSenderData = () => {
+export const useChatMember = () => {
   const { rootAdmin } = useContext(AppContext);
   const { data: uniqueId, isFetching } = useGetAsyncStorage<string>(
     AsyncStorageKeys.UniqueId,
   );
 
   //TODO: implement authId (userAuthProfile)
+  const member = rootAdmin ? REACT_CHAT_ROOT_ADMIN : uniqueId;
 
   return {
-    rootAdmin,
-    rootAdminId: REACT_CHAT_ROOT_ADMIN,
-    uniqueId,
+    member,
     loading: isFetching,
   };
 };
