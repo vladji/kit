@@ -40,10 +40,7 @@ export const MainButton: FC<Props> = ({
       },
       typography: {
         default: { ...fontColors.light },
-        outline: {
-          backgroundColor: 'transparent',
-          ...fontColors.main,
-        },
+        outline: { ...fontColors.main },
       },
     }),
     [colors, fontColors],

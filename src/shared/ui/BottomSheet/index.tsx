@@ -79,7 +79,7 @@ export const BottomSheet = memo(
           duration: ANIMATION_DURATION * 1.2,
         });
       },
-      [top],
+      [top, bottom],
     );
 
     const panResponder = useMemo(() => {

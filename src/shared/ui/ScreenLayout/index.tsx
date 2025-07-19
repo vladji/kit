@@ -38,6 +38,7 @@ const styles = StyleSheet.create({
   wrapper: {
     flex: 1,
     paddingTop: Sizes.Default,
+    paddingBottom: Sizes.Default,
     zIndex: 1,
   },
 });
