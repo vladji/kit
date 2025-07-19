@@ -1,7 +1,17 @@
 import api from 'app/api/axios.ts';
 import { ApiResponse } from 'app/api/types.ts';
-import { GetMessagesRequest } from 'entities/Chat/api/types.ts';
-import { ChatMessageProps } from 'entities/Chat/model/types.ts';
+import {
+  GetAppChatsRequest,
+  GetMessagesRequest,
+} from 'entities/Chat/api/types.ts';
+import { ChatMessageProps, ChatProps } from 'entities/Chat/model/types.ts';
+
+export const getAllChats = ({
+  member,
+}: GetAppChatsRequest): Promise<ApiResponse<ChatProps[]>> =>
+  api({
+    url: `/chat/all-chats?member=${member}`,
+  });
 
 export const getMessages = ({
   chatId,

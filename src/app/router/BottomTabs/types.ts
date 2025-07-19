@@ -1,4 +1,5 @@
 export enum BottomTabs {
-  Restaurants = 'Restaurants',
+  Home = 'Home',
+  Chat = 'Chat',
   Settings = 'Settings',
 }

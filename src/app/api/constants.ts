@@ -6,5 +6,6 @@ export const SERVER_URL = __DEV__
 export const API_URL = `${SERVER_URL}/api`;
 
 export const QUERY_KEYS = {
+  GET_ALL_CHATS: 'get_all_chats',
   GET_MESSAGES: 'get_messages',
 };

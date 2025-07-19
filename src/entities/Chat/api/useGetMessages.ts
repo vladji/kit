@@ -14,6 +14,7 @@ export const useGetMessages = ({ chatId, setMessages }: Props) => {
     queryKey: [QUERY_KEYS.GET_MESSAGES, chatId],
     queryFn: () => getMessages({ chatId }),
     enabled: !!chatId,
+    refetchOnWindowFocus: true,
   });
 
   useEffect(() => {
