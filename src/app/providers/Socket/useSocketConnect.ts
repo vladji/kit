@@ -1,13 +1,13 @@
 import { useEffect } from 'react';
 import { connectSocket } from 'app/providers/Socket/socket.ts';
-import { useChatMember } from 'entities/Chat/model/useChatMember.ts';
+import { useChatUser } from 'entities/Chat/model/useChatUser.ts';
 
 export const useSocketConnect = () => {
-  const { member } = useChatMember();
+  const { userId } = useChatUser();
 
   useEffect(() => {
-    if (member) {
-      connectSocket(member);
+    if (userId) {
+      connectSocket(userId);
     }
-  }, [member]);
+  }, [userId]);
 };

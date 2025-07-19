@@ -3,20 +3,20 @@ import { FlatList, StyleSheet } from 'react-native';
 import { FormattedMessage } from 'react-intl';
 import { getSocket } from 'app/providers/Socket/socket.ts';
 import { useGetAllChats } from 'entities/Chat/api/useGetAllChats.ts';
-import { useChatMember } from 'entities/Chat/model/useChatMember.ts';
+import { useChatUser } from 'entities/Chat/model/useChatUser.ts';
 import { ChatItem } from 'screens/ChatTab/ui/ChatItem.tsx';
 import { Sizes } from 'shared/styles/constants/sizes.ts';
 import { ScreenLayout } from 'shared/ui/ScreenLayout';
 import { Spinner } from 'shared/ui/Spinner';
 
 export const ChatTab = () => {
-  const { member, loading: loadingMember } = useChatMember();
+  const { userId, loading: loadingMember } = useChatUser();
 
   const {
     allChats,
     loading: loadingChats,
     refetch,
-  } = useGetAllChats({ member });
+  } = useGetAllChats({ member: userId });
 
   useEffect(() => {
     const socket = getSocket();

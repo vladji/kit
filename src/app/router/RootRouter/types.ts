@@ -1,14 +1,15 @@
 export enum RootRouter {
   BottomTabs = 'BottomTabs',
   CreateStoreRoute = 'CreateStoreRoute',
-  ChatRoute = 'ChatRoute',
+  PrivateChatRoute = 'PrivateChatRoute',
 }
 
 export interface ChatRouteParams {
   to: string;
+  chatId?: string;
 }
 
 export interface RootRouterParams {
   CreateStoreRoute: unknown;
-  ChatRoute: ChatRouteParams;
+  PrivateChatRoute: ChatRouteParams;
 }

@@ -25,7 +25,6 @@ export const useIdentifyUser = () => {
       const deviceId = getDeviceId() || '';
 
       const data: CreateUserDocument = {
-        type: 'client',
         uniqueId,
         deviceData: {
           deviceManufacturer,

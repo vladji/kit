@@ -6,9 +6,8 @@ import { FormattedMessage } from 'react-intl';
 import { getSocket } from 'app/providers/Socket/socket.ts';
 import { ChatRouteParams } from 'app/router/RootRouter/types.ts';
 import { useGetMessages } from 'entities/Chat/api/useGetMessages.ts';
-import { composeChatId } from 'entities/Chat/lib/utils.ts';
 import { ChatMessageProps } from 'entities/Chat/model/types.ts';
-import { useChatMember } from 'entities/Chat/model/useChatMember.ts';
+import { useChatUser } from 'entities/Chat/model/useChatUser.ts';
 import { LIGHT_COLOR, TRANSPARENT } from 'shared/styles/constants/colors.ts';
 import { ComponentSize, Sizes } from 'shared/styles/constants/sizes.ts';
 import { useStyles } from 'shared/styles/useStyles.ts';
@@ -17,15 +16,14 @@ import { Spinner } from 'shared/ui/Spinner';
 import { TextInputComponent } from 'shared/ui/TextInput';
 import { Typography } from 'shared/ui/Typography';
 
-export const ChatScreen = () => {
+export const PrivateChatScreen = () => {
   const { colors } = useStyles();
 
   const {
-    params: { to },
+    params: { to, chatId = null },
   } = useRoute<RouteProp<{ params: ChatRouteParams }>>();
 
-  const { member } = useChatMember();
-  const chatId = composeChatId({ from: member, to });
+  const { userId } = useChatUser();
 
   const [messages, setMessages] = useState<ChatMessageProps[]>([]);
   const [text, setText] = useState('');
@@ -53,7 +51,7 @@ export const ChatScreen = () => {
   const sendMessage = () => {
     const socket = getSocket();
     socket.emit('private_message', {
-      from: member,
+      from: userId,
       to,
       text,
     });
@@ -66,15 +64,16 @@ export const ChatScreen = () => {
       hasBackButton
     >
       <View style={styles.wrapper}>
-        <ScrollView contentContainerStyle={styles.scrollContainer}>
-          {loading && <Spinner />}
-          {!!messages &&
-            messages.map((message) => (
+        {loading && <Spinner />}
+        {!!messages?.length && (
+          <ScrollView contentContainerStyle={styles.scrollContainer}>
+            {messages.map((message) => (
               <Typography key={message.createdAt.toString()}>
                 {message.text}
               </Typography>
             ))}
-        </ScrollView>
+          </ScrollView>
+        )}
         <View style={styles.inputBlock}>
           <TextInputComponent value={text} onChangeText={setText} />
           <TouchableOpacity

@@ -4,10 +4,19 @@ interface DeviceDataProps {
   deviceId: string;
 }
 
+interface AdminProps {
+  chatEnabled: boolean;
+  chatNotificationEnabled: boolean;
+}
+
 export interface UserProps {
   id: string;
   uniqueId: string;
-  type: 'client' | 'store';
   deviceData: DeviceDataProps;
+  createdAt: Date;
+  updatedAt: Date;
+  name?: string;
+  avatar?: string;
+  admin?: AdminProps;
   storeId?: string;
 }
