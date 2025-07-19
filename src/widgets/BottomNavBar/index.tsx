@@ -9,8 +9,6 @@ import { useStyles } from 'shared/styles/useStyles.ts';
 import { TabButton } from 'widgets/BottomNavBar/TabButton.tsx';
 
 export const BottomNavBar: FC<BottomTabBarProps> = ({ navigation, state }) => {
-  console.log('state', state);
-
   const { colors } = useStyles();
   const onPress = (route: BottomTabs) => {
     navigation.navigate(route);

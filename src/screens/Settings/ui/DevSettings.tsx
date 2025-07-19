@@ -1,13 +1,14 @@
+import { useContext } from 'react';
 import { StyleSheet, View } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { FormattedMessage } from 'react-intl';
-import { useAppContext } from 'app/context/useAppContext.ts';
+import { AppContext } from 'app/context';
 import { Sizes } from 'shared/styles/constants/sizes.ts';
 import { MainButton } from 'shared/ui/MainButton';
 import { SwitchItem } from 'shared/ui/SwitchItem';
 
 export const DevSettings = () => {
-  const { rootAdmin, setRootAdmin } = useAppContext();
+  const { rootAdmin, setRootAdmin } = useContext(AppContext);
   const onSuperAdminPress = () => {
     setRootAdmin((prev) => !prev);
   };

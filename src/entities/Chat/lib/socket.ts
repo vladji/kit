@@ -6,8 +6,6 @@ const URL = SERVER_URL;
 let socket: Socket;
 
 export const connectSocket = (userId: string) => {
-  console.log('connectSocket', { userId });
-
   socket = io(URL, {
     transports: ['websocket'],
     reconnection: true,

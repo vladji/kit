@@ -13,7 +13,7 @@ export const useAppContext = () => {
   const [themeState, setThemeState] = useState<ColorSchemeName>('light');
   const [userAuthProfile, setUserAuthProfile] =
     useState<FirebaseAuthTypes.User | null>(null);
-  const [rootAdmin, setRootAdmin] = useState(false);
+  const [rootAdmin, setRootAdmin] = useState<boolean>(false);
 
   const setLocale = useCallback(async (locale: Locales) => {
     setLocaleState(locale);

@@ -1,4 +1,4 @@
-import { createContext } from 'react';
+import { Dispatch, SetStateAction, createContext } from 'react';
 import { ColorSchemeName } from 'react-native';
 import { FirebaseAuthTypes } from '@react-native-firebase/auth';
 import { DEFAULT_LOCALE } from 'app/config/constants.ts';
@@ -12,7 +12,7 @@ interface AppContextProps {
   userAuthProfile: FirebaseAuthTypes.User | null;
   setUserAuthProfile: (user: FirebaseAuthTypes.User | null) => void;
   rootAdmin: boolean;
-  setRootAdmin: (value: boolean) => void;
+  setRootAdmin: Dispatch<SetStateAction<boolean>>;
 }
 
 export const AppContext = createContext<AppContextProps>({

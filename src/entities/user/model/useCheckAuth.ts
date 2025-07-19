@@ -1,14 +1,14 @@
-import { useEffect } from 'react';
+import { useContext, useEffect } from 'react';
 import {
   FirebaseAuthTypes,
   getAuth,
   onAuthStateChanged,
 } from '@react-native-firebase/auth';
-import { useAppContext } from 'app/context/useAppContext.ts';
+import { AppContext } from 'app/context';
 import User = FirebaseAuthTypes.User;
 
 export const useCheckAuth = () => {
-  const { setUserAuthProfile } = useAppContext();
+  const { setUserAuthProfile } = useContext(AppContext);
 
   useEffect(() => {
     const handleAuthState = (user: User | null) => {
