@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { ScrollView, StyleSheet, TouchableOpacity, View } from 'react-native';
+import { ScrollView, StyleSheet, View } from 'react-native';
 import { RouteProp, useRoute } from '@react-navigation/native';
 import { Send } from 'lucide-react-native';
 import { FormattedMessage } from 'react-intl';
@@ -8,17 +8,14 @@ import { ChatRouteParams } from 'app/router/RootRouter/types.ts';
 import { useGetMessages } from 'entities/Chat/api/useGetMessages.ts';
 import { ChatMessageProps } from 'entities/Chat/model/types.ts';
 import { useChatUser } from 'entities/Chat/model/useChatUser.ts';
-import { LIGHT_COLOR, TRANSPARENT } from 'shared/styles/constants/colors.ts';
-import { ComponentSize, Sizes } from 'shared/styles/constants/sizes.ts';
-import { useStyles } from 'shared/styles/useStyles.ts';
+import { LIGHT_COLOR } from 'shared/styles/constants/colors.ts';
+import { Sizes } from 'shared/styles/constants/sizes.ts';
 import { ScreenLayout } from 'shared/ui/ScreenLayout';
 import { Spinner } from 'shared/ui/Spinner';
-import { TextInputComponent } from 'shared/ui/TextInput';
+import { TextInputAction } from 'shared/ui/TextInputAction';
 import { Typography } from 'shared/ui/Typography';
 
 export const PrivateChatScreen = () => {
-  const { colors } = useStyles();
-
   const {
     params: { to, chatId = null },
   } = useRoute<RouteProp<{ params: ChatRouteParams }>>();
@@ -64,25 +61,24 @@ export const PrivateChatScreen = () => {
       hasBackButton
     >
       <View style={styles.wrapper}>
-        {loading && <Spinner />}
-        {!!messages?.length && (
-          <ScrollView contentContainerStyle={styles.scrollContainer}>
-            {messages.map((message) => (
-              <Typography key={message.createdAt.toString()}>
-                {message.text}
-              </Typography>
-            ))}
-          </ScrollView>
-        )}
-        <View style={styles.inputBlock}>
-          <TextInputComponent value={text} onChangeText={setText} />
-          <TouchableOpacity
-            style={[styles.button, colors().brand]}
-            onPress={sendMessage}
-          >
-            <Send color={LIGHT_COLOR} />
-          </TouchableOpacity>
+        <View style={styles.messagesBlock}>
+          {loading && <Spinner />}
+          {!!messages?.length && (
+            <ScrollView contentContainerStyle={styles.scrollContainer}>
+              {messages.map((message) => (
+                <Typography key={message.createdAt.toString()}>
+                  {message.text}
+                </Typography>
+              ))}
+            </ScrollView>
+          )}
         </View>
+        <TextInputAction
+          inputValue={text}
+          onChangeText={setText}
+          onPress={sendMessage}
+          Icon={<Send color={LIGHT_COLOR} />}
+        />
       </View>
     </ScreenLayout>
   );
@@ -93,21 +89,10 @@ const styles = StyleSheet.create({
     flex: 1,
     gap: Sizes.Big,
   },
-  scrollContainer: {
+  messagesBlock: {
     flex: 1,
   },
-  inputBlock: {
-    flexDirection: 'row',
-    gap: Sizes.Default,
-  },
-  button: {
-    flexDirection: 'row',
-    height: '100%',
-    width: 48,
-    justifyContent: 'center',
-    alignItems: 'center',
-    borderWidth: 1,
-    borderRadius: ComponentSize.ButtonBorderRadius,
-    borderColor: TRANSPARENT,
+  scrollContainer: {
+    flex: 1,
   },
 });

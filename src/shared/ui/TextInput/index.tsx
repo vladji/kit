@@ -1,9 +1,16 @@
-import { FC } from 'react';
+import { FC, ReactElement } from 'react';
 import { StyleSheet, TextInput, TextInputProps, View } from 'react-native';
 import { ComponentSize, Sizes } from 'shared/styles/constants/sizes.ts';
 import { useStyles } from 'shared/styles/useStyles.ts';
 
-export const TextInputComponent: FC<TextInputProps> = (props) => {
+export interface TextInputComponentProps extends TextInputProps {
+  startAdornment?: ReactElement;
+}
+
+export const TextInputComponent: FC<TextInputComponentProps> = ({
+  startAdornment,
+  ...props
+}) => {
   const { colors } = useStyles();
 
   return (
@@ -16,12 +23,13 @@ export const TextInputComponent: FC<TextInputProps> = (props) => {
 const styles = StyleSheet.create({
   wrapper: {
     flex: 1,
+    gap: Sizes.Micro,
     paddingHorizontal: Sizes.Mini,
     borderWidth: 1,
     borderRadius: ComponentSize.ButtonBorderRadius,
   },
   input: {
-    height: ComponentSize.MainButtonHeight,
+    height: ComponentSize.InputSize,
     fontSize: 16,
   },
 });
