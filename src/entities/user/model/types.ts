@@ -5,8 +5,9 @@ interface DeviceDataProps {
 }
 
 export interface UserProps {
-  type: 'client' | 'store';
+  id: string;
   uniqueId: string;
+  type: 'client' | 'store';
   deviceData: DeviceDataProps;
   storeId?: string;
 }

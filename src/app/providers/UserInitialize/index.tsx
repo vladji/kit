@@ -1,9 +1,9 @@
 import { ReactNode } from 'react';
-import { useCheckAuth } from 'entities/user/model/useCheckAuth.ts';
-import { useUniqueId } from 'entities/user/model/useUniqueId.ts';
+import { useCheckAuth } from 'app/providers/UserInitialize/model/useCheckAuth.ts';
+import { useIdentifyUser } from 'app/providers/UserInitialize/model/useIdentifyUser.ts';
 
 export const UserInitialize = ({ children }: { children: ReactNode }) => {
-  useUniqueId();
+  useIdentifyUser();
   useCheckAuth();
 
   return children;

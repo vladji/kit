@@ -5,16 +5,16 @@ import {
   getManufacturer,
   getUniqueId,
 } from 'react-native-device-info';
+import { CreateUserDocument } from 'app/providers/UserInitialize/api/types.ts';
+import { useGetUserByUniqueId } from 'app/providers/UserInitialize/api/useGetUserByUniqueId.ts';
+import { usePostCreateUser } from 'app/providers/UserInitialize/api/usePostCreateUser.ts';
 import {
   getAsyncStorageValue,
   setAsyncStorageValue,
 } from 'app/storage/lib/asyncStorage.ts';
 import { AsyncStorageKeys } from 'app/storage/model/types.ts';
-import { useGetUserByUniqueId } from 'entities/user/api/useGetUserByUniqueId.ts';
-import { usePostCreateUser } from 'entities/user/api/usePostCreateUser.ts';
-import { UserProps } from 'entities/user/model/types.ts';
 
-export const useUniqueId = () => {
+export const useIdentifyUser = () => {
   const { getUserByUniqueId } = useGetUserByUniqueId();
   const { postCreateUser } = usePostCreateUser();
 
@@ -24,7 +24,7 @@ export const useUniqueId = () => {
       const deviceOs = (await getBaseOs()) || '';
       const deviceId = getDeviceId() || '';
 
-      const data: UserProps = {
+      const data: CreateUserDocument = {
         type: 'client',
         uniqueId,
         deviceData: {
@@ -41,11 +41,11 @@ export const useUniqueId = () => {
 
   useEffect(() => {
     const checkUniqueId = async () => {
-      const uniqueIdStorage = await getAsyncStorageValue<string>(
-        AsyncStorageKeys.UniqueId,
+      const userDbIdStorage = await getAsyncStorageValue<string>(
+        AsyncStorageKeys.UserDbId,
       );
 
-      if (!uniqueIdStorage) {
+      if (!userDbIdStorage) {
         const uniqueId = await getUniqueId();
         let response = await getUserByUniqueId({ uniqueId });
 
@@ -53,10 +53,10 @@ export const useUniqueId = () => {
           response = await createUser(uniqueId);
         }
 
-        if (response.user?.uniqueId) {
+        if (response.user?.id) {
           await setAsyncStorageValue(
-            AsyncStorageKeys.UniqueId,
-            response.user.uniqueId,
+            AsyncStorageKeys.UserDbId,
+            response.user.id,
           );
         }
       }

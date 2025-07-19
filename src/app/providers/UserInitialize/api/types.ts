@@ -4,6 +4,8 @@ export interface UserByUniqueIdRequest {
   uniqueId: string;
 }
 
-export interface UserByUniqueIdResponse {
+export type CreateUserDocument = Omit<UserProps, 'id'>;
+
+export interface UserDocumentResponse {
   user: UserProps | null;
 }

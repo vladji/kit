@@ -1,13 +1,13 @@
 import { useMutation } from '@tanstack/react-query';
-import { getUserByUniqueId } from 'entities/user/api/requests.ts';
+import { getUserByUniqueId } from 'app/providers/UserInitialize/api/requests.ts';
 import {
   UserByUniqueIdRequest,
-  UserByUniqueIdResponse,
-} from 'entities/user/api/types.ts';
+  UserDocumentResponse,
+} from 'app/providers/UserInitialize/api/types.ts';
 
 export const useGetUserByUniqueId = () => {
   const { mutateAsync } = useMutation<
-    UserByUniqueIdResponse,
+    UserDocumentResponse,
     unknown,
     UserByUniqueIdRequest
   >({
