@@ -21,7 +21,7 @@ export const TabButton: FC<Props> = ({ onPress, Icon, text, active }) => {
   const fontColor = { color: active ? BRAND_COLOR : undefined };
 
   return (
-    <TouchableOpacity style={styles.wrapper} onPress={onPress}>
+    <TouchableOpacity style={styles.wrapper} onPress={onPress} hitSlop={10}>
       <Icon size={20} color={iconColor} />
       <Typography style={fontColor} size={10}>
         {text}

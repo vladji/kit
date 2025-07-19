@@ -3,7 +3,7 @@ import { MainButton } from 'shared/ui/MainButton';
 import { ScreenLayout } from 'shared/ui/ScreenLayout';
 import { Typography } from 'shared/ui/Typography';
 
-export const HomeScreen = () => {
+export const HomeTab = () => {
   return (
     <ScreenLayout headerTitle={<FormattedMessage defaultMessage="Главная" />}>
       <Typography>

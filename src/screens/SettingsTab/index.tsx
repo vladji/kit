@@ -2,13 +2,13 @@ import { useContext } from 'react';
 import { ScrollView, StyleSheet } from 'react-native';
 import { FormattedMessage } from 'react-intl';
 import { AppContext } from 'app/context';
-import { SettingsAuth } from 'screens/Settings/ui/Auth.tsx';
-import { Contacts } from 'screens/Settings/ui/Contacts.tsx';
-import { DevSettings } from 'screens/Settings/ui/DevSettings.tsx';
+import { SettingsAuth } from 'screens/SettingsTab/ui/Auth.tsx';
+import { Contacts } from 'screens/SettingsTab/ui/Contacts.tsx';
+import { DevSettings } from 'screens/SettingsTab/ui/DevSettings.tsx';
 import { Sizes } from 'shared/styles/constants/sizes.ts';
 import { ScreenLayout } from 'shared/ui/ScreenLayout';
 
-export const SettingsScreen = () => {
+export const SettingsTab = () => {
   const { rootAdmin } = useContext(AppContext);
 
   const showAuthBlock = !rootAdmin;
