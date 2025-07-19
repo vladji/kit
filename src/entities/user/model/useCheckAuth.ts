@@ -7,7 +7,7 @@ import {
 import { useAppContext } from 'app/context/useAppContext.ts';
 import User = FirebaseAuthTypes.User;
 
-export const useAuth = () => {
+export const useCheckAuth = () => {
   const { setUserAuthProfile } = useAppContext();
 
   useEffect(() => {
