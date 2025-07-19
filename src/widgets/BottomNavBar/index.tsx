@@ -8,7 +8,9 @@ import { ComponentSize } from 'shared/styles/constants/sizes.ts';
 import { useStyles } from 'shared/styles/useStyles.ts';
 import { TabButton } from 'widgets/BottomNavBar/TabButton.tsx';
 
-export const BottomNavBar: FC<BottomTabBarProps> = ({ navigation }) => {
+export const BottomNavBar: FC<BottomTabBarProps> = ({ navigation, state }) => {
+  console.log('state', state);
+
   const { colors } = useStyles();
   const onPress = (route: BottomTabs) => {
     navigation.navigate(route);
@@ -20,11 +22,13 @@ export const BottomNavBar: FC<BottomTabBarProps> = ({ navigation }) => {
         onPress={() => onPress(BottomTabs.Restaurants)}
         Icon={House}
         text={<FormattedMessage defaultMessage="Главная" />}
+        active={state.index === 0}
       />
       <TabButton
         onPress={() => onPress(BottomTabs.Settings)}
         Icon={User}
         text={<FormattedMessage defaultMessage="Профиль" />}
+        active={state.index === 1}
       />
     </View>
   );
