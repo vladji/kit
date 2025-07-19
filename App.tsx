@@ -3,6 +3,7 @@ import ErrorBoundary from 'react-native-error-boundary';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { ContextProvider } from 'app/providers/Context';
 import { LocaleProvider } from 'app/providers/Locale';
+import { SocketConnect } from 'app/providers/Socket';
 import { TanStackQuery } from 'app/providers/TanStackQuery';
 import { UserInitialize } from 'app/providers/UserInitialize';
 import RootRouter from 'app/router/RootRouter';
@@ -17,9 +18,11 @@ function App(): React.JSX.Element {
           <TanStackQuery>
             <SafeAreaProvider>
               <UserInitialize>
-                <AppLayout>
-                  <RootRouter />
-                </AppLayout>
+                <SocketConnect>
+                  <AppLayout>
+                    <RootRouter />
+                  </AppLayout>
+                </SocketConnect>
               </UserInitialize>
             </SafeAreaProvider>
           </TanStackQuery>
