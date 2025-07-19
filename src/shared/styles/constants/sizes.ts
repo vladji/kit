@@ -9,8 +9,9 @@ export const Sizes = {
 
 export const ComponentSize = {
   ScreenPaddingHorizontal: Sizes.Default,
-  HeaderHeight: 56,
-  BottomNavBarHeight: 48,
-  MainButtonHeight: 48,
+  HeaderSize: 56,
+  BottomNavBarSize: 48,
+  MainButtonSize: 48,
+  InputSize: 42,
   ButtonBorderRadius: Sizes.Mini,
 };

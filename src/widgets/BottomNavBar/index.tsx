@@ -44,7 +44,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'space-evenly',
     gap: Sizes.Big,
-    height: ComponentSize.BottomNavBarHeight,
+    height: ComponentSize.BottomNavBarSize,
     paddingHorizontal: ComponentSize.ScreenPaddingHorizontal,
   },
 });

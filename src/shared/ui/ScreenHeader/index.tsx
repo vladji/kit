@@ -37,7 +37,7 @@ export const ScreenHeader: FC<Props> = ({ title, hasBackButton = false }) => {
 const styles = StyleSheet.create({
   wrapper: {
     flexDirection: 'row',
-    height: ComponentSize.HeaderHeight,
+    height: ComponentSize.HeaderSize,
     paddingHorizontal: ComponentSize.ScreenPaddingHorizontal,
     zIndex: 2,
     ...SHADOW,

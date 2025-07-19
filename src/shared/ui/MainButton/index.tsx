@@ -62,7 +62,7 @@ const styles = StyleSheet.create({
   wrapper: {
     alignItems: 'center',
     justifyContent: 'center',
-    height: ComponentSize.MainButtonHeight,
+    height: ComponentSize.MainButtonSize,
     paddingHorizontal: Sizes.Medium,
     borderRadius: ComponentSize.ButtonBorderRadius,
   },

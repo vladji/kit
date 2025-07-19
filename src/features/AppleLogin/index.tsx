@@ -31,7 +31,7 @@ const styles = StyleSheet.create({
     gap: Sizes.Mini,
     alignItems: 'center',
     justifyContent: 'center',
-    height: ComponentSize.MainButtonHeight,
+    height: ComponentSize.MainButtonSize,
     borderRadius: ComponentSize.ButtonBorderRadius,
     borderWidth: 1,
   },
