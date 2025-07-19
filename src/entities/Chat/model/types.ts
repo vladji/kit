@@ -4,4 +4,6 @@ export interface ChatMessageProps {
   to: string;
   text: string;
   read: boolean;
+  createdAt: Date;
+  updatedAt: Date;
 }

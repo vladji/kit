@@ -1,4 +1,3 @@
 export interface GetMessagesRequest {
-  from: string | null;
-  to: string;
+  chatId: string | null;
 }

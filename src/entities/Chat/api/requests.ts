@@ -4,9 +4,8 @@ import { GetMessagesRequest } from 'entities/Chat/api/types.ts';
 import { ChatMessageProps } from 'entities/Chat/model/types.ts';
 
 export const getMessages = ({
-  from,
-  to,
+  chatId,
 }: GetMessagesRequest): Promise<ApiResponse<ChatMessageProps[]>> =>
   api({
-    url: `/chat/messages?from=${from}&to=${to}`,
+    url: `/chat/messages?chatId=${chatId}`,
   });
