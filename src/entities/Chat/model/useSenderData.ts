@@ -4,13 +4,12 @@ import { useGetAsyncStorage } from 'app/storage/lib/useGetAsyncStorage.ts';
 import { AsyncStorageKeys } from 'app/storage/model/types.ts';
 
 export const useSenderData = () => {
-  const { rootAdmin, userAuthProfile } = useAppContext();
+  const { rootAdmin } = useAppContext();
   const { data: uniqueId, isFetching } = useGetAsyncStorage<string>(
     AsyncStorageKeys.UniqueId,
   );
 
   //TODO: implement authId (userAuthProfile)
-  console.log('userAuthProfile', userAuthProfile);
 
   return {
     rootAdmin,

@@ -19,7 +19,7 @@ export const SettingsAuth = () => {
   };
 
   const onSupportPress = () => {
-    navigate(RootRouter.ChatRoute, { params: { to: REACT_CHAT_ROOT_ADMIN } });
+    navigate(RootRouter.ChatRoute, { to: REACT_CHAT_ROOT_ADMIN });
   };
 
   return (

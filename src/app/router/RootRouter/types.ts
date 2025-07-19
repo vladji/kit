@@ -4,7 +4,11 @@ export enum RootRouter {
   ChatRoute = 'ChatRoute',
 }
 
+export interface ChatRouteParams {
+  to: string;
+}
+
 export interface RootRouterParams {
   CreateStoreRoute: unknown;
-  ChatRoute: { params: { to: string } };
+  ChatRoute: ChatRouteParams;
 }
