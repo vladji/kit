@@ -1,10 +1,10 @@
 import { FC, ReactElement } from 'react';
 import { StyleSheet, TouchableOpacity, View } from 'react-native';
 import { NavigationProp, useNavigation } from '@react-navigation/native';
-import { ArrowLeft } from 'lucide-react-native';
+import { ArrowLeft, MoveLeft } from 'lucide-react-native';
 import { RootRouterParams } from 'app/router/RootRouter/types.ts';
 import { SHADOW } from 'shared/styles/constants/colors.ts';
-import { ComponentSize } from 'shared/styles/constants/sizes.ts';
+import { ComponentSize, Sizes } from 'shared/styles/constants/sizes.ts';
 import { useStyles } from 'shared/styles/useStyles.ts';
 import { Typography } from 'shared/ui/Typography';
 
@@ -18,7 +18,7 @@ export const ScreenHeader: FC<Props> = ({ title, hasBackButton = false }) => {
   const { colors } = useStyles();
 
   return (
-    <View style={[styles.wrapper, colors('backgroundColor').main]}>
+    <View style={[styles.wrapper, colors().main]}>
       <View style={styles.leftBlock}>
         {hasBackButton && (
           <TouchableOpacity hitSlop={8} onPress={goBack}>
@@ -39,6 +39,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     height: ComponentSize.HeaderSize,
     paddingHorizontal: ComponentSize.ScreenPaddingHorizontal,
+    paddingBottom: Sizes.Micro,
     zIndex: 2,
     ...SHADOW,
   },

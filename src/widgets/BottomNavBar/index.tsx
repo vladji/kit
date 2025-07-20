@@ -1,7 +1,7 @@
 import { FC } from 'react';
 import { StyleSheet, View } from 'react-native';
 import { BottomTabBarProps } from '@react-navigation/bottom-tabs';
-import { House, Send, User } from 'lucide-react-native';
+import { House, Send, Settings } from 'lucide-react-native';
 import { FormattedMessage } from 'react-intl';
 import { BottomTabs } from 'app/router/BottomTabs/types.ts';
 import { ComponentSize, Sizes } from 'shared/styles/constants/sizes.ts';
@@ -30,8 +30,8 @@ export const BottomNavBar: FC<BottomTabBarProps> = ({ navigation, state }) => {
       />
       <TabButton
         onPress={() => onPress(BottomTabs.Settings)}
-        Icon={User}
-        text={<FormattedMessage defaultMessage="Профиль" />}
+        Icon={Settings}
+        text={<FormattedMessage defaultMessage="Настройки" />}
         active={state.index === 2}
       />
     </View>
@@ -46,5 +46,6 @@ const styles = StyleSheet.create({
     gap: Sizes.Big,
     height: ComponentSize.BottomNavBarSize,
     paddingHorizontal: ComponentSize.ScreenPaddingHorizontal,
+    paddingBottom: 18,
   },
 });

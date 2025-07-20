@@ -8,8 +8,8 @@ export const ACCENT_DARK = '#71450e';
 export const DARK_COLOR = '#201c19';
 export const DARK_TEXT_COLOR = '#0e0e0e';
 export const LIGHT_COLOR = '#f1f1f1';
-export const MUTED_LIGHT_THEME = '#b9b7b7';
-export const MUTED_DARK_THEME = '#9f9f9f';
+export const MUTED_LIGHT_THEME = '#dadada';
+export const MUTED_DARK_THEME = '#dadada';
 export const BORDER_COLOR = '#c6c6c6';
 
 export const SHADOW_COLOR = IS_IOS

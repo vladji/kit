@@ -20,7 +20,7 @@ export const MenuButton: FC<Props> = ({ noBorder, children, ...props }) => {
   return (
     <TouchableOpacity
       {...props}
-      style={[styles.wrapper, borderBottomWidth, colors().border]}
+      style={[styles.wrapper, borderBottomWidth, colors('borderColor').muted]}
     >
       <Typography>{children}</Typography>
       <ChevronRight />

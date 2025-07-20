@@ -36,7 +36,9 @@ export const ChatTab = () => {
   const loading = loadingMember || loadingChats;
 
   return (
-    <ScreenLayout headerTitle={<FormattedMessage defaultMessage="Чаты" />}>
+    <ScreenLayout
+      headerTitle={<FormattedMessage defaultMessage="Список чатов" />}
+    >
       {loading && <Spinner />}
       {!loading && (
         <FlatList

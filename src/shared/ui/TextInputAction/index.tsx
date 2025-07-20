@@ -20,12 +20,17 @@ export const TextInputAction: FC<Props> = ({
   onChangeText,
   onPress,
   Icon,
+  ...inputProps
 }) => {
   const { colors } = useStyles();
 
   return (
     <View style={styles.wrapper}>
-      <TextInputComponent value={inputValue} onChangeText={onChangeText} />
+      <TextInputComponent
+        {...inputProps}
+        value={inputValue}
+        onChangeText={onChangeText}
+      />
       <TouchableOpacity
         style={[styles.button, colors().brand]}
         onPress={onPress}
