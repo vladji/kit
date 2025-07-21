@@ -23,6 +23,7 @@ import { ANIMATION_DURATION } from 'shared/styles/constants/animation.ts';
 import { TRANSPARENT } from 'shared/styles/constants/colors.ts';
 import { Sizes } from 'shared/styles/constants/sizes.ts';
 import { useStyles } from 'shared/styles/useStyles.ts';
+import { useKeyboardAvoid } from 'shared/ui/ScrollKeyboardAvoid/useKeyboardAvoid.ts';
 import { Spinner } from 'shared/ui/Spinner';
 import { Typography } from 'shared/ui/Typography';
 
@@ -62,6 +63,8 @@ export const BottomSheet = memo(
     const bottom = useSharedValue(-screenHeight);
     const translateY = useSharedValue(0);
     const paddingBottom = useSharedValue(0);
+
+    useKeyboardAvoid({ translateY });
 
     const animation = useCallback<Animation>(
       ({ topValue, bottomValue, onClose }) => {
