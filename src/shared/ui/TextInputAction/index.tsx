@@ -8,14 +8,14 @@ import {
   TextInputComponentProps,
 } from 'shared/ui/TextInput';
 
-interface Props extends TextInputComponentProps {
+export interface TextInputActionProps extends TextInputComponentProps {
   inputValue: string;
   onChangeText: (text: string) => void;
   onPress: () => void;
   Icon: ReactElement;
 }
 
-export const TextInputAction: FC<Props> = ({
+export const TextInputAction: FC<TextInputActionProps> = ({
   inputValue,
   onChangeText,
   onPress,
@@ -26,11 +26,13 @@ export const TextInputAction: FC<Props> = ({
 
   return (
     <View style={styles.wrapper}>
-      <TextInputComponent
-        {...inputProps}
-        value={inputValue}
-        onChangeText={onChangeText}
-      />
+      <View style={styles.inputWrapper}>
+        <TextInputComponent
+          {...inputProps}
+          value={inputValue}
+          onChangeText={onChangeText}
+        />
+      </View>
       <TouchableOpacity
         style={[styles.button, colors().brand]}
         onPress={onPress}
@@ -45,6 +47,9 @@ const styles = StyleSheet.create({
   wrapper: {
     flexDirection: 'row',
     gap: Sizes.Medium,
+  },
+  inputWrapper: {
+    flex: 1,
   },
   button: {
     flexDirection: 'row',

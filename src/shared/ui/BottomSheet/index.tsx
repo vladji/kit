@@ -169,7 +169,8 @@ export const BottomSheet = memo(
                 {showDecor && <View style={[styles.decor, colors().muted]} />}
                 <View
                   style={{
-                    paddingTop: showDecor ? Sizes.Big : Sizes.Micro,
+                    gap: Sizes.Default,
+                    paddingTop: showDecor ? Sizes.Default : Sizes.Micro,
                     paddingBottom: IS_IOS
                       ? Sizes.Micro + safeBottom
                       : Sizes.Big + safeBottom,
@@ -177,7 +178,7 @@ export const BottomSheet = memo(
                     backgroundColor: TRANSPARENT,
                   }}
                 >
-                  {!!title && <Typography type="title">{title}</Typography>}
+                  {!!title && <Typography weight="500">{title}</Typography>}
                   {children}
                 </View>
               </Animated.View>
