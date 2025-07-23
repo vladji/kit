@@ -1,13 +1,20 @@
 import { useEffect } from 'react';
 import { connectSocket } from 'app/providers/Socket/socket.ts';
-import { useChatUser } from 'entities/Chat/model/useChatUser.ts';
+import { useGetAsyncStorage } from 'app/storage/lib/useGetAsyncStorage.ts';
+import { AsyncStorageKeys } from 'app/storage/model/types.ts';
 
 export const useSocketConnect = () => {
-  const { userId } = useChatUser();
+  const { data: token, isFetched: tokenFetched } = useGetAsyncStorage<string>(
+    AsyncStorageKeys.Token,
+  );
+  const { data: userDbId, isFetched: userDbIdFetched } =
+    useGetAsyncStorage<string>(AsyncStorageKeys.UserDbId);
+
+  const fetched = tokenFetched && userDbIdFetched;
 
   useEffect(() => {
-    if (userId) {
-      connectSocket(userId);
+    if (userDbId && fetched) {
+      connectSocket(userDbId, token);
     }
-  }, [userId]);
+  }, [token, userDbId, fetched]);
 };
