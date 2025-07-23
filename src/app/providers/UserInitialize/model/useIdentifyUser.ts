@@ -1,4 +1,5 @@
 import { useCallback, useEffect } from 'react';
+import { useQueryClient } from '@tanstack/react-query';
 import {
   getBaseOs,
   getDeviceId,
@@ -8,15 +9,22 @@ import {
 import { CreateUserDocument } from 'app/providers/UserInitialize/api/types.ts';
 import { useGetUserByUniqueId } from 'app/providers/UserInitialize/api/useGetUserByUniqueId.ts';
 import { usePostCreateUser } from 'app/providers/UserInitialize/api/usePostCreateUser.ts';
+import { setAsyncStorageValue } from 'app/storage/lib/asyncStorage.ts';
+import { useGetAsyncStorage } from 'app/storage/lib/useGetAsyncStorage.ts';
 import {
-  getAsyncStorageValue,
-  setAsyncStorageValue,
-} from 'app/storage/lib/asyncStorage.ts';
-import { AsyncStorageKeys } from 'app/storage/model/types.ts';
+  ASYNC_STORAGE_GET,
+  AsyncStorageKeys,
+} from 'app/storage/model/types.ts';
 
 export const useIdentifyUser = () => {
+  const queryClient = useQueryClient();
+
   const { getUserByUniqueId } = useGetUserByUniqueId();
   const { postCreateUser } = usePostCreateUser();
+
+  const { data: userDbId, isFetched } = useGetAsyncStorage(
+    AsyncStorageKeys.UserDbId,
+  );
 
   const createUser = useCallback(
     async (uniqueId: string) => {
@@ -40,27 +48,24 @@ export const useIdentifyUser = () => {
 
   useEffect(() => {
     const checkUniqueId = async () => {
-      const userDbIdStorage = await getAsyncStorageValue<string>(
-        AsyncStorageKeys.UserDbId,
-      );
+      const uniqueId = await getUniqueId();
+      let response = await getUserByUniqueId({ uniqueId });
 
-      if (!userDbIdStorage) {
-        const uniqueId = await getUniqueId();
-        let response = await getUserByUniqueId({ uniqueId });
+      if (!response.user) {
+        response = await createUser(uniqueId);
+      }
 
-        if (!response.user) {
-          response = await createUser(uniqueId);
-        }
-
-        if (response.user?.id) {
-          await setAsyncStorageValue(
-            AsyncStorageKeys.UserDbId,
-            response.user.id,
-          );
-        }
+      if (response.user?.id) {
+        await setAsyncStorageValue(AsyncStorageKeys.UserDbId, response.user.id);
+        await queryClient.invalidateQueries({
+          queryKey: [ASYNC_STORAGE_GET, AsyncStorageKeys.UserDbId],
+          exact: true,
+        });
       }
     };
 
-    checkUniqueId();
-  }, [getUserByUniqueId, createUser]);
+    if (!userDbId && isFetched) {
+      checkUniqueId();
+    }
+  }, [userDbId, isFetched, getUserByUniqueId, createUser, queryClient]);
 };
