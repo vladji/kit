@@ -26,7 +26,7 @@ api.interceptors.response.use(
     \n${errorStatusText || ''}
     \n${responseMessage}`;
 
-    Alert.alert('Error', errorMessage);
+    Alert.alert('API Error', errorMessage);
 
     return Promise.reject(error);
   },

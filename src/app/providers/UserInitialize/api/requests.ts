@@ -1,4 +1,4 @@
-import api from 'app/api/axios.ts';
+import api from 'app/api/api.ts';
 import { ApiResponse } from 'app/api/types.ts';
 import {
   CreateUserDocument,

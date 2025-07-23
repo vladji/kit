@@ -4,11 +4,6 @@ interface DeviceDataProps {
   deviceId: string;
 }
 
-interface AdminProps {
-  chatEnabled: boolean;
-  chatNotificationEnabled: boolean;
-}
-
 export interface UserProps {
   id: string;
   uniqueId: string;
@@ -17,6 +12,5 @@ export interface UserProps {
   updatedAt: Date;
   name?: string;
   avatar?: string;
-  admin?: AdminProps;
   storeId?: string;
 }
