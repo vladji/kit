@@ -1,39 +1,37 @@
 import { useEffect } from 'react';
 import { FlatList, StyleSheet } from 'react-native';
 import { FormattedMessage } from 'react-intl';
-import { getSocket } from 'app/providers/Socket/socket.ts';
-import { useGetAllChats } from 'entities/Chat/api/useGetAllChats.ts';
-import { useChatUser } from 'entities/Chat/model/useChatUser.ts';
+import { safeSocket } from 'app/providers/Socket/socket.ts';
+import { useGetAsyncStorage } from 'app/storage/lib/useGetAsyncStorage.ts';
+import { AsyncStorageKeys } from 'app/storage/model/types.ts';
+import { useGetAllChats } from 'entities/chat/api/useGetAllChats.ts';
 import { ChatItem } from 'screens/ChatTab/ui/ChatItem.tsx';
 import { Sizes } from 'shared/styles/constants/sizes.ts';
 import { ScreenLayout } from 'shared/ui/ScreenLayout';
 import { Spinner } from 'shared/ui/Spinner';
 
 export const ChatTab = () => {
-  const { userId, loading: loadingMember } = useChatUser();
+  const { data: userDbId, isLoading: userDbIdLoading } =
+    useGetAsyncStorage<string>(AsyncStorageKeys.Token);
 
   const {
     allChats,
-    loading: loadingChats,
+    isLoading: chatsLoading,
     refetch,
-  } = useGetAllChats({ member: userId });
+  } = useGetAllChats({ member: userDbId });
 
   useEffect(() => {
-    const socket = getSocket();
-    if (!socket) return;
-
     const handler = (payload: { chatId: string }) => {
       refetch();
     };
-
-    socket.on('chat_updated', handler);
+    safeSocket()?.on('chat_updated', handler);
 
     return () => {
-      socket.off('chat_updated', handler);
+      safeSocket()?.off('chat_updated', handler);
     };
   }, [refetch]);
 
-  const loading = loadingMember || loadingChats;
+  const loading = userDbIdLoading || chatsLoading;
 
   return (
     <ScreenLayout

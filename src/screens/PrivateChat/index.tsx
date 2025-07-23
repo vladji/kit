@@ -3,11 +3,12 @@ import { ScrollView, StyleSheet, View } from 'react-native';
 import { RouteProp, useRoute } from '@react-navigation/native';
 import { Send } from 'lucide-react-native';
 import { FormattedMessage } from 'react-intl';
-import { getSocket } from 'app/providers/Socket/socket.ts';
+import { safeSocket } from 'app/providers/Socket/socket.ts';
 import { ChatRouteParams } from 'app/router/RootRouter/types.ts';
-import { useGetMessages } from 'entities/Chat/api/useGetMessages.ts';
-import { ChatMessageProps } from 'entities/Chat/model/types.ts';
-import { useChatUser } from 'entities/Chat/model/useChatUser.ts';
+import { useGetAsyncStorage } from 'app/storage/lib/useGetAsyncStorage.ts';
+import { AsyncStorageKeys } from 'app/storage/model/types.ts';
+import { useGetMessages } from 'entities/chat/api/useGetMessages.ts';
+import { ChatMessageProps } from 'entities/chat/model/types.ts';
 import { LIGHT_COLOR } from 'shared/styles/constants/colors.ts';
 import { Sizes } from 'shared/styles/constants/sizes.ts';
 import { ScreenLayout } from 'shared/ui/ScreenLayout';
@@ -20,7 +21,7 @@ export const PrivateChatScreen = () => {
     params: { to, chatId = null },
   } = useRoute<RouteProp<{ params: ChatRouteParams }>>();
 
-  const { userId } = useChatUser();
+  const { data: userDbId } = useGetAsyncStorage<string>(AsyncStorageKeys.Token);
 
   const [messages, setMessages] = useState<ChatMessageProps[]>([]);
   const [text, setText] = useState('');
@@ -31,24 +32,20 @@ export const PrivateChatScreen = () => {
   });
 
   useEffect(() => {
-    const socket = getSocket();
-    if (!socket) return;
-
-    socket.on('private_message', (msg) => {
+    safeSocket()?.on('private_message', (msg) => {
       if (msg.chatId === chatId) {
         setMessages((prev) => [...prev, msg]);
       }
     });
 
     return () => {
-      socket.off('private_message');
+      safeSocket()?.off('private_message');
     };
   }, [chatId]);
 
   const sendMessage = () => {
-    const socket = getSocket();
-    socket.emit('private_message', {
-      from: userId,
+    safeSocket()?.emit('private_message', {
+      from: userDbId,
       to,
       text,
     });

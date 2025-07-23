@@ -1,10 +1,10 @@
-import api from 'app/api/axios.ts';
+import api from 'app/api/api.ts';
 import { ApiResponse } from 'app/api/types.ts';
 import {
   GetAppChatsRequest,
   GetMessagesRequest,
-} from 'entities/Chat/api/types.ts';
-import { ChatMessageProps, ChatProps } from 'entities/Chat/model/types.ts';
+} from 'entities/chat/api/types.ts';
+import { ChatMessageProps, ChatProps } from 'entities/chat/model/types.ts';
 
 export const getAllChats = ({
   member,

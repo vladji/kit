@@ -1,3 +1,4 @@
+import { Alert } from 'react-native';
 import { Socket, io } from 'socket.io-client';
 import { SERVER_URL } from 'app/api/constants.ts';
 import { SocketError } from 'app/providers/Socket/constants.ts';
@@ -64,4 +65,10 @@ export const disconnectSocket = () => {
   }
 };
 
-export const getSocket = () => socket;
+export const safeSocket = (): Socket | void => {
+  if (!socket) {
+    Alert.alert('Socket', 'Server connection error');
+    return;
+  }
+  return socket;
+};

@@ -1,6 +1,6 @@
 import { FC } from 'react';
 import { StyleSheet, View } from 'react-native';
-import { ChatProps } from 'entities/Chat/model/types.ts';
+import { ChatProps } from 'entities/chat/model/types.ts';
 import { Sizes } from 'shared/styles/constants/sizes.ts';
 import { Typography } from 'shared/ui/Typography';
 
