@@ -9,10 +9,11 @@ import { Sizes } from 'shared/styles/constants/sizes.ts';
 import { ScreenLayout } from 'shared/ui/ScreenLayout';
 
 export const SettingsTab = () => {
-  const { rootAdmin } = useContext(AppContext);
+  const { admin, rootAdmin } = useContext(AppContext);
+  const anyAdmin = rootAdmin || admin;
 
-  const showAuthBlock = !rootAdmin;
-  const contactsBlock = !rootAdmin;
+  const showAuthBlock = !anyAdmin;
+  const contactsBlock = !anyAdmin;
 
   return (
     <ScreenLayout headerTitle={<FormattedMessage defaultMessage="Настройки" />}>

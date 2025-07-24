@@ -1,3 +1,10 @@
+export enum UserRoles {
+  Client = 'client',
+  Store = 'store',
+  Admin = 'admin',
+  RootAdmin = 'root-admin',
+}
+
 interface DeviceDataProps {
   deviceManufacturer: string;
   deviceOs: string;

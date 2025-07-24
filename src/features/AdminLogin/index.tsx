@@ -1,5 +1,5 @@
 import { FC, useState } from 'react';
-import { StyleSheet, View } from 'react-native';
+import { Keyboard, StyleSheet, View } from 'react-native';
 import { usePostAdminLogin } from 'features/AdminLogin/api/usePostAdminLogin.ts';
 import { Sizes } from 'shared/styles/constants/sizes.ts';
 import { BottomSheet } from 'shared/ui/BottomSheet';
@@ -22,6 +22,7 @@ export const AdminLogin: FC<Props> = ({ show, onClose }) => {
     if (name && password) {
       await postAdminLogin({ uniqId: name, password });
       onClose();
+      Keyboard.dismiss();
     }
   };
 

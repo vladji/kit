@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { Keyboard } from 'react-native';
 import { REACT_ADMIN_LOGIN_PHRASE } from '@env';
 import { Search as SearchIcon } from 'lucide-react-native';
 import { AdminLogin } from 'features/AdminLogin';
@@ -19,7 +20,9 @@ export const Search = () => {
 
   useEffect(() => {
     if (searchValue === REACT_ADMIN_LOGIN_PHRASE) {
+      Keyboard.dismiss();
       toggleShowAdmin();
+      setSearchValue('');
     }
   }, [searchValue]);
 
