@@ -4,7 +4,7 @@ import {
   getAuth,
   onAuthStateChanged,
 } from '@react-native-firebase/auth';
-import { AppContext } from 'app/context';
+import { AppContext } from 'app/appContext';
 import User = FirebaseAuthTypes.User;
 
 export const useCheckAuth = () => {

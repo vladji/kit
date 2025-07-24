@@ -1,7 +1,7 @@
-import { Dispatch, SetStateAction, createContext } from 'react';
+import { createContext } from 'react';
 import { ColorSchemeName } from 'react-native';
 import { FirebaseAuthTypes } from '@react-native-firebase/auth';
-import { DEFAULT_LOCALE } from 'app/config/constants.ts';
+import { DEFAULT_LOCALE, DEFAULT_THEME } from 'app/config/constants.ts';
 import { Locales } from 'app/locales/types.ts';
 
 interface AppContextProps {
@@ -12,13 +12,13 @@ interface AppContextProps {
   userAuthProfile: FirebaseAuthTypes.User | null;
   setUserAuthProfile: (user: FirebaseAuthTypes.User | null) => void;
   rootAdmin: boolean;
-  setRootAdmin: Dispatch<SetStateAction<boolean>>;
+  setRootAdmin: (value: boolean) => void;
 }
 
 export const AppContext = createContext<AppContextProps>({
   locale: DEFAULT_LOCALE,
   setLocale: () => Promise.resolve(),
-  theme: 'light',
+  theme: DEFAULT_THEME,
   setTheme: () => {},
   userAuthProfile: null,
   setUserAuthProfile: () => {},

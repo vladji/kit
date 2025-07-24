@@ -1,6 +1,6 @@
 import React, { ReactNode, useContext } from 'react';
 import { StatusBar, StyleSheet, View } from 'react-native';
-import { AppContext } from 'app/context';
+import { AppContext } from 'app/appContext';
 import { useSafeArea } from 'shared/styles/useSafeArea.ts';
 import { useStyles } from 'shared/styles/useStyles.ts';
 

@@ -1,7 +1,7 @@
 import { ReactNode, useContext } from 'react';
 import { IntlProvider } from 'react-intl';
+import { AppContext } from 'app/appContext';
 import { DEFAULT_LOCALE } from 'app/config/constants.ts';
-import { AppContext } from 'app/context';
 import { useMessages } from 'app/locales/useMessages.ts';
 
 export const LocaleProvider = ({ children }: { children: ReactNode }) => {

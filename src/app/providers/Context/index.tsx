@@ -1,7 +1,7 @@
 import { ReactNode, useEffect } from 'react';
 import BootSplash from 'react-native-bootsplash';
-import { AppContext } from 'app/context';
-import { useAppContext } from 'app/context/useAppContext.ts';
+import { AppContext } from 'app/appContext';
+import { useAppContext } from 'app/appContext/useAppContext.ts';
 
 export const ContextProvider = ({ children }: { children: ReactNode }) => {
   const {
