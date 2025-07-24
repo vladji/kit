@@ -33,19 +33,15 @@ export const connectSocket = (userId: string, token: string | null) => {
     console.log('❌ Socket connect error:', err.message);
 
     if (err.message === SocketError.TokenExpired) {
-      try {
-        const refreshTokenResponse = await refreshToken();
-        const newAccessToken = refreshTokenResponse.data.accessToken;
+      const refreshTokenResponse = await refreshToken();
+      const newAccessToken = refreshTokenResponse.data.accessToken;
 
-        socket!.auth = {
-          ...(socket!.auth || {}),
-          token: `Bearer ${newAccessToken}`,
-        };
+      socket!.auth = {
+        ...(socket!.auth || {}),
+        token: `Bearer ${newAccessToken}`,
+      };
 
-        socket!.connect();
-      } catch (refreshErr) {
-        console.error('🔒 Refresh token failed for socket:', refreshErr);
-      }
+      socket!.connect();
     }
 
     if (
@@ -54,6 +50,7 @@ export const connectSocket = (userId: string, token: string | null) => {
       err.message === SocketError.InvalidToken
     ) {
       await logout();
+      // TODO: add 'reset app'
     }
   });
 };

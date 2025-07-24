@@ -1,4 +1,5 @@
-import axios from 'axios';
+import { REACT_API_KEY } from '@env';
+import axios, { AxiosError } from 'axios';
 import { API_URL, STATUS } from 'app/api/constants.ts';
 import { AxiosApiResponse } from 'app/api/types.ts';
 import {
@@ -24,6 +25,7 @@ export const refreshToken = async (): Promise<
       {},
       {
         headers: {
+          'x-api-key': REACT_API_KEY,
           Authorization: `Bearer ${refreshToken}`,
         },
       },
@@ -43,7 +45,10 @@ export const refreshToken = async (): Promise<
     }
 
     return response;
-  } catch (error) {
+  } catch (err) {
+    const error = err as AxiosError<{ message?: string }>;
+    const message = error.response?.data?.message || error.message || error;
+    console.warn('🔒 Refresh token failed for socket:', message);
     await logout();
     return Promise.reject(error);
   }
