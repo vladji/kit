@@ -1,14 +1,24 @@
 import { useCallback, useEffect } from 'react';
 import { Keyboard } from 'react-native';
 import { SharedValue, withTiming } from 'react-native-reanimated';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { IS_IOS } from 'app/config/constants.ts';
 import { ANIMATION_DURATION } from 'shared/styles/constants/animation.ts';
 
-interface Props {
+export interface KeyboardAvoidProps {
   translateY: SharedValue<number>;
+  correction?: number;
+  includeSafeBottom?: boolean;
 }
 
-export const useKeyboardAvoid = ({ translateY }: Props) => {
+export const useKeyboardAvoid = ({
+  translateY,
+  correction = 0,
+  includeSafeBottom = false,
+}: KeyboardAvoidProps) => {
+  const { bottom } = useSafeAreaInsets();
+  const safeBottom = includeSafeBottom ? bottom : 0;
+
   const animation = useCallback(
     (value: number) => {
       translateY.value = withTiming(value, { duration: ANIMATION_DURATION });
@@ -22,7 +32,8 @@ export const useKeyboardAvoid = ({ translateY }: Props) => {
         'keyboardWillShow',
         (event) => {
           const keyboardHeight = event.endCoordinates.height;
-          animation(-keyboardHeight);
+          const value = keyboardHeight - correction - safeBottom;
+          animation(-value);
         },
       );
 
@@ -35,5 +46,5 @@ export const useKeyboardAvoid = ({ translateY }: Props) => {
         hideSubscription.remove();
       };
     }
-  }, [animation]);
+  }, [animation, correction, safeBottom]);
 };

@@ -11,6 +11,7 @@ import { useGetMessages } from 'entities/chat/api/useGetMessages.ts';
 import { ChatMessageProps } from 'entities/chat/model/types.ts';
 import { LIGHT_COLOR } from 'shared/styles/constants/colors.ts';
 import { Sizes } from 'shared/styles/constants/sizes.ts';
+import { KeyboardAvoidWrapper } from 'shared/ui/KeyboardAvoid/KeyboardAvoidWrapper.tsx';
 import { ScreenLayout } from 'shared/ui/ScreenLayout';
 import { Spinner } from 'shared/ui/Spinner';
 import { TextInputAction } from 'shared/ui/TextInputAction';
@@ -57,7 +58,11 @@ export const PrivateChatScreen = () => {
       headerTitle={<FormattedMessage defaultMessage="Чат с поддержкой" />}
       hasBackButton
     >
-      <View style={styles.wrapper}>
+      <KeyboardAvoidWrapper
+        style={styles.wrapper}
+        correction={6}
+        includeSafeBottom={true}
+      >
         <View style={styles.messagesBlock}>
           {loading && <Spinner />}
           {!!messages?.length && (
@@ -76,7 +81,7 @@ export const PrivateChatScreen = () => {
           onPress={sendMessage}
           Icon={<Send color={LIGHT_COLOR} />}
         />
-      </View>
+      </KeyboardAvoidWrapper>
     </ScreenLayout>
   );
 };

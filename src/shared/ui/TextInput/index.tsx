@@ -50,7 +50,7 @@ const styles = StyleSheet.create({
   label: {
     position: 'absolute',
     top: 0,
-    left: 20,
+    left: 12,
     transform: [{ translateY: '-55%' }],
     paddingHorizontal: Sizes.Micro,
   },
