@@ -22,13 +22,17 @@ export const useAppContext = () => {
 
   const setUserAuthProfile = useCallback(
     (user: FirebaseAuthTypes.User | null) => {
-      dispatch({ type: 'SET_USER', payload: user });
+      dispatch({ type: 'SET_USER_AUTH_PROFILE', payload: user });
     },
     [],
   );
 
   const setRootAdmin = useCallback((value: boolean) => {
     dispatch({ type: 'SET_ROOT_ADMIN', payload: value });
+  }, []);
+
+  const setAdmin = useCallback((value: boolean) => {
+    dispatch({ type: 'SET_ADMIN', payload: value });
   }, []);
 
   useEffect(() => {
@@ -50,9 +54,11 @@ export const useAppContext = () => {
     theme: state.theme,
     userAuthProfile: state.userAuthProfile,
     rootAdmin: state.rootAdmin,
+    admin: state.admin,
     setLocale,
     setTheme,
     setUserAuthProfile,
     setRootAdmin,
+    setAdmin,
   };
 };
