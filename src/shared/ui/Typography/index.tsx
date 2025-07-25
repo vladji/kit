@@ -4,7 +4,7 @@ import { useStyles } from 'shared/styles/useStyles.ts';
 
 interface Props extends TextProps {
   type?: 'text' | 'caption' | 'label' | 'title' | 'header';
-  color?: Record<'color', string>;
+  color?: Record<'color', string | undefined>;
   align?: TextStyle['textAlign'];
   weight?: TextStyle['fontWeight'];
   size?: TextStyle['fontSize'];

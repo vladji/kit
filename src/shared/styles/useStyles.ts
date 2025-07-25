@@ -35,6 +35,7 @@ export const useStyles = () => {
       light: { color: '#fff' },
       dark: { color: DARK_TEXT_COLOR },
       muted: { color: isLight ? MUTED_LIGHT_THEME : MUTED_DARK_THEME },
+      alert: { color: isLight ? '#e00' : '#e00' },
     };
 
     return {

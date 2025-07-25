@@ -17,7 +17,7 @@ export interface UserProps {
   deviceData: DeviceDataProps;
   createdAt: Date;
   updatedAt: Date;
-  name?: string;
+  publicName?: string;
   avatar?: string;
   storeId?: string;
 }

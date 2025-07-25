@@ -1,3 +1,4 @@
+import { Alert } from 'react-native';
 import { setAsyncStorageValue } from 'app/storage/lib/asyncStorage.ts';
 import { AsyncStorageKeys } from 'app/storage/model/types.ts';
 import { invalidateUser } from 'shared/lib/auth/invalidateUser.ts';
@@ -10,4 +11,6 @@ export const logout = async () => {
   ]);
 
   await invalidateUser();
+
+  Alert.alert('Logout', 'Successfully logged out');
 };

@@ -12,13 +12,12 @@ export const SettingsTab = () => {
   const { admin, rootAdmin } = useContext(AppContext);
   const anyAdmin = rootAdmin || admin;
 
-  const showAuthBlock = !anyAdmin;
   const contactsBlock = !anyAdmin;
 
   return (
     <ScreenLayout headerTitle={<FormattedMessage defaultMessage="Настройки" />}>
       <ScrollView contentContainerStyle={styles.scrollContainer}>
-        {showAuthBlock && <SettingsAuth />}
+        <SettingsAuth />
         {contactsBlock && <Contacts />}
       </ScrollView>
       {__DEV__ && <DevSettings />}
