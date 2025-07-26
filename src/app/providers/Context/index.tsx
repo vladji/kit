@@ -9,13 +9,11 @@ export const ContextProvider = ({ children }: { children: ReactNode }) => {
     locale,
     theme,
     userAuthProfile,
-    rootAdmin,
-    admin,
+    roles,
     setLocale,
     setTheme,
     setUserAuthProfile,
-    setRootAdmin,
-    setAdmin,
+    setRoles,
   } = useAppContext();
 
   useEffect(() => {
@@ -35,13 +33,11 @@ export const ContextProvider = ({ children }: { children: ReactNode }) => {
         locale,
         theme,
         userAuthProfile,
-        rootAdmin,
-        admin,
+        roles,
         setLocale,
         setTheme,
         setUserAuthProfile,
-        setRootAdmin,
-        setAdmin,
+        setRoles,
       }}
     >
       {children}

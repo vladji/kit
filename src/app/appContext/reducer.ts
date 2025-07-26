@@ -2,14 +2,14 @@ import { ColorSchemeName } from 'react-native';
 import { FirebaseAuthTypes } from '@react-native-firebase/auth';
 import { DEFAULT_LOCALE, DEFAULT_THEME } from 'app/config/constants.ts';
 import { Locales } from 'app/locales/types.ts';
+import { UserRoles, UserRolesProps } from 'entities/user/model/types.ts';
 
 type AppState = {
   contextLoading: boolean;
   locale: Locales;
   theme: ColorSchemeName;
   userAuthProfile: FirebaseAuthTypes.User | null;
-  rootAdmin: boolean;
-  admin: boolean;
+  roles: UserRolesProps;
 };
 
 type Action =
@@ -17,16 +17,14 @@ type Action =
   | { type: 'SET_LOCALE'; payload: Locales }
   | { type: 'SET_THEME'; payload: ColorSchemeName }
   | { type: 'SET_USER_AUTH_PROFILE'; payload: FirebaseAuthTypes.User | null }
-  | { type: 'SET_ROOT_ADMIN'; payload: boolean }
-  | { type: 'SET_ADMIN'; payload: boolean };
+  | { type: 'SET_ROLES'; payload: UserRolesProps };
 
 export const initialState: AppState = {
   contextLoading: true,
   locale: DEFAULT_LOCALE,
   theme: DEFAULT_THEME,
   userAuthProfile: null,
-  rootAdmin: false,
-  admin: false,
+  roles: { [UserRoles.Client]: true },
 };
 
 export const reducer = (state: AppState, action: Action): AppState => {
@@ -39,10 +37,8 @@ export const reducer = (state: AppState, action: Action): AppState => {
       return { ...state, theme: action.payload };
     case 'SET_USER_AUTH_PROFILE':
       return { ...state, userAuthProfile: action.payload };
-    case 'SET_ROOT_ADMIN':
-      return { ...state, rootAdmin: action.payload };
-    case 'SET_ADMIN':
-      return { ...state, admin: action.payload };
+    case 'SET_ROLES':
+      return { ...state, roles: action.payload };
     default:
       return state;
   }

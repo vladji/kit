@@ -5,6 +5,8 @@ export enum UserRoles {
   RootAdmin = 'root-admin',
 }
 
+export type UserRolesProps = Partial<Record<UserRoles, boolean>>;
+
 interface DeviceDataProps {
   deviceManufacturer: string;
   deviceOs: string;

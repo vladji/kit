@@ -1,10 +1,8 @@
-import { UserRoles } from 'entities/user/model/types.ts';
-
-type TokenUserRoles = Partial<Record<UserRoles, boolean>>;
+import { UserRolesProps } from 'entities/user/model/types.ts';
 
 export interface TokenPayload {
   id: string;
   uniqId: string;
-  roles: TokenUserRoles;
+  roles: UserRolesProps;
   createdAt: number;
 }

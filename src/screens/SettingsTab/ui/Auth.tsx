@@ -1,23 +1,21 @@
-import { useCallback, useContext, useState } from 'react';
+import { useCallback, useState } from 'react';
 import { View } from 'react-native';
 import { NavigationProp, useNavigation } from '@react-navigation/native';
 import { FormattedMessage } from 'react-intl';
-import { AppContext } from 'app/appContext';
 import { RootRouter, RootRouterParams } from 'app/router/RootRouter/types.ts';
 import { Login } from 'features/Login';
 import { Logout } from 'features/Logout';
+import { useIsAdmin } from 'shared/hooks/useIsAdmin.ts';
 import { MenuButton } from 'shared/ui/MenuButton';
 
 export const SettingsAuth = () => {
+  const { anyAdmin } = useIsAdmin();
   const { navigate } = useNavigation<NavigationProp<RootRouterParams>>();
 
   const [showLoginModal, setShowLoginModal] = useState(false);
   const toggleShowLogin = useCallback(() => {
     setShowLoginModal((prev) => !prev);
   }, []);
-
-  const { admin, rootAdmin } = useContext(AppContext);
-  const anyAdmin = rootAdmin || admin;
 
   const onCreateStorePress = () => {
     navigate(RootRouter.CreateStoreRoute);

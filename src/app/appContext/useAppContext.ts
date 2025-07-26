@@ -6,6 +6,7 @@ import { setInitialLocale, setInitialTheme } from 'app/appContext/utils.ts';
 import { Locales } from 'app/locales/types.ts';
 import { setAsyncStorageValue } from 'app/storage/lib/asyncStorage.ts';
 import { AsyncStorageKeys } from 'app/storage/model/types.ts';
+import { UserRolesProps } from 'entities/user/model/types.ts';
 
 export const useAppContext = () => {
   const [state, dispatch] = useReducer(reducer, initialState);
@@ -27,12 +28,8 @@ export const useAppContext = () => {
     [],
   );
 
-  const setRootAdmin = useCallback((value: boolean) => {
-    dispatch({ type: 'SET_ROOT_ADMIN', payload: value });
-  }, []);
-
-  const setAdmin = useCallback((value: boolean) => {
-    dispatch({ type: 'SET_ADMIN', payload: value });
+  const setRoles = useCallback((roles: UserRolesProps) => {
+    dispatch({ type: 'SET_ROLES', payload: roles });
   }, []);
 
   useEffect(() => {
@@ -53,12 +50,10 @@ export const useAppContext = () => {
     locale: state.locale,
     theme: state.theme,
     userAuthProfile: state.userAuthProfile,
-    rootAdmin: state.rootAdmin,
-    admin: state.admin,
+    roles: state.roles,
     setLocale,
     setTheme,
     setUserAuthProfile,
-    setRootAdmin,
-    setAdmin,
+    setRoles,
   };
 };
