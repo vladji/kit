@@ -2,6 +2,6 @@ export interface GetMessagesRequest {
   chatId: string | null;
 }
 
-export interface GetAppChatsRequest {
+export interface GetMemberChatsRequest {
   member: string | null;
 }

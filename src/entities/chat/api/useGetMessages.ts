@@ -12,7 +12,7 @@ interface Props extends GetMessagesRequest {
 export const useGetMessages = ({ chatId, setMessages }: Props) => {
   const { data, isLoading } = useQuery({
     queryKey: [QUERY_KEYS.GET_MESSAGES, chatId],
-    queryFn: () => getMessages({ chatId }),
+    queryFn: () => getMessages({ chatId, page: 1, limit: 10 }),
     enabled: !!chatId,
     refetchOnWindowFocus: true,
   });

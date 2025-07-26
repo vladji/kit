@@ -1,21 +1,38 @@
 import api from 'app/api/api.ts';
-import { ApiResponse } from 'app/api/types.ts';
+import jwtApi from 'app/api/jwtApi.ts';
+import { PaginationRequest, PaginationResponse } from 'app/api/types.ts';
 import {
-  GetAppChatsRequest,
+  GetMemberChatsRequest,
   GetMessagesRequest,
 } from 'entities/chat/api/types.ts';
 import { ChatMessageProps, ChatProps } from 'entities/chat/model/types.ts';
 
-export const getAllChats = ({
+export const getAdminSupportAllChats = ({
+  page,
+  limit,
+}: PaginationRequest): Promise<PaginationResponse<ChatProps[]>> =>
+  jwtApi({
+    url: `/chat/admin/all-support?page=${page}&limit=${limit}`,
+  });
+
+export const getMemberAllChats = ({
   member,
-}: GetAppChatsRequest): Promise<ApiResponse<ChatProps[]>> =>
+  page,
+  limit,
+}: PaginationRequest<GetMemberChatsRequest>): Promise<
+  PaginationResponse<ChatProps[]>
+> =>
   api({
-    url: `/chat/all-chats?member=${member}`,
+    url: `/chat/member/all-chats?member=${member}&page=${page}&limit=${limit}`,
   });
 
 export const getMessages = ({
   chatId,
-}: GetMessagesRequest): Promise<ApiResponse<ChatMessageProps[]>> =>
+  page,
+  limit,
+}: PaginationRequest<GetMessagesRequest>): Promise<
+  PaginationResponse<ChatMessageProps[]>
+> =>
   api({
-    url: `/chat/messages?chatId=${chatId}`,
+    url: `/chat/messages?chatId=${chatId}&page=${page}&limit=${limit}`,
   });

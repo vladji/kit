@@ -22,7 +22,9 @@ export const PrivateChatScreen = () => {
     params: { to, chatId = null },
   } = useRoute<RouteProp<{ params: ChatRouteParams }>>();
 
-  const { data: userDbId } = useGetAsyncStorage<string>(AsyncStorageKeys.Token);
+  const { data: userDbId } = useGetAsyncStorage<string>(
+    AsyncStorageKeys.UserDbId,
+  );
 
   const [messages, setMessages] = useState<ChatMessageProps[]>([]);
   const [text, setText] = useState('');

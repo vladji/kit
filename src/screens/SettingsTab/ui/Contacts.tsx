@@ -1,7 +1,7 @@
 import { NavigationProp, useNavigation } from '@react-navigation/native';
 import { FormattedMessage } from 'react-intl';
-import { CHAT_SUPPORT } from 'app/config/constants.ts';
 import { RootRouter, RootRouterParams } from 'app/router/RootRouter/types.ts';
+import { CHAT_SUPPORT } from 'entities/chat/model/constants.ts';
 import { MenuButton } from 'shared/ui/MenuButton';
 
 export const Contacts = () => {

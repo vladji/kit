@@ -9,6 +9,17 @@ export interface BaseApiResponse {
 export type ApiResponse<T> = BaseApiResponse & T;
 export type AxiosApiResponse<T> = AxiosResponse<ApiResponse<T>>;
 
+export type PaginationRequest<T = unknown> = {
+  page: number;
+  limit: number;
+} & T;
+
+export type PaginationResponse<T> = {
+  total: number;
+  page: number;
+  totalPages: number;
+} & ApiResponse<T>;
+
 export interface CustomAxiosRequestConfig extends AxiosRequestConfig {
   _retry?: boolean;
 }
