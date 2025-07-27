@@ -1,9 +1,9 @@
 import { useMutation } from '@tanstack/react-query';
-import { getUserByUniqueId } from 'app/providers/UserInitialize/api/requests.ts';
+import { getUserByUniqueId } from 'entities/user/api/requests.ts';
 import {
   UserByUniqueIdRequest,
   UserDocumentResponse,
-} from 'app/providers/UserInitialize/api/types.ts';
+} from 'entities/user/api/types.ts';
 
 export const useGetUserByUniqueId = () => {
   const { mutateAsync } = useMutation<

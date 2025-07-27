@@ -6,7 +6,10 @@ import { setInitialLocale, setInitialTheme } from 'app/appContext/utils.ts';
 import { Locales } from 'app/locales/types.ts';
 import { setAsyncStorageValue } from 'app/storage/lib/asyncStorage.ts';
 import { AsyncStorageKeys } from 'app/storage/model/types.ts';
-import { UserRolesProps } from 'entities/user/model/types.ts';
+import {
+  UserPublicProfileProps,
+  UserRolesProps,
+} from 'entities/user/model/types.ts';
 
 export const useAppContext = () => {
   const [state, dispatch] = useReducer(reducer, initialState);
@@ -21,9 +24,16 @@ export const useAppContext = () => {
     await setAsyncStorageValue(AsyncStorageKeys.Theme, theme);
   }, []);
 
+  const setUserPublicProfile = useCallback(
+    (profile: UserPublicProfileProps | null) => {
+      dispatch({ type: 'SET_USER_PUBLIC_PROFILE', payload: profile });
+    },
+    [],
+  );
+
   const setUserAuthProfile = useCallback(
-    (user: FirebaseAuthTypes.User | null) => {
-      dispatch({ type: 'SET_USER_AUTH_PROFILE', payload: user });
+    (profile: FirebaseAuthTypes.User | null) => {
+      dispatch({ type: 'SET_USER_AUTH_PROFILE', payload: profile });
     },
     [],
   );
@@ -49,10 +59,12 @@ export const useAppContext = () => {
     contextLoading: state.contextLoading,
     locale: state.locale,
     theme: state.theme,
+    userPublicProfile: state.userPublicProfile,
     userAuthProfile: state.userAuthProfile,
     roles: state.roles,
     setLocale,
     setTheme,
+    setUserPublicProfile,
     setUserAuthProfile,
     setRoles,
   };

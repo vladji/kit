@@ -6,15 +6,15 @@ import {
   getManufacturer,
   getUniqueId,
 } from 'react-native-device-info';
-import { CreateUserDocument } from 'app/providers/UserInitialize/api/types.ts';
-import { useGetUserByUniqueId } from 'app/providers/UserInitialize/api/useGetUserByUniqueId.ts';
-import { usePostCreateUser } from 'app/providers/UserInitialize/api/usePostCreateUser.ts';
 import { setAsyncStorageValue } from 'app/storage/lib/asyncStorage.ts';
 import { useGetAsyncStorage } from 'app/storage/lib/useGetAsyncStorage.ts';
 import {
   ASYNC_STORAGE_GET,
   AsyncStorageKeys,
 } from 'app/storage/model/types.ts';
+import { CreateUserDocument } from 'entities/user/api/types.ts';
+import { useGetUserByUniqueId } from 'entities/user/api/useGetUserByUniqueId.ts';
+import { usePostCreateUser } from 'entities/user/api/usePostCreateUser.ts';
 
 export const useIdentifyUser = () => {
   const queryClient = useQueryClient();

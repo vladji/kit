@@ -8,10 +8,12 @@ export const ContextProvider = ({ children }: { children: ReactNode }) => {
     contextLoading,
     locale,
     theme,
+    userPublicProfile,
     userAuthProfile,
     roles,
     setLocale,
     setTheme,
+    setUserPublicProfile,
     setUserAuthProfile,
     setRoles,
   } = useAppContext();
@@ -32,10 +34,12 @@ export const ContextProvider = ({ children }: { children: ReactNode }) => {
       value={{
         locale,
         theme,
+        userPublicProfile,
         userAuthProfile,
         roles,
         setLocale,
         setTheme,
+        setUserPublicProfile,
         setUserAuthProfile,
         setRoles,
       }}

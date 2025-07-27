@@ -2,12 +2,17 @@ import { ColorSchemeName } from 'react-native';
 import { FirebaseAuthTypes } from '@react-native-firebase/auth';
 import { DEFAULT_LOCALE, DEFAULT_THEME } from 'app/config/constants.ts';
 import { Locales } from 'app/locales/types.ts';
-import { UserRoles, UserRolesProps } from 'entities/user/model/types.ts';
+import {
+  UserPublicProfileProps,
+  UserRoles,
+  UserRolesProps,
+} from 'entities/user/model/types.ts';
 
 type AppState = {
   contextLoading: boolean;
   locale: Locales;
   theme: ColorSchemeName;
+  userPublicProfile: UserPublicProfileProps | null;
   userAuthProfile: FirebaseAuthTypes.User | null;
   roles: UserRolesProps;
 };
@@ -16,6 +21,7 @@ type Action =
   | { type: 'SET_LOADING'; payload: boolean }
   | { type: 'SET_LOCALE'; payload: Locales }
   | { type: 'SET_THEME'; payload: ColorSchemeName }
+  | { type: 'SET_USER_PUBLIC_PROFILE'; payload: UserPublicProfileProps | null }
   | { type: 'SET_USER_AUTH_PROFILE'; payload: FirebaseAuthTypes.User | null }
   | { type: 'SET_ROLES'; payload: UserRolesProps };
 
@@ -23,6 +29,7 @@ export const initialState: AppState = {
   contextLoading: true,
   locale: DEFAULT_LOCALE,
   theme: DEFAULT_THEME,
+  userPublicProfile: null,
   userAuthProfile: null,
   roles: { [UserRoles.Client]: true },
 };
@@ -35,6 +42,8 @@ export const reducer = (state: AppState, action: Action): AppState => {
       return { ...state, locale: action.payload };
     case 'SET_THEME':
       return { ...state, theme: action.payload };
+    case 'SET_USER_PUBLIC_PROFILE':
+      return { ...state, userPublicProfile: action.payload };
     case 'SET_USER_AUTH_PROFILE':
       return { ...state, userAuthProfile: action.payload };
     case 'SET_ROLES':

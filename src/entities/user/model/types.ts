@@ -20,6 +20,11 @@ export interface UserProps {
   createdAt: Date;
   updatedAt: Date;
   publicName?: string;
-  avatar?: string;
+  avatarUrl?: string;
   storeId?: string;
+}
+
+export interface UserPublicProfileProps {
+  publicName: string | null;
+  avatarUrl: string | null;
 }

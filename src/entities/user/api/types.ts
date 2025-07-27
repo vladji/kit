@@ -9,6 +9,11 @@ export type CreateUserDocument = Omit<
   'id' | 'createdAt' | 'updatedAt'
 >;
 
+export interface UpdateUserProps {
+  id: string;
+  data: CreateUserDocument;
+}
+
 export interface UserDocumentResponse {
   user: UserProps | null;
 }
