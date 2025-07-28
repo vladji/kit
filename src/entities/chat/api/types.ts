@@ -3,5 +3,5 @@ export interface GetMessagesRequest {
 }
 
 export interface GetMemberChatsRequest {
-  member: string | null;
+  memberId: string | null;
 }

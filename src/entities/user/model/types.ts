@@ -23,8 +23,3 @@ export interface UserProps {
   avatarUrl?: string;
   storeId?: string;
 }
-
-export interface UserPublicProfileProps {
-  publicName: string | null;
-  avatarUrl: string | null;
-}

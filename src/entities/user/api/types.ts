@@ -4,6 +4,10 @@ export interface UserByUniqueIdRequest {
   uniqueId: string;
 }
 
+export interface UserByIdRequest {
+  userId: string;
+}
+
 export type CreateUserDocument = Omit<
   UserProps,
   'id' | 'createdAt' | 'updatedAt'
@@ -12,8 +16,4 @@ export type CreateUserDocument = Omit<
 export interface UpdateUserProps {
   id: string;
   data: CreateUserDocument;
-}
-
-export interface UserDocumentResponse {
-  user: UserProps | null;
 }

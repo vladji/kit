@@ -3,26 +3,26 @@ import { ApiResponse } from 'app/api/types.ts';
 import {
   CreateUserDocument,
   UpdateUserProps,
-  UserDocumentResponse,
 } from 'entities/user/api/types.ts';
+import { UserProps } from 'entities/user/model/types.ts';
 
 export const getUserByUniqueId = (
   uniqueId: string,
-): Promise<ApiResponse<UserDocumentResponse>> =>
+): Promise<ApiResponse<UserProps>> =>
   api({
     url: `/user/profile/unique/${uniqueId}`,
   });
 
 export const getUserById = (
   id: string | null,
-): Promise<ApiResponse<UserDocumentResponse>> =>
+): Promise<ApiResponse<UserProps>> =>
   api({
     url: `/user/profile/id/${id}`,
   });
 
 export const createUser = (
   data: CreateUserDocument,
-): Promise<ApiResponse<UserDocumentResponse>> =>
+): Promise<ApiResponse<UserProps>> =>
   api({
     url: `/user/profile/id`,
     method: 'POST',
@@ -32,7 +32,7 @@ export const createUser = (
 export const updateUser = ({
   id,
   data,
-}: UpdateUserProps): Promise<ApiResponse<UserDocumentResponse>> =>
+}: UpdateUserProps): Promise<ApiResponse<UserProps>> =>
   api({
     url: `/user/profile/id/${id}`,
     method: 'PUT',

@@ -1,23 +1,19 @@
-import { useQuery } from '@tanstack/react-query';
-import { QUERY_KEYS } from 'app/api/constants.ts';
-import { useGetAsyncStorage } from 'app/storage/lib/useGetAsyncStorage.ts';
-import { AsyncStorageKeys } from 'app/storage/model/types.ts';
+import { useMutation } from '@tanstack/react-query';
 import { getUserById } from 'entities/user/api/requests.ts';
+import { UserByIdRequest } from 'entities/user/api/types.ts';
+import { UserProps } from 'entities/user/model/types.ts';
 
 export const useGetUserById = () => {
-  const { data: userDbId } = useGetAsyncStorage<string>(
-    AsyncStorageKeys.UserDbId,
-  );
-
-  const { data, isLoading } = useQuery({
-    queryKey: [QUERY_KEYS.GET_USER_BY_ID, userDbId],
-    queryFn: () => getUserById(userDbId),
-    enabled: !!userDbId,
-    refetchOnWindowFocus: true,
+  const { mutateAsync, data } = useMutation<
+    UserProps,
+    unknown,
+    UserByIdRequest
+  >({
+    mutationFn: ({ userId }) => getUserById(userId),
   });
 
   return {
-    data,
-    isLoading,
+    getUserById: mutateAsync,
+    user: data,
   };
 };
