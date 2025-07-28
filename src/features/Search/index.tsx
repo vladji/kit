@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { memo, useEffect, useState } from 'react';
 import { Keyboard } from 'react-native';
 import { REACT_ADMIN_LOGIN_PHRASE } from '@env';
 import { Search as SearchIcon } from 'lucide-react-native';
@@ -6,7 +6,7 @@ import { AdminLogin } from 'features/AdminLogin';
 import { LIGHT_COLOR } from 'shared/styles/constants/colors.ts';
 import { TextInputAction } from 'shared/ui/TextInputAction';
 
-export const Search = () => {
+export const Search = memo(() => {
   const [showAdminLogin, setShowAdminLogin] = useState(false);
   const [searchValue, setSearchValue] = useState('');
 
@@ -38,4 +38,4 @@ export const Search = () => {
       <AdminLogin show={showAdminLogin} onClose={toggleShowAdmin} />
     </>
   );
-};
+});

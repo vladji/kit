@@ -18,8 +18,8 @@ export const useGetMessages = ({ chatId, setMessages }: Props) => {
   });
 
   useEffect(() => {
-    if (data?.length) {
-      setMessages(data);
+    if (data?.messages.length) {
+      setMessages(data.messages);
     }
   }, [data, setMessages]);
 

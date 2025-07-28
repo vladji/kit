@@ -1,31 +1,29 @@
 import { useEffect, useState } from 'react';
-import { ScrollView, StyleSheet, View } from 'react-native';
+import { FlatList, StyleSheet, View } from 'react-native';
 import { RouteProp, useRoute } from '@react-navigation/native';
 import { Send } from 'lucide-react-native';
 import { FormattedMessage } from 'react-intl';
 import { safeSocket } from 'app/providers/Socket/socket.ts';
 import { ChatRouteParams } from 'app/router/RootRouter/types.ts';
-import { useGetAsyncStorage } from 'app/storage/lib/useGetAsyncStorage.ts';
-import { AsyncStorageKeys } from 'app/storage/model/types.ts';
 import { useGetMessages } from 'entities/chat/api/useGetMessages.ts';
-import { ChatMessageProps } from 'entities/chat/model/types.ts';
+import {
+  ChatMessageProps,
+  PrivateMessageProps,
+} from 'entities/chat/model/types.ts';
+import { useFrom } from 'screens/PrivateChat/model/useFrom.ts';
+import { Message } from 'screens/PrivateChat/ui/Message.tsx';
 import { LIGHT_COLOR } from 'shared/styles/constants/colors.ts';
 import { Sizes } from 'shared/styles/constants/sizes.ts';
 import { KeyboardAvoidWrapper } from 'shared/ui/KeyboardAvoid/KeyboardAvoidWrapper.tsx';
 import { ScreenLayout } from 'shared/ui/ScreenLayout';
 import { Spinner } from 'shared/ui/Spinner';
 import { TextInputAction } from 'shared/ui/TextInputAction';
-import { Typography } from 'shared/ui/Typography';
 
 export const PrivateChatScreen = () => {
-  const {
-    params: { to, chatId = null },
-  } = useRoute<RouteProp<{ params: ChatRouteParams }>>();
+  const from = useFrom();
+  const { params } = useRoute<RouteProp<{ params: ChatRouteParams }>>();
 
-  const { data: userDbId } = useGetAsyncStorage<string>(
-    AsyncStorageKeys.UserDbId,
-  );
-
+  const [chatId, setChatId] = useState<string | null>(params.chatId || null);
   const [messages, setMessages] = useState<ChatMessageProps[]>([]);
   const [text, setText] = useState('');
 
@@ -36,6 +34,9 @@ export const PrivateChatScreen = () => {
 
   useEffect(() => {
     safeSocket()?.on('private_message', (msg) => {
+      if (!chatId) {
+        setChatId(msg.chatId);
+      }
       if (msg.chatId === chatId) {
         setMessages((prev) => [...prev, msg]);
       }
@@ -47,11 +48,14 @@ export const PrivateChatScreen = () => {
   }, [chatId]);
 
   const sendMessage = () => {
-    safeSocket()?.emit('private_message', {
-      from: userDbId,
-      to,
+    if (!from) return;
+
+    const privateMessage: PrivateMessageProps = {
+      from,
+      to: params.to,
       text,
-    });
+    };
+    safeSocket()?.emit('private_message', privateMessage);
     setText('');
   };
 
@@ -60,30 +64,31 @@ export const PrivateChatScreen = () => {
       headerTitle={<FormattedMessage defaultMessage="Чат с поддержкой" />}
       hasBackButton
     >
-      <KeyboardAvoidWrapper
-        style={styles.wrapper}
-        correction={6}
-        includeSafeBottom={true}
-      >
-        <View style={styles.messagesBlock}>
-          {loading && <Spinner />}
-          {!!messages?.length && (
-            <ScrollView contentContainerStyle={styles.scrollContainer}>
-              {messages.map((message) => (
-                <Typography key={message.createdAt.toString()}>
-                  {message.text}
-                </Typography>
-              ))}
-            </ScrollView>
-          )}
-        </View>
-        <TextInputAction
-          inputValue={text}
-          onChangeText={setText}
-          onPress={sendMessage}
-          Icon={<Send color={LIGHT_COLOR} />}
-        />
-      </KeyboardAvoidWrapper>
+      {!from && <Spinner />}
+      {!!from && (
+        <KeyboardAvoidWrapper
+          style={styles.wrapper}
+          correction={6}
+          includeSafeBottom={true}
+        >
+          <View style={styles.messagesBlock}>
+            {loading && <Spinner />}
+            {!!messages?.length && (
+              <FlatList
+                data={messages}
+                renderItem={(item) => <Message data={item} ownerId={from.id} />}
+                keyExtractor={(item) => item.id}
+              />
+            )}
+          </View>
+          <TextInputAction
+            inputValue={text}
+            onChangeText={setText}
+            onPress={sendMessage}
+            Icon={<Send color={LIGHT_COLOR} />}
+          />
+        </KeyboardAvoidWrapper>
+      )}
     </ScreenLayout>
   );
 };

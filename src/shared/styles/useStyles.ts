@@ -27,6 +27,8 @@ export const useStyles = () => {
         main: { [styleProp]: isLight ? LIGHT_COLOR : DARK_COLOR },
         muted: { [styleProp]: isLight ? MUTED_LIGHT_THEME : MUTED_DARK_THEME },
         border: { borderColor: BORDER_COLOR },
+        messageFrom: { backgroundColor: isLight ? '#d5bca4' : '#d5bca4' },
+        messageTo: { backgroundColor: isLight ? '#81b3be' : '#81b3be' },
       };
     };
 

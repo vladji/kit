@@ -1,3 +1,5 @@
+import { ChatMemberProps } from 'entities/chat/model/types.ts';
+
 export enum RootRouter {
   BottomTabs = 'BottomTabs',
   CreateStoreRoute = 'CreateStoreRoute',
@@ -5,7 +7,7 @@ export enum RootRouter {
 }
 
 export interface ChatRouteParams {
-  to: string;
+  to: ChatMemberProps;
   chatId?: string;
 }
 
