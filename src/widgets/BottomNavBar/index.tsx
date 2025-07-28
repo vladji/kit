@@ -25,7 +25,7 @@ export const BottomNavBar: FC<BottomTabBarProps> = ({ navigation, state }) => {
       <TabButton
         onPress={() => onPress(BottomTabs.Chat)}
         Icon={Send}
-        text={<FormattedMessage defaultMessage="Чат" />}
+        text={<FormattedMessage defaultMessage="Чаты" />}
         active={state.index === 1}
       />
       <TabButton

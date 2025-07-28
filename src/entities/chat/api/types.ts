@@ -4,4 +4,5 @@ export interface GetMessagesRequest {
 
 export interface GetMemberChatsRequest {
   memberId: string | null;
+  support?: boolean;
 }

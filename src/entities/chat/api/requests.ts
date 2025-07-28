@@ -8,25 +8,19 @@ import { ChatMessageProps, ChatProps } from 'entities/chat/model/types.ts';
 
 export const getMemberChats = ({
   memberId,
+  support = false,
   page,
   limit,
 }: PaginationRequest<GetMemberChatsRequest>): Promise<
   PaginationResponse<{ chats: ChatProps[] }>
-> =>
-  api({
-    url: `/chats/member?memberId=${memberId}&page=${page}&limit=${limit}`,
+> => {
+  const url = support
+    ? `/chats/member?memberId=${memberId}&support=${support}&page=${page}&limit=${limit}`
+    : `/chats/member?memberId=${memberId}&page=${page}&limit=${limit}`;
+  return api({
+    url,
   });
-
-export const getMemberSupportChats = ({
-  memberId,
-  page,
-  limit,
-}: PaginationRequest<GetMemberChatsRequest>): Promise<
-  PaginationResponse<ChatProps[]>
-> =>
-  api({
-    url: `/chats/member?memberId=${memberId}&support=true&page=${page}&limit=${limit}`,
-  });
+};
 
 export const getMessages = ({
   chatId,
