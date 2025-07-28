@@ -7,7 +7,7 @@ import {
 export const invalidateUser = async () => {
   await Promise.all([
     queryClient.invalidateQueries({
-      queryKey: [ASYNC_STORAGE_GET, AsyncStorageKeys.UserDbId],
+      queryKey: [ASYNC_STORAGE_GET, AsyncStorageKeys.UserId],
       exact: true,
     }),
     queryClient.invalidateQueries({

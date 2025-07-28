@@ -8,7 +8,7 @@ export const useSocketConnect = () => {
     AsyncStorageKeys.Token,
   );
   const { data: userDbId, isFetched: userDbIdFetched } =
-    useGetAsyncStorage<string>(AsyncStorageKeys.UserDbId);
+    useGetAsyncStorage<string>(AsyncStorageKeys.UserId);
 
   const fetched = tokenFetched && userDbIdFetched;
 

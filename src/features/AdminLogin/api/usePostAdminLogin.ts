@@ -20,7 +20,7 @@ export const usePostAdminLogin = () => {
         disconnectSocket();
 
         await Promise.all([
-          setAsyncStorageValue(AsyncStorageKeys.UserDbId, response.admin.id),
+          setAsyncStorageValue(AsyncStorageKeys.UserId, response.admin.id),
           setAsyncStorageValue(AsyncStorageKeys.Token, response.accessToken),
           setAsyncStorageValue(
             AsyncStorageKeys.RefreshToken,

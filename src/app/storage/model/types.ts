@@ -1,7 +1,7 @@
 export enum AsyncStorageKeys {
   Locale = 'locale',
   Theme = 'theme',
-  UserDbId = 'user_db_id',
+  UserId = 'user_id',
   Token = 'token',
   RefreshToken = 'refresh_token',
 }

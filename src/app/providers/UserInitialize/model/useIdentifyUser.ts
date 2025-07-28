@@ -22,8 +22,8 @@ export const useIdentifyUser = () => {
   const { getUserByUniqueId } = useGetUserByUniqueId();
   const { postCreateUser } = usePostCreateUser();
 
-  const { data: userDbId, isFetched } = useGetAsyncStorage(
-    AsyncStorageKeys.UserDbId,
+  const { data: userId, isFetched } = useGetAsyncStorage(
+    AsyncStorageKeys.UserId,
   );
 
   const createUser = useCallback(
@@ -49,23 +49,23 @@ export const useIdentifyUser = () => {
   useEffect(() => {
     const checkUniqueId = async () => {
       const uniqueId = await getUniqueId();
-      let response = await getUserByUniqueId({ uniqueId });
+      let user = await getUserByUniqueId({ uniqueId });
 
-      if (!response.user) {
-        response = await createUser(uniqueId);
+      if (!user) {
+        user = await createUser(uniqueId);
       }
 
-      if (response.user?.id) {
-        await setAsyncStorageValue(AsyncStorageKeys.UserDbId, response.user.id);
+      if (user?.id) {
+        await setAsyncStorageValue(AsyncStorageKeys.UserId, user.id);
         await queryClient.invalidateQueries({
-          queryKey: [ASYNC_STORAGE_GET, AsyncStorageKeys.UserDbId],
+          queryKey: [ASYNC_STORAGE_GET, AsyncStorageKeys.UserId],
           exact: true,
         });
       }
     };
 
-    if (!userDbId && isFetched) {
+    if (!userId && isFetched) {
       checkUniqueId();
     }
-  }, [userDbId, isFetched, getUserByUniqueId, createUser, queryClient]);
+  }, [userId, isFetched, getUserByUniqueId, createUser, queryClient]);
 };
