@@ -1,5 +1,6 @@
 import { useCallback, useContext, useEffect } from 'react';
 import { AppContext } from 'app/appContext';
+import { useCheckUser } from 'app/providers/UserInitialize/lib/useCheckUser.ts';
 import { useGetAsyncStorage } from 'app/storage/lib/useGetAsyncStorage.ts';
 import { AsyncStorageKeys } from 'app/storage/model/types.ts';
 import { useGetAdmin } from 'entities/admin/api/useGetAdmin.ts';
@@ -17,9 +18,16 @@ export const useSetChatProfile = () => {
   const { getAdmin } = useGetAdmin();
   const { getStore } = useGetStore();
 
+  const checkUser = useCheckUser();
+
   const setUserProfile = useCallback(
     async (userId: string) => {
       const user = await getUserById({ userId });
+
+      if (!user) {
+        await checkUser();
+      }
+
       const chatProfile: ChatProfileProps = {
         userId,
         chatName: user.publicName || 'User',
@@ -27,12 +35,13 @@ export const useSetChatProfile = () => {
       };
       setChatProfile(chatProfile);
     },
-    [getUserById, setChatProfile],
+    [getUserById, setChatProfile, checkUser],
   );
 
   const setAdminProfile = useCallback(
     async (userId: string) => {
       const admin = await getAdmin({ adminId: userId });
+
       const chatProfile: ChatProfileProps = {
         userId,
         chatName: admin.name || 'Admin',
@@ -46,6 +55,7 @@ export const useSetChatProfile = () => {
   const setStoreProfile = useCallback(
     async (userId: string) => {
       const store = await getStore({ storeId: userId });
+
       const chatProfile: ChatProfileProps = {
         userId,
         chatName: store.storeName || 'Store',
