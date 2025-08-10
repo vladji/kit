@@ -18,14 +18,15 @@ export const ChatItem: FC<Props> = ({
   item: { lastMessage, members, support },
 }) => {
   const withMember = useWithChatMember({ members, support });
+
   return (
     <TouchableOpacity style={styles.wrapper}>
       <Image
         style={styles.avatar}
         source={
-          withMember.avatar
+          withMember.avatarUrl
             ? {
-                uri: withMember.avatar,
+                uri: withMember.avatarUrl,
               }
             : require('shared/assets/images/placeholder-512w.png')
         }

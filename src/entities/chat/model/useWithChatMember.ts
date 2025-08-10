@@ -1,6 +1,6 @@
 import { useContext, useMemo } from 'react';
 import { AppContext } from 'app/appContext';
-import { ADMIN_PLACEHOLDER_AVATAR_URL } from 'entities/admin/model/constants.ts';
+import { DEFAULT_ADMIN } from 'entities/admin/model/constants.ts';
 import {
   ChatMemberProps,
   SupportChatProps,
@@ -18,56 +18,35 @@ export const useWithChatMember = ({ members, support }: Props) => {
   const { anyAdmin } = useIsAdmin();
   const userId = chatProfile?.userId;
 
-  return useMemo(() => {
+  return useMemo<ChatMemberProps>(() => {
     if (!userId) {
       return {
+        id: '',
+        role: UserRoles.Client,
         name: 'Unknown',
-        avatar: '',
+        avatarUrl: '',
       };
     }
 
     if (anyAdmin) {
-      const filtered = members.filter(
+      return members.filter(
         (member) =>
           member.role !== UserRoles.Admin &&
           member.role !== UserRoles.RootAdmin,
       )[0];
-
-      return {
-        name: filtered.name,
-        avatar: filtered.avatarUrl,
-      };
     }
 
     if (roles[UserRoles.Store]) {
-      const filtered = members.filter(
-        (member) => member.role !== UserRoles.Store,
-      )[0];
-
-      return {
-        name: filtered.name,
-        avatar: filtered.avatarUrl,
-      };
+      return members.filter((member) => member.role !== UserRoles.Store)[0];
     }
 
     if (support) {
       if (support.admin) {
-        return {
-          name: support.admin.name,
-          avatar: support.admin.avatarUrl,
-        };
+        return support.admin;
       }
-      return {
-        name: 'Admin',
-        avatar: ADMIN_PLACEHOLDER_AVATAR_URL,
-      };
+      return DEFAULT_ADMIN;
     }
 
-    const member = members.filter((member) => member.id !== userId)[0];
-
-    return {
-      name: member.name,
-      avatar: member.avatarUrl,
-    };
+    return members.filter((member) => member.id !== userId)[0];
   }, [support, members, userId, anyAdmin, roles]);
 };
