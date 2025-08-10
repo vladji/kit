@@ -1,5 +1,6 @@
 import { FC, useMemo } from 'react';
-import { ListRenderItemInfo, StyleSheet, View } from 'react-native';
+import { Image, ListRenderItemInfo, StyleSheet, View } from 'react-native';
+import { ADMIN_PLACEHOLDER_AVATAR_URL } from 'entities/admin/model/constants.ts';
 import { ChatProps } from 'entities/chat/model/types.ts';
 import { UserRoles, UserRolesProps } from 'entities/user/model/types.ts';
 import { SPACING } from 'shared/styles/tokens/spacing.ts';
@@ -53,12 +54,12 @@ export const ChatItem: FC<Props> = ({
       if (support.admin) {
         return {
           name: support.admin.name,
-          avatar: '',
+          avatar: support.admin.avatarUrl,
         };
       }
       return {
         name: 'Admin',
-        avatar: '',
+        avatar: ADMIN_PLACEHOLDER_AVATAR_URL,
       };
     }
 
@@ -72,6 +73,17 @@ export const ChatItem: FC<Props> = ({
 
   return (
     <View style={styles.wrapper}>
+      <Image
+        style={styles.avatar}
+        source={
+          withMember.avatar
+            ? {
+                uri: withMember.avatar,
+              }
+            : require('shared/assets/images/placeholder-512w.png')
+        }
+        resizeMode="contain"
+      />
       <Typography type="caption" weight="600">
         {withMember.name}
       </Typography>
@@ -83,6 +95,10 @@ export const ChatItem: FC<Props> = ({
 const styles = StyleSheet.create({
   wrapper: {
     gap: SPACING.MINI,
-    backgroundColor: '#ccc',
+  },
+  avatar: {
+    width: 72,
+    height: 72,
+    borderRadius: 9999,
   },
 });
