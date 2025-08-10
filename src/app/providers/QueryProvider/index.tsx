@@ -3,7 +3,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { createAsyncStoragePersister } from '@tanstack/query-async-storage-persister';
 import { QueryClient } from '@tanstack/react-query';
 import { PersistQueryClientProvider } from '@tanstack/react-query-persist-client';
-import { useRefetchOnAppStateActive } from 'app/providers/TanStackQuery/lib/refetchOnAppStateActive.ts';
+import { useRefetchOnAppStateActive } from 'app/providers/QueryProvider/lib/refetchOnAppStateActive.ts';
 
 export const queryClient = new QueryClient({
   defaultOptions: {
@@ -17,7 +17,7 @@ const asyncStoragePersister = createAsyncStoragePersister({
   storage: AsyncStorage,
 });
 
-export const TanStackQuery = ({ children }: { children: ReactNode }) => {
+export const QueryProvider = ({ children }: { children: ReactNode }) => {
   useRefetchOnAppStateActive();
   return (
     <PersistQueryClientProvider

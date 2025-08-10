@@ -1,4 +1,4 @@
-import { queryClient } from 'app/providers/TanStackQuery';
+import { queryClient } from 'app/providers/QueryProvider';
 import {
   ASYNC_STORAGE_GET,
   AsyncStorageKeys,

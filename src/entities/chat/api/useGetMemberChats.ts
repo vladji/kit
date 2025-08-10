@@ -11,7 +11,6 @@ export const useGetMemberChats = ({
     queryKey: [QUERY_KEYS.GET_MEMBER_CHATS, memberId, support],
     queryFn: () => getMemberChats({ memberId, support, page: 1, limit: 10 }),
     enabled: !!memberId,
-    refetchOnWindowFocus: true,
   });
 
   return {
