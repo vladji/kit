@@ -1,9 +1,16 @@
 import { FC, useMemo } from 'react';
-import { Image, ListRenderItemInfo, StyleSheet, View } from 'react-native';
+import {
+  Image,
+  ListRenderItemInfo,
+  StyleSheet,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 import { ADMIN_PLACEHOLDER_AVATAR_URL } from 'entities/admin/model/constants.ts';
 import { ChatProps } from 'entities/chat/model/types.ts';
 import { UserRoles, UserRolesProps } from 'entities/user/model/types.ts';
-import { SPACING } from 'shared/styles/tokens/spacing.ts';
+import { lightTheme } from 'shared/styles/theme/theme.ts';
+import { ComponentSize, SPACING } from 'shared/styles/tokens/spacing.ts';
 import { Typography } from 'shared/ui/Typography';
 
 type Props = ListRenderItemInfo<ChatProps> & {
@@ -72,7 +79,7 @@ export const ChatItem: FC<Props> = ({
   }, [support, members, userId, anyAdmin, roles]);
 
   return (
-    <View style={styles.wrapper}>
+    <TouchableOpacity style={styles.wrapper}>
       <Image
         style={styles.avatar}
         source={
@@ -84,21 +91,27 @@ export const ChatItem: FC<Props> = ({
         }
         resizeMode="contain"
       />
-      <Typography type="caption" weight="600">
-        {withMember.name}
-      </Typography>
-      <Typography>{lastMessage}</Typography>
-    </View>
+      <View style={styles.textWrapper}>
+        <Typography weight="600">{withMember.name}</Typography>
+        <Typography weight="300">{lastMessage}</Typography>
+      </View>
+    </TouchableOpacity>
   );
 };
 
 const styles = StyleSheet.create({
   wrapper: {
+    flexDirection: 'row',
     gap: SPACING.MINI,
+    borderBottomWidth: 1,
+    borderColor: lightTheme.border,
   },
   avatar: {
-    width: 72,
-    height: 72,
+    width: ComponentSize.AvatarSize,
+    height: ComponentSize.AvatarSize,
     borderRadius: 9999,
+  },
+  textWrapper: {
+    paddingVertical: SPACING.NANO,
   },
 });

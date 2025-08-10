@@ -2,8 +2,10 @@ import { memo, useEffect, useRef } from 'react';
 import { ScrollView, StyleSheet, TouchableOpacity, View } from 'react-native';
 import { MaterialTopTabBarProps } from '@react-navigation/material-top-tabs';
 import { useSafeAreaFrame } from 'react-native-safe-area-context';
+import { chatTabsNames } from 'app/router/Tabs/model/chatTabsNames.tsx';
 import { TabsNames } from 'app/router/Tabs/types.ts';
 import { lightTheme } from 'shared/styles/theme/theme.ts';
+import { lightThemeText } from 'shared/styles/theme/themeText.ts';
 import { SPACING } from 'shared/styles/tokens/spacing.ts';
 import { Typography } from 'shared/ui/Typography';
 
@@ -41,7 +43,7 @@ export const TabBar = memo(({ state, navigation }: MaterialTopTabBarProps) => {
       >
         {state.routes.map((route, index) => {
           const isFocused = state.index === index;
-          const tabName = route.name as TabsNames;
+          const tabName = chatTabsNames[route.name as TabsNames];
 
           const onPress = () => {
             const event = navigation.emit({
@@ -51,7 +53,7 @@ export const TabBar = memo(({ state, navigation }: MaterialTopTabBarProps) => {
             });
 
             if (!isFocused && !event.defaultPrevented) {
-              navigation.navigate(tabName, route.params);
+              navigation.navigate(route.name, route.params);
             }
           };
 
@@ -63,19 +65,22 @@ export const TabBar = memo(({ state, navigation }: MaterialTopTabBarProps) => {
                 }
               }}
               key={route.key}
-              style={{
-                ...styles.button,
-                backgroundColor: isFocused
-                  ? lightTheme.brandLight
-                  : lightTheme.main,
-                borderBottomWidth: isFocused ? 2 : 0,
-                borderBottomColor: isFocused ? lightTheme.brand : 'transparent',
-                borderBottomLeftRadius: isFocused ? 0 : SPACING.MINI,
-                borderBottomRightRadius: isFocused ? 0 : SPACING.MINI,
-              }}
+              style={[
+                styles.button,
+                {
+                  backgroundColor: isFocused
+                    ? lightTheme.brandLight
+                    : lightTheme.main,
+                },
+              ]}
               onPress={onPress}
             >
-              <Typography>{tabName}</Typography>
+              <Typography
+                type="title"
+                color={isFocused ? lightThemeText.light : lightThemeText.main}
+              >
+                {tabName}
+              </Typography>
             </TouchableOpacity>
           );
         })}

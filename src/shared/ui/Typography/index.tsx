@@ -6,6 +6,7 @@ interface Props extends TextProps {
   type?: 'text' | 'caption' | 'label' | 'title' | 'header';
   size?: TextStyle['fontSize'];
   weight?: TextStyle['fontWeight'];
+  leading?: TextStyle['lineHeight'];
   color?: TextStyle['color'];
   align?: TextStyle['textAlign'];
 }
@@ -16,6 +17,7 @@ export const Typography: FC<Props> = ({
   type = 'text',
   size,
   weight,
+  leading,
   color = lightThemeText.main,
   align = 'left',
   ...props
@@ -25,16 +27,17 @@ export const Typography: FC<Props> = ({
       getStyles({
         size,
         weight,
+        leading,
         color,
         align,
       }),
-    [size, weight, color, align],
+    [size, weight, leading, color, align],
   );
 
   return <Text {...props} style={[styles[type], props.style]} />;
 };
 
-const getStyles = ({ size, weight, color, align }: StyleProps) =>
+const getStyles = ({ size, weight, leading, color, align }: StyleProps) =>
   StyleSheet.create({
     label: {
       fontSize: 12,
@@ -53,6 +56,7 @@ const getStyles = ({ size, weight, color, align }: StyleProps) =>
       fontWeight: weight ?? '400',
       color,
       textAlign: align,
+      lineHeight: leading,
     },
     title: {
       fontSize: 18,

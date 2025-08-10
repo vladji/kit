@@ -1,4 +1,5 @@
 export const SPACING = {
+  NANO: 2,
   MICRO: 4,
   MINI: 8,
   MEDIUM: 12,
@@ -13,4 +14,5 @@ export const ComponentSize = {
   MainButtonSize: 42,
   InputSize: 38,
   ButtonBorderRadius: SPACING.MINI,
+  AvatarSize: 58,
 };

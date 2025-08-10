@@ -4,8 +4,8 @@ import { QueryObserverResult } from '@tanstack/react-query';
 import { PaginationResponse } from 'app/api/types.ts';
 import { AppContext } from 'app/appContext';
 import { ChatProps } from 'entities/chat/model/types.ts';
+import { useChatUpdated } from 'entities/chat/model/useChatUpdated.ts';
 import { ChatItem } from 'entities/chat/ui/ChatItem.tsx';
-import { useChatUpdated } from 'screens/ChatTab/model/useChatUpdated.ts';
 import { useIsAdmin } from 'shared/hooks/useIsAdmin.ts';
 import { SPACING } from 'shared/styles/tokens/spacing.ts';
 import { Spinner } from 'shared/ui/Spinner';
@@ -32,6 +32,7 @@ export const ChatsList = ({ loading, refetch, chats }: Props) => {
       {loading && <Spinner />}
       {!!chats && (
         <FlatList
+          style={styles.scroll}
           contentContainerStyle={styles.scrollContainer}
           data={chats}
           renderItem={(item) => (
@@ -50,6 +51,9 @@ export const ChatsList = ({ loading, refetch, chats }: Props) => {
 };
 
 const styles = StyleSheet.create({
+  scroll: {
+    marginTop: SPACING.DEFAULT,
+  },
   scrollContainer: {
     gap: SPACING.DEFAULT,
   },
