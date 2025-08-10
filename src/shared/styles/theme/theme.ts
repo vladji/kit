@@ -1,4 +1,3 @@
-import { ColorValue } from 'react-native';
 import { COLORS } from 'shared/styles/tokens/colors.ts';
 
 export const lightTheme = {

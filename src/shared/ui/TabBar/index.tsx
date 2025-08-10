@@ -3,12 +3,7 @@ import { ScrollView, StyleSheet, TouchableOpacity, View } from 'react-native';
 import { MaterialTopTabBarProps } from '@react-navigation/material-top-tabs';
 import { useSafeAreaFrame } from 'react-native-safe-area-context';
 import { TabsNames } from 'app/router/Tabs/types.ts';
-import {
-  BRAND_COLOR,
-  BRAND_LIGHT,
-  LIGHT_COLOR,
-  TRANSPARENT,
-} from 'shared/styles/tokens/colors.ts';
+import { lightTheme } from 'shared/styles/theme/theme.ts';
 import { SPACING } from 'shared/styles/tokens/spacing.ts';
 import { Typography } from 'shared/ui/Typography';
 
@@ -70,9 +65,11 @@ export const TabBar = memo(({ state, navigation }: MaterialTopTabBarProps) => {
               key={route.key}
               style={{
                 ...styles.button,
-                backgroundColor: isFocused ? BRAND_LIGHT : LIGHT_COLOR,
+                backgroundColor: isFocused
+                  ? lightTheme.brandLight
+                  : lightTheme.main,
                 borderBottomWidth: isFocused ? 2 : 0,
-                borderBottomColor: isFocused ? BRAND_COLOR : TRANSPARENT,
+                borderBottomColor: isFocused ? lightTheme.brand : 'transparent',
                 borderBottomLeftRadius: isFocused ? 0 : SPACING.MINI,
                 borderBottomRightRadius: isFocused ? 0 : SPACING.MINI,
               }}

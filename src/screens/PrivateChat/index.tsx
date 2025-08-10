@@ -4,7 +4,7 @@ import { RouteProp, useRoute } from '@react-navigation/native';
 import { Send } from 'lucide-react-native';
 import { FormattedMessage } from 'react-intl';
 import { safeSocket } from 'app/providers/Socket/socket.ts';
-import { ChatRouteParams } from 'app/router/RootRouter/types.ts';
+import { RootRouter, RootStackParams } from 'app/router/RootRouter/types.ts';
 import { useGetMessages } from 'entities/chat/api/useGetMessages.ts';
 import {
   ChatMessageProps,
@@ -18,9 +18,14 @@ import { KeyboardAvoidWrapper } from 'shared/ui/KeyboardAvoid/KeyboardAvoidWrapp
 import { TextInputAction } from 'shared/ui/TextInputAction';
 import { ScreenLayout } from 'widgets/ScreenLayout';
 
+type PrivateChatRouteProp = RouteProp<
+  RootStackParams,
+  RootRouter.PrivateChatRoute
+>;
+
 export const PrivateChatScreen = () => {
   const from = useFrom();
-  const { params } = useRoute<RouteProp<{ params: ChatRouteParams }>>();
+  const { params } = useRoute<PrivateChatRouteProp>();
 
   const [chatId, setChatId] = useState<string | null>(params.chatId || null);
   const [messages, setMessages] = useState<ChatMessageProps[]>([]);

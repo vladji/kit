@@ -2,7 +2,7 @@ import { useCallback, useState } from 'react';
 import { View } from 'react-native';
 import { NavigationProp, useNavigation } from '@react-navigation/native';
 import { FormattedMessage } from 'react-intl';
-import { RootRouter, RootRouterParams } from 'app/router/RootRouter/types.ts';
+import { RootRouter, RootStackParams } from 'app/router/RootRouter/types.ts';
 import { Login } from 'features/Login';
 import { Logout } from 'features/Logout';
 import { useIsAdmin } from 'shared/hooks/useIsAdmin.ts';
@@ -10,7 +10,7 @@ import { MenuButton } from 'shared/ui/MenuButton';
 
 export const SettingsAuth = () => {
   const { anyAdmin } = useIsAdmin();
-  const { navigate } = useNavigation<NavigationProp<RootRouterParams>>();
+  const { navigate } = useNavigation<NavigationProp<RootStackParams>>();
 
   const [showLoginModal, setShowLoginModal] = useState(false);
   const toggleShowLogin = useCallback(() => {

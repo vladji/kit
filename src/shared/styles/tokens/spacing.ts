@@ -10,7 +10,6 @@ export const SPACING = {
 export const ComponentSize = {
   ScreenPaddingHorizontal: SPACING.DEFAULT,
   HeaderSize: 38,
-  BottomNavBarSize: 42,
   MainButtonSize: 42,
   InputSize: 38,
   ButtonBorderRadius: SPACING.MINI,

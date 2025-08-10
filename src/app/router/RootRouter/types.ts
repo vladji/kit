@@ -11,7 +11,7 @@ export interface ChatRouteParams {
   chatId: string | null;
 }
 
-export interface RootRouterParams {
-  CreateStoreRoute: unknown;
-  PrivateChatRoute: ChatRouteParams;
-}
+export type RootStackParams = {
+  [RootRouter.CreateStoreRoute]: undefined;
+  [RootRouter.PrivateChatRoute]: ChatRouteParams;
+};
