@@ -4,6 +4,7 @@ import { BottomTabBarProps } from '@react-navigation/bottom-tabs';
 import { House, Send, Settings } from 'lucide-react-native';
 import { FormattedMessage } from 'react-intl';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { IS_IOS } from 'app/config/constants.ts';
 import { BottomTabs } from 'app/router/BottomTabs/types.ts';
 import { lightTheme } from 'shared/styles/theme/theme.ts';
 import { ComponentSize, SPACING } from 'shared/styles/tokens/spacing.ts';
@@ -16,7 +17,12 @@ export const BottomNavBar: FC<BottomTabBarProps> = ({ navigation, state }) => {
   };
 
   return (
-    <View style={[styles.wrapper, { paddingBottom: safeBottom }]}>
+    <View
+      style={[
+        styles.wrapper,
+        { paddingBottom: IS_IOS ? safeBottom : safeBottom + SPACING.DEFAULT },
+      ]}
+    >
       <TabButton
         onPress={() => onPress(BottomTabs.Home)}
         Icon={House}
@@ -45,6 +51,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'space-evenly',
     gap: SPACING.BIG,
+    paddingTop: SPACING.MINI,
     paddingHorizontal: ComponentSize.ScreenPaddingHorizontal,
     backgroundColor: lightTheme.main,
   },
