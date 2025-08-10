@@ -21,6 +21,7 @@ export const useSetChatProfile = () => {
     async (userId: string) => {
       const user = await getUserById({ userId });
       const chatProfile: ChatProfileProps = {
+        userId,
         chatName: user.publicName || 'User',
         avatarUrl: user.avatarUrl || null,
       };
@@ -33,6 +34,7 @@ export const useSetChatProfile = () => {
     async (userId: string) => {
       const admin = await getAdmin({ adminId: userId });
       const chatProfile: ChatProfileProps = {
+        userId,
         chatName: admin.name || 'Admin',
         avatarUrl: null,
       };
@@ -45,6 +47,7 @@ export const useSetChatProfile = () => {
     async (userId: string) => {
       const store = await getStore({ storeId: userId });
       const chatProfile: ChatProfileProps = {
+        userId,
         chatName: store.storeName || 'Store',
         avatarUrl: store.storeAvatarUrl || null,
       };

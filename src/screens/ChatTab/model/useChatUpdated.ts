@@ -8,13 +8,9 @@ interface Props<T> {
 
 export const useChatUpdated = <T>({ refetch }: Props<T>) => {
   useEffect(() => {
-    const handler = (payload: any) => {
-      refetch();
-    };
-    safeSocket()?.on('chat_updated', handler);
-
+    safeSocket()?.on('chat_updated', refetch);
     return () => {
-      safeSocket()?.off('chat_updated', handler);
+      safeSocket()?.off('chat_updated', refetch);
     };
   }, [refetch]);
 };

@@ -7,14 +7,15 @@ export const useSocketConnect = () => {
   const { data: token, isFetched: tokenFetched } = useGetAsyncStorage<string>(
     AsyncStorageKeys.Token,
   );
-  const { data: userDbId, isFetched: userDbIdFetched } =
-    useGetAsyncStorage<string>(AsyncStorageKeys.UserId);
+  const { data: userId, isFetched: userIdFetched } = useGetAsyncStorage<string>(
+    AsyncStorageKeys.UserId,
+  );
 
-  const fetched = tokenFetched && userDbIdFetched;
+  const fetched = tokenFetched && userIdFetched;
 
   useEffect(() => {
-    if (userDbId && fetched) {
-      connectSocket(userDbId, token);
+    if (userId && fetched) {
+      connectSocket(userId, token);
     }
-  }, [token, userDbId, fetched]);
+  }, [token, userId, fetched]);
 };

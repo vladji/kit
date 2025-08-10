@@ -6,7 +6,6 @@ export const useGetAllClientChats = () => {
   const { data, isLoading, refetch } = useQuery({
     queryKey: [QUERY_KEYS.GET_SUPPORT_ALL_CLIENT_CHATS],
     queryFn: () => getAllClientChats({ page: 1, limit: 10 }),
-    refetchOnWindowFocus: true,
   });
 
   return {

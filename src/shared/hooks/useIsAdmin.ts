@@ -4,7 +4,7 @@ import { UserRoles } from 'entities/user/model/types.ts';
 
 export const useIsAdmin = () => {
   const { roles } = useContext(AppContext);
-  const anyAdmin = roles[UserRoles.Admin] || roles[UserRoles.RootAdmin];
+  const anyAdmin = !!roles[UserRoles.Admin] || !!roles[UserRoles.RootAdmin];
 
   return {
     admin: roles[UserRoles.Admin],
