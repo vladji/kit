@@ -8,7 +8,7 @@ export const useMemberAllChats = (support?: boolean) => {
   );
 
   const {
-    chats,
+    data,
     isLoading: chatsLoading,
     refetch,
   } = useGetMemberChats({ memberId: userId, support });
@@ -16,6 +16,6 @@ export const useMemberAllChats = (support?: boolean) => {
   return {
     loading: userIdLoading || chatsLoading,
     refetch,
-    chats,
+    data,
   };
 };

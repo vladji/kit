@@ -4,7 +4,7 @@ import { ChatProps } from 'entities/chat/model/types.ts';
 import { Sizes } from 'shared/styles/constants/sizes.ts';
 import { Typography } from 'shared/ui/Typography';
 
-export const ChatItem: FC<ChatProps> = ({ chatId, lastMessage }) => {
+export const ChatItem: FC<ChatProps> = ({ chatId, lastMessage, support }) => {
   return (
     <View style={styles.wrapper}>
       <Typography type="caption" weight="bold">

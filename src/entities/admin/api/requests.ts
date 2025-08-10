@@ -17,7 +17,15 @@ export const getAdmin = (
 export const getAllClientChats = ({
   page,
   limit,
-}: PaginationRequest): Promise<PaginationResponse<ChatProps[]>> =>
+}: PaginationRequest): Promise<PaginationResponse<{ chats: ChatProps[] }>> =>
   jwtApi({
     url: `/admin/chats/all/clients?page=${page}&limit=${limit}`,
+  });
+
+export const getAllStoreChats = ({
+  page,
+  limit,
+}: PaginationRequest): Promise<PaginationResponse<{ chats: ChatProps[] }>> =>
+  jwtApi({
+    url: `/admin/chats/all/stores?page=${page}&limit=${limit}`,
   });

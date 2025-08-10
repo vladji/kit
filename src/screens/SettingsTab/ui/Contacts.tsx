@@ -9,11 +9,11 @@ import { MenuButton } from 'shared/ui/MenuButton';
 
 export const Contacts = () => {
   const { navigate } = useNavigation<NavigationProp<RootRouterParams>>();
-  const { chats: supportChats, loading } = useMemberAllChats(true);
+  const { data, loading } = useMemberAllChats(true);
 
   let supportChatId: string | null = null;
-  if (supportChats?.length) {
-    supportChatId = supportChats[0].chatId;
+  if (data?.chats.length) {
+    supportChatId = data.chats[0].chatId;
   }
 
   const admin: ChatMemberProps = {

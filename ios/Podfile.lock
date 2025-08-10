@@ -1696,6 +1696,35 @@ PODS:
     - SocketRocket
   - react-native-netinfo (11.4.1):
     - React-Core
+  - react-native-pager-view (6.8.1):
+    - boost
+    - DoubleConversion
+    - fast_float
+    - fmt
+    - glog
+    - hermes-engine
+    - RCT-Folly
+    - RCT-Folly/Fabric
+    - RCTRequired
+    - RCTTypeSafety
+    - React-Core
+    - React-debug
+    - React-Fabric
+    - React-featureflags
+    - React-graphics
+    - React-hermes
+    - React-ImageManager
+    - React-jsi
+    - React-NativeModulesApple
+    - React-RCTFabric
+    - React-renderercss
+    - React-rendererdebug
+    - React-utils
+    - ReactCodegen
+    - ReactCommon/turbomodule/bridging
+    - ReactCommon/turbomodule/core
+    - SocketRocket
+    - Yoga
   - react-native-safe-area-context (5.5.1):
     - boost
     - DoubleConversion
@@ -2672,6 +2701,7 @@ DEPENDENCIES:
   - React-Mapbuffer (from `../node_modules/react-native/ReactCommon`)
   - React-microtasksnativemodule (from `../node_modules/react-native/ReactCommon/react/nativemodule/microtasks`)
   - "react-native-netinfo (from `../node_modules/@react-native-community/netinfo`)"
+  - react-native-pager-view (from `../node_modules/react-native-pager-view`)
   - react-native-safe-area-context (from `../node_modules/react-native-safe-area-context`)
   - React-NativeModulesApple (from `../node_modules/react-native/ReactCommon/react/nativemodule/core/platform/ios`)
   - React-oscompat (from `../node_modules/react-native/ReactCommon/oscompat`)
@@ -2814,6 +2844,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native/ReactCommon/react/nativemodule/microtasks"
   react-native-netinfo:
     :path: "../node_modules/@react-native-community/netinfo"
+  react-native-pager-view:
+    :path: "../node_modules/react-native-pager-view"
   react-native-safe-area-context:
     :path: "../node_modules/react-native-safe-area-context"
   React-NativeModulesApple:
@@ -2950,6 +2982,7 @@ SPEC CHECKSUMS:
   React-Mapbuffer: 1c4f922460dc5f7006f1d5e89bf2d42aa77b0904
   React-microtasksnativemodule: dd33f28d1022f35430c973ee46add9b91f719026
   react-native-netinfo: cec9c4e86083cb5b6aba0e0711f563e2fbbff187
+  react-native-pager-view: 14b164735478c7f04a7ee14f544b3fb3218b080e
   react-native-safe-area-context: 6f490fdd05ab39fa7e8091daea6437546c301b51
   React-NativeModulesApple: 2a261739a86fb0fc82de4b9cc8c9199083b4cea2
   React-oscompat: 114036cd8f064558c9c1a0c04fc9ae5e1453706a

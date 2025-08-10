@@ -1,4 +1,5 @@
 import { useMemo } from 'react';
+import { StyleSheet } from 'react-native';
 import {
   ACCENT_DARK,
   ACCENT_LIGHT,
@@ -19,7 +20,7 @@ export const useStyles = () => {
   return useMemo(() => {
     const colors = (prop?: 'backgroundColor' | 'borderColor') => {
       const styleProp = prop ?? 'backgroundColor';
-      return {
+      return StyleSheet.create({
         brand: { [styleProp]: BRAND_COLOR },
         brandLight: { [styleProp]: BRAND_LIGHT },
         accentLight: { [styleProp]: ACCENT_LIGHT },
@@ -29,7 +30,7 @@ export const useStyles = () => {
         border: { borderColor: BORDER_COLOR },
         messageFrom: { backgroundColor: isLight ? '#d5bca4' : '#d5bca4' },
         messageTo: { backgroundColor: isLight ? '#81b3be' : '#81b3be' },
-      };
+      });
     };
 
     const fontColors = {
