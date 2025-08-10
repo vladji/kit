@@ -1,7 +1,7 @@
 import { FC, useState } from 'react';
 import { Keyboard, StyleSheet, View } from 'react-native';
 import { usePostAdminLogin } from 'features/AdminLogin/api/usePostAdminLogin.ts';
-import { Sizes } from 'shared/styles/constants/sizes.ts';
+import { SPACING } from 'shared/styles/tokens/spacing.ts';
 import { BottomSheet } from 'shared/ui/BottomSheet';
 import { MainButton } from 'shared/ui/MainButton';
 import { PasswordInput } from 'shared/ui/PasswordInput';
@@ -44,6 +44,6 @@ export const AdminLogin: FC<Props> = ({ show, onClose }) => {
 
 const styles = StyleSheet.create({
   wrapper: {
-    gap: Sizes.Default,
+    gap: SPACING.DEFAULT,
   },
 });

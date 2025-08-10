@@ -1,8 +1,7 @@
 import { FC, ReactElement } from 'react';
 import { StyleSheet, TouchableOpacity, View } from 'react-native';
-import { TRANSPARENT } from 'shared/styles/constants/colors.ts';
-import { ComponentSize, Sizes } from 'shared/styles/constants/sizes.ts';
-import { useStyles } from 'shared/styles/useStyles.ts';
+import { lightTheme } from 'shared/styles/theme/theme.ts';
+import { ComponentSize, SPACING } from 'shared/styles/tokens/spacing.ts';
 import {
   TextInputComponent,
   TextInputComponentProps,
@@ -22,8 +21,6 @@ export const TextInputAction: FC<TextInputActionProps> = ({
   Icon,
   ...inputProps
 }) => {
-  const { colors } = useStyles();
-
   return (
     <View style={styles.wrapper}>
       <View style={styles.inputWrapper}>
@@ -33,10 +30,7 @@ export const TextInputAction: FC<TextInputActionProps> = ({
           onChangeText={onChangeText}
         />
       </View>
-      <TouchableOpacity
-        style={[styles.button, colors().brand]}
-        onPress={onPress}
-      >
+      <TouchableOpacity style={styles.button} onPress={onPress}>
         {Icon}
       </TouchableOpacity>
     </View>
@@ -46,7 +40,7 @@ export const TextInputAction: FC<TextInputActionProps> = ({
 const styles = StyleSheet.create({
   wrapper: {
     flexDirection: 'row',
-    gap: Sizes.Medium,
+    gap: SPACING.MEDIUM,
   },
   inputWrapper: {
     flex: 1,
@@ -59,6 +53,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     borderWidth: 1,
     borderRadius: ComponentSize.ButtonBorderRadius,
-    borderColor: TRANSPARENT,
+    borderColor: 'transparent',
+    backgroundColor: lightTheme.brand,
   },
 });

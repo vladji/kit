@@ -1,19 +1,20 @@
-import { FC } from 'react';
+import { FC, useMemo } from 'react';
 import {
+  ColorValue,
   StyleSheet,
   TouchableOpacity,
   TouchableOpacityProps,
   View,
 } from 'react-native';
 import { ChevronRight, LucideProps } from 'lucide-react-native';
-import { Sizes } from 'shared/styles/constants/sizes.ts';
-import { useStyles } from 'shared/styles/useStyles.ts';
+import { lightTheme } from 'shared/styles/theme/theme.ts';
+import { SPACING } from 'shared/styles/tokens/spacing.ts';
 import { Typography } from 'shared/ui/Typography';
 
 interface Props extends TouchableOpacityProps {
   StartIcon?: FC<LucideProps>;
   noBorder?: boolean;
-  textColor?: Record<'color', string>;
+  textColor?: ColorValue;
 }
 
 export const MenuButton: FC<Props> = ({
@@ -23,34 +24,37 @@ export const MenuButton: FC<Props> = ({
   children,
   ...props
 }) => {
-  const { colors } = useStyles();
-  const borderBottomWidth = { borderBottomWidth: noBorder ? 0 : 1 };
+  const borderBottomWidth = noBorder ? 0 : 1;
+  const styles = useMemo(
+    () => getStyles(borderBottomWidth),
+    [borderBottomWidth],
+  );
 
   return (
-    <TouchableOpacity
-      {...props}
-      style={[styles.wrapper, borderBottomWidth, colors('borderColor').muted]}
-    >
+    <TouchableOpacity {...props} style={styles.wrapper}>
       <View style={styles.main}>
-        {!!StartIcon && <StartIcon color={textColor?.color} />}
+        {!!StartIcon && <StartIcon color={textColor} />}
         <Typography color={textColor}>{children}</Typography>
       </View>
-      <ChevronRight color={textColor?.color} />
+      <ChevronRight color={textColor} />
     </TouchableOpacity>
   );
 };
 
-const styles = StyleSheet.create({
-  wrapper: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    gap: Sizes.Default,
-    paddingVertical: Sizes.Mini,
-  },
-  main: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: Sizes.Medium,
-  },
-});
+const getStyles = (borderBottomWidth: number) =>
+  StyleSheet.create({
+    wrapper: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      justifyContent: 'space-between',
+      gap: SPACING.DEFAULT,
+      paddingVertical: SPACING.MINI,
+      borderColor: lightTheme.border,
+      borderBottomWidth,
+    },
+    main: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      gap: SPACING.MEDIUM,
+    },
+  });

@@ -1,7 +1,7 @@
 import { FC } from 'react';
 import { StyleSheet, View } from 'react-native';
 import { ChatProps } from 'entities/chat/model/types.ts';
-import { Sizes } from 'shared/styles/constants/sizes.ts';
+import { SPACING } from 'shared/styles/tokens/spacing.ts';
 import { Typography } from 'shared/ui/Typography';
 
 export const ChatItem: FC<ChatProps> = ({ chatId, lastMessage, support }) => {
@@ -17,7 +17,7 @@ export const ChatItem: FC<ChatProps> = ({ chatId, lastMessage, support }) => {
 
 const styles = StyleSheet.create({
   wrapper: {
-    gap: Sizes.Mini,
+    gap: SPACING.MINI,
     backgroundColor: '#ccc',
   },
 });

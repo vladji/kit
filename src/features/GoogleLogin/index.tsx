@@ -1,22 +1,17 @@
 import { StyleSheet, TouchableOpacity } from 'react-native';
 import { FormattedMessage } from 'react-intl';
 import { GoogleIcon } from 'shared/assets/icons/GoogleIcon.tsx';
-import { ComponentSize, Sizes } from 'shared/styles/constants/sizes.ts';
-import { useStyles } from 'shared/styles/useStyles.ts';
+import { lightTheme } from 'shared/styles/theme/theme.ts';
+import { ComponentSize, SPACING } from 'shared/styles/tokens/spacing.ts';
 import { Typography } from 'shared/ui/Typography';
 
 export const GoogleLogin = () => {
-  const { colors } = useStyles();
-
   const onPress = () => {
     return null;
   };
 
   return (
-    <TouchableOpacity
-      style={[styles.button, colors('borderColor').border]}
-      onPress={onPress}
-    >
+    <TouchableOpacity style={styles.button} onPress={onPress}>
       <GoogleIcon />
       <Typography weight="600">
         <FormattedMessage defaultMessage="Войти с Google" />
@@ -28,11 +23,12 @@ export const GoogleLogin = () => {
 const styles = StyleSheet.create({
   button: {
     flexDirection: 'row',
-    gap: Sizes.Mini,
+    gap: SPACING.MINI,
     alignItems: 'center',
     justifyContent: 'center',
     height: ComponentSize.MainButtonSize,
     borderRadius: ComponentSize.ButtonBorderRadius,
     borderWidth: 1,
+    borderColor: lightTheme.border,
   },
 });

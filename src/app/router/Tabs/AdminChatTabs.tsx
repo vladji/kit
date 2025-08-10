@@ -1,10 +1,10 @@
-import { View } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
 import { AdminChatTabsNames } from 'app/router/Tabs/types.ts';
 import { AdminClientsTab } from 'screens/ChatTab/ui/AdminClientsTab.tsx';
 import { AdminStoresTab } from 'screens/ChatTab/ui/AdminStoresTab.tsx';
-import { LIGHT_COLOR } from 'shared/styles/constants/colors.ts';
-import { Sizes } from 'shared/styles/constants/sizes.ts';
+import { lightTheme } from 'shared/styles/theme/theme.ts';
+import { SPACING } from 'shared/styles/tokens/spacing.ts';
 import { TabBar } from 'shared/ui/TabBar';
 
 const Tabs = createMaterialTopTabNavigator();
@@ -12,16 +12,8 @@ const Tabs = createMaterialTopTabNavigator();
 export const AdminChatTabs = () => {
   return (
     <Tabs.Navigator
-      style={{ marginTop: Sizes.Medium }}
-      screenLayout={(props) => (
-        <View
-          {...props}
-          style={{
-            flex: 1,
-            backgroundColor: LIGHT_COLOR,
-          }}
-        />
-      )}
+      style={{ marginTop: SPACING.MEDIUM }}
+      screenLayout={(props) => <View {...props} style={styles.layout} />}
       screenOptions={{
         tabBarAllowFontScaling: false,
       }}
@@ -38,3 +30,10 @@ export const AdminChatTabs = () => {
     </Tabs.Navigator>
   );
 };
+
+const styles = StyleSheet.create({
+  layout: {
+    flex: 1,
+    backgroundColor: lightTheme.main,
+  },
+});

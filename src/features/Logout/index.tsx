@@ -2,7 +2,7 @@ import { FC } from 'react';
 import { LogOut } from 'lucide-react-native';
 import { FormattedMessage } from 'react-intl';
 import { logout } from 'shared/lib/auth/logout.ts';
-import { useStyles } from 'shared/styles/useStyles.ts';
+import { lightThemeText } from 'shared/styles/theme/themeText.ts';
 import { MenuButton } from 'shared/ui/MenuButton';
 
 interface Props {
@@ -10,8 +10,6 @@ interface Props {
 }
 
 export const Logout: FC<Props> = () => {
-  const { fontColors } = useStyles();
-
   const onPress = () => {
     logout();
   };
@@ -19,7 +17,7 @@ export const Logout: FC<Props> = () => {
   return (
     <MenuButton
       onPress={onPress}
-      textColor={fontColors.alert}
+      textColor={lightThemeText.alert}
       StartIcon={LogOut}
     >
       <FormattedMessage defaultMessage="Выйти из аккаунта" />

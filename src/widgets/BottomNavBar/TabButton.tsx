@@ -1,9 +1,9 @@
 import { FC, ReactElement, ReactNode } from 'react';
 import { StyleSheet, TouchableOpacity } from 'react-native';
 import { LucideProps } from 'lucide-react-native';
-import { BRAND_COLOR } from 'shared/styles/constants/colors.ts';
-import { Sizes } from 'shared/styles/constants/sizes.ts';
-import { useStyles } from 'shared/styles/useStyles.ts';
+import { lightTheme } from 'shared/styles/theme/theme.ts';
+import { lightThemeText } from 'shared/styles/theme/themeText.ts';
+import { SPACING } from 'shared/styles/tokens/spacing.ts';
 import { Typography } from 'shared/ui/Typography';
 
 export type LucideIconFC = (props: LucideProps) => ReactNode;
@@ -16,14 +16,13 @@ interface Props {
 }
 
 export const TabButton: FC<Props> = ({ onPress, Icon, text, active }) => {
-  const { fontColors } = useStyles();
-  const iconColor = active ? BRAND_COLOR : fontColors.main.color;
-  const fontColor = { color: active ? BRAND_COLOR : undefined };
+  const iconColor = active ? lightTheme.brand : lightThemeText.main;
+  const fontColor = active ? lightTheme.brand : undefined;
 
   return (
     <TouchableOpacity style={styles.wrapper} onPress={onPress} hitSlop={10}>
       <Icon size={20} color={iconColor} />
-      <Typography style={fontColor} size={10}>
+      <Typography color={fontColor} size={10}>
         {text}
       </Typography>
     </TouchableOpacity>
@@ -32,7 +31,7 @@ export const TabButton: FC<Props> = ({ onPress, Icon, text, active }) => {
 
 const styles = StyleSheet.create({
   wrapper: {
-    gap: Sizes.Micro,
+    gap: SPACING.MICRO,
     alignItems: 'center',
   },
 });

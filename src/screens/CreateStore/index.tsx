@@ -1,11 +1,11 @@
 import { FormattedMessage } from 'react-intl';
-import { ScreenLayout } from 'shared/ui/ScreenLayout';
 import { Typography } from 'shared/ui/Typography';
+import { ScreenLayout } from 'widgets/ScreenLayout';
 
 export const CreateStore = () => {
   return (
     <ScreenLayout
-      headerTitle={<FormattedMessage defaultMessage="Регистрация бизнеса" />}
+      headerContent={<FormattedMessage defaultMessage="Регистрация бизнеса" />}
       hasBackButton
     >
       <Typography>New business</Typography>

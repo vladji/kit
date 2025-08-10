@@ -1,35 +1,34 @@
 import { FC, ReactElement } from 'react';
 import { StyleSheet, TouchableOpacity, View } from 'react-native';
 import { NavigationProp, useNavigation } from '@react-navigation/native';
-import { ArrowLeft, MoveLeft } from 'lucide-react-native';
+import { ArrowLeft } from 'lucide-react-native';
 import { RootRouterParams } from 'app/router/RootRouter/types.ts';
-import { SHADOW } from 'shared/styles/constants/colors.ts';
-import { ComponentSize, Sizes } from 'shared/styles/constants/sizes.ts';
-import { useStyles } from 'shared/styles/useStyles.ts';
+import { SHADOW } from 'shared/styles/tokens/colors.ts';
+import { ComponentSize, SPACING } from 'shared/styles/tokens/spacing.ts';
 import { Typography } from 'shared/ui/Typography';
 
 interface Props {
-  title: ReactElement;
+  content: ReactElement;
   hasBackButton?: boolean;
 }
 
-export const ScreenHeader: FC<Props> = ({ title, hasBackButton = false }) => {
-  const { goBack } = useNavigation<NavigationProp<RootRouterParams>>();
-  const { colors } = useStyles();
+export const ScreenHeader: FC<Props> = ({ content, hasBackButton = false }) => {
+  const { goBack, canGoBack } =
+    useNavigation<NavigationProp<RootRouterParams>>();
 
   return (
-    <View style={[styles.wrapper, colors().main]}>
-      <View style={styles.leftBlock}>
-        {hasBackButton && (
+    <View style={styles.wrapper}>
+      <View style={styles.startBlock}>
+        {hasBackButton && canGoBack() && (
           <TouchableOpacity hitSlop={8} onPress={goBack}>
             <ArrowLeft />
           </TouchableOpacity>
         )}
       </View>
       <View style={styles.centerBlock}>
-        <Typography type="title">{title}</Typography>
+        <Typography type="title">{content}</Typography>
       </View>
-      <View style={styles.rightBlock}></View>
+      <View style={styles.endBlock}></View>
     </View>
   );
 };
@@ -39,16 +38,16 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     height: ComponentSize.HeaderSize,
     paddingHorizontal: ComponentSize.ScreenPaddingHorizontal,
-    paddingBottom: Sizes.Micro,
+    paddingBottom: SPACING.MICRO,
     zIndex: 2,
     ...SHADOW,
   },
-  leftBlock: {
+  startBlock: {
     width: 32,
     justifyContent: 'center',
     alignItems: 'flex-start',
   },
-  rightBlock: {
+  endBlock: {
     width: 32,
     justifyContent: 'center',
     alignItems: 'flex-end',

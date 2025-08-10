@@ -1,6 +1,6 @@
 import { ListRenderItemInfo, StyleSheet, View, ViewStyle } from 'react-native';
 import { ChatMessageProps } from 'entities/chat/model/types.ts';
-import { Sizes } from 'shared/styles/constants/sizes.ts';
+import { SPACING } from 'shared/styles/tokens/spacing.ts';
 import { Typography } from 'shared/ui/Typography';
 
 interface Props {
@@ -32,7 +32,7 @@ export const Message = ({ data, ownerId }: Props) => {
 
 const styles = StyleSheet.create({
   wrapper: {
-    padding: Sizes.Micro,
-    borderRadius: Sizes.Medium,
+    padding: SPACING.MICRO,
+    borderRadius: SPACING.MEDIUM,
   },
 });

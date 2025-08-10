@@ -3,7 +3,7 @@ import { Keyboard } from 'react-native';
 import { SharedValue, withTiming } from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { IS_IOS } from 'app/config/constants.ts';
-import { ANIMATION_DURATION } from 'shared/styles/constants/animation.ts';
+import { ANIMATION_DURATION } from 'shared/styles/tokens/animation.ts';
 
 export interface KeyboardAvoidProps {
   translateY: SharedValue<number>;

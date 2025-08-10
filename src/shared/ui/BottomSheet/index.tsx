@@ -19,10 +19,9 @@ import {
   useSafeAreaInsets,
 } from 'react-native-safe-area-context';
 import { IS_IOS } from 'app/config/constants.ts';
-import { ANIMATION_DURATION } from 'shared/styles/constants/animation.ts';
-import { TRANSPARENT } from 'shared/styles/constants/colors.ts';
-import { Sizes } from 'shared/styles/constants/sizes.ts';
-import { useStyles } from 'shared/styles/useStyles.ts';
+import { lightTheme } from 'shared/styles/theme/theme.ts';
+import { ANIMATION_DURATION } from 'shared/styles/tokens/animation.ts';
+import { SPACING } from 'shared/styles/tokens/spacing.ts';
 import { useKeyboardAvoid } from 'shared/ui/KeyboardAvoid/useKeyboardAvoid.ts';
 import { Spinner } from 'shared/ui/Spinner';
 import { Typography } from 'shared/ui/Typography';
@@ -55,9 +54,10 @@ export const BottomSheet = memo(
     loading = false,
     showDecor = true,
   }: Props) => {
-    const { colors } = useStyles();
     const { height: screenHeight } = useSafeAreaFrame();
     const { bottom: safeBottom } = useSafeAreaInsets();
+
+    const contentStyles = getContentStyles(showDecor, safeBottom);
 
     const top = useSharedValue(screenHeight);
     const bottom = useSharedValue(-screenHeight);
@@ -166,21 +166,11 @@ export const BottomSheet = memo(
               style={[styles.sheetLayout, sheetLayoutAnimationStyle]}
             >
               <Animated.View
-                style={[styles.sheet, colors().main, sheetAnimationStyle]}
+                style={[styles.sheet, sheetAnimationStyle]}
                 {...panResponder.panHandlers}
               >
-                {showDecor && <View style={[styles.decor, colors().muted]} />}
-                <View
-                  style={{
-                    gap: Sizes.Default,
-                    paddingTop: showDecor ? Sizes.Default : Sizes.Micro,
-                    paddingBottom: IS_IOS
-                      ? Sizes.Micro + safeBottom
-                      : Sizes.Big + safeBottom,
-                    paddingHorizontal: Sizes.Default,
-                    backgroundColor: TRANSPARENT,
-                  }}
-                >
+                {showDecor && <View style={styles.decor} />}
+                <View style={contentStyles.wrapper}>
                   {!!title && <Typography weight="500">{title}</Typography>}
                   {children}
                 </View>
@@ -202,22 +192,37 @@ const styles = StyleSheet.create({
     left: 0,
     right: 0,
     justifyContent: 'flex-end',
-    paddingLeft: Sizes.Mini,
-    paddingRight: Sizes.Mini,
-    backgroundColor: TRANSPARENT,
+    paddingLeft: SPACING.MINI,
+    paddingRight: SPACING.MINI,
+    backgroundColor: 'transparent',
   },
   sheet: {
-    paddingTop: Sizes.Default,
-    borderTopRightRadius: Sizes.Default,
-    borderTopLeftRadius: Sizes.Default,
+    paddingTop: SPACING.DEFAULT,
+    borderTopRightRadius: SPACING.DEFAULT,
+    borderTopLeftRadius: SPACING.DEFAULT,
+    backgroundColor: lightTheme.main,
   },
   decor: {
     position: 'absolute',
-    top: Sizes.Medium,
+    top: SPACING.MEDIUM,
     left: '50%',
     transform: [{ translateX: -32 }],
     width: 64,
     height: 4,
     borderRadius: 2,
+    backgroundColor: lightTheme.muted,
   },
 });
+
+const getContentStyles = (showDecor: boolean, safeBottom: number) =>
+  StyleSheet.create({
+    wrapper: {
+      gap: SPACING.DEFAULT,
+      paddingTop: showDecor ? SPACING.DEFAULT : SPACING.MICRO,
+      paddingBottom: IS_IOS
+        ? SPACING.MICRO + safeBottom
+        : SPACING.BIG + safeBottom,
+      paddingHorizontal: SPACING.DEFAULT,
+      backgroundColor: 'transparent',
+    },
+  });

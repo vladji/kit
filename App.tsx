@@ -7,7 +7,6 @@ import { SocketConnect } from 'app/providers/Socket';
 import { TanStackQuery } from 'app/providers/TanStackQuery';
 import { UserInitialize } from 'app/providers/UserInitialize';
 import RootRouter from 'app/router/RootRouter';
-import { AppLayout } from 'widgets/AppLayout';
 import { ErrorFallback } from 'widgets/ErrorFallback';
 
 function App(): React.JSX.Element {
@@ -19,9 +18,7 @@ function App(): React.JSX.Element {
             <SafeAreaProvider>
               <UserInitialize>
                 <SocketConnect>
-                  <AppLayout>
-                    <RootRouter />
-                  </AppLayout>
+                  <RootRouter />
                 </SocketConnect>
               </UserInitialize>
             </SafeAreaProvider>

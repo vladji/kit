@@ -1,7 +1,7 @@
 import { StyleSheet, View } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { FormattedMessage } from 'react-intl';
-import { Sizes } from 'shared/styles/constants/sizes.ts';
+import { SPACING } from 'shared/styles/tokens/spacing.ts';
 import { MainButton } from 'shared/ui/MainButton';
 
 export const DevSettings = () => {
@@ -17,9 +17,9 @@ export const DevSettings = () => {
 const styles = StyleSheet.create({
   wrapper: {
     position: 'absolute',
-    left: Sizes.Default,
-    right: Sizes.Default,
-    bottom: Sizes.Big,
-    gap: Sizes.Default,
+    left: SPACING.DEFAULT,
+    right: SPACING.DEFAULT,
+    bottom: SPACING.BIG,
+    gap: SPACING.DEFAULT,
   },
 });

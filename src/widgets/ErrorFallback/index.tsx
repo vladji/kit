@@ -1,6 +1,6 @@
 import { FC } from 'react';
 import { StyleSheet, View } from 'react-native';
-import { Sizes } from 'shared/styles/constants/sizes.ts';
+import { SPACING } from 'shared/styles/tokens/spacing.ts';
 import { MainButton } from 'shared/ui/MainButton';
 import { Typography } from 'shared/ui/Typography';
 
@@ -30,8 +30,8 @@ const styles = StyleSheet.create({
   wrapper: {
     flex: 1,
     justifyContent: 'center',
-    gap: Sizes.Large,
-    paddingHorizontal: Sizes.Default,
-    paddingVertical: Sizes.Large,
+    gap: SPACING.LARGE,
+    paddingHorizontal: SPACING.DEFAULT,
+    paddingVertical: SPACING.LARGE,
   },
 });

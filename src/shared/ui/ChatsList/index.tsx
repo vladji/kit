@@ -4,7 +4,7 @@ import { PaginationResponse } from 'app/api/types.ts';
 import { ChatProps } from 'entities/chat/model/types.ts';
 import { useChatUpdated } from 'screens/ChatTab/model/useChatUpdated.ts';
 import { ChatItem } from 'screens/ChatTab/ui/ChatItem.tsx';
-import { Sizes } from 'shared/styles/constants/sizes.ts';
+import { SPACING } from 'shared/styles/tokens/spacing.ts';
 import { Spinner } from 'shared/ui/Spinner';
 
 interface Props {
@@ -39,6 +39,6 @@ export const ChatsList = ({ loading, refetch, chats }: Props) => {
 
 const styles = StyleSheet.create({
   scrollContainer: {
-    gap: Sizes.Default,
+    gap: SPACING.DEFAULT,
   },
 });

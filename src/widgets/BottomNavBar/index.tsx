@@ -4,18 +4,17 @@ import { BottomTabBarProps } from '@react-navigation/bottom-tabs';
 import { House, Send, Settings } from 'lucide-react-native';
 import { FormattedMessage } from 'react-intl';
 import { BottomTabs } from 'app/router/BottomTabs/types.ts';
-import { ComponentSize, Sizes } from 'shared/styles/constants/sizes.ts';
-import { useStyles } from 'shared/styles/useStyles.ts';
+import { lightTheme } from 'shared/styles/theme/theme.ts';
+import { ComponentSize, SPACING } from 'shared/styles/tokens/spacing.ts';
 import { TabButton } from 'widgets/BottomNavBar/TabButton.tsx';
 
 export const BottomNavBar: FC<BottomTabBarProps> = ({ navigation, state }) => {
-  const { colors } = useStyles();
   const onPress = (route: BottomTabs) => {
     navigation.navigate(route);
   };
 
   return (
-    <View style={[styles.wrapper, colors('backgroundColor').main]}>
+    <View style={styles.wrapper}>
       <TabButton
         onPress={() => onPress(BottomTabs.Home)}
         Icon={House}
@@ -43,9 +42,10 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-evenly',
-    gap: Sizes.Big,
+    gap: SPACING.BIG,
     height: ComponentSize.BottomNavBarSize,
     paddingHorizontal: ComponentSize.ScreenPaddingHorizontal,
     paddingBottom: 18,
+    backgroundColor: lightTheme.main,
   },
 });

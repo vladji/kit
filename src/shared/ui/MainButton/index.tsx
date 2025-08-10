@@ -1,20 +1,16 @@
-import { FC, useMemo } from 'react';
+import { FC } from 'react';
 import {
+  ColorValue,
   StyleSheet,
-  TextProps,
   TouchableOpacity,
   TouchableOpacityProps,
 } from 'react-native';
-import { ComponentSize, Sizes } from 'shared/styles/constants/sizes.ts';
-import { useStyles } from 'shared/styles/useStyles.ts';
+import { lightTheme } from 'shared/styles/theme/theme.ts';
+import { lightThemeText } from 'shared/styles/theme/themeText.ts';
+import { ComponentSize, SPACING } from 'shared/styles/tokens/spacing.ts';
 import { Typography } from 'shared/ui/Typography';
 
 type ButtonVariants = 'default' | 'outline';
-
-type VariantsType = {
-  button: Record<ButtonVariants, TouchableOpacityProps['style']>;
-  typography: Record<ButtonVariants, TextProps['style']>;
-};
 
 interface Props extends TouchableOpacityProps {
   variant?: ButtonVariants;
@@ -26,36 +22,23 @@ export const MainButton: FC<Props> = ({
   children,
   ...props
 }) => {
-  const { colors, fontColors } = useStyles();
-
-  const variants = useMemo<VariantsType>(
-    () => ({
-      button: {
-        default: { ...colors().brand },
-        outline: {
-          borderWidth: 1,
-          ...colors('borderColor').border,
-          backgroundColor: 'transparent',
-        },
-      },
-      typography: {
-        default: { ...fontColors.light },
-        outline: { ...fontColors.main },
-      },
-    }),
-    [colors, fontColors],
-  );
-
-  const buttonVariant = variants.button[variant];
-  const typographyVariant = variants.typography[variant];
+  const fontColor = fontColorVariants[variant];
 
   return (
-    <TouchableOpacity style={[styles.wrapper, buttonVariant, style]} {...props}>
-      <Typography type="title" style={typographyVariant}>
+    <TouchableOpacity
+      {...props}
+      style={[styles.wrapper, styles[variant], style]}
+    >
+      <Typography type="title" color={fontColor}>
         {children}
       </Typography>
     </TouchableOpacity>
   );
+};
+
+const fontColorVariants: Record<ButtonVariants, ColorValue> = {
+  default: lightThemeText.light,
+  outline: lightThemeText.main,
 };
 
 const styles = StyleSheet.create({
@@ -63,7 +46,15 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     height: ComponentSize.MainButtonSize,
-    paddingHorizontal: Sizes.Medium,
+    paddingHorizontal: SPACING.MEDIUM,
     borderRadius: ComponentSize.ButtonBorderRadius,
+  },
+  default: {
+    backgroundColor: lightTheme.brand,
+  },
+  outline: {
+    borderWidth: 1,
+    borderColor: lightTheme.border,
+    backgroundColor: 'transparent',
   },
 });

@@ -12,12 +12,11 @@ import {
 } from 'entities/chat/model/types.ts';
 import { useFrom } from 'screens/PrivateChat/model/useFrom.ts';
 import { Message } from 'screens/PrivateChat/ui/Message.tsx';
-import { LIGHT_COLOR } from 'shared/styles/constants/colors.ts';
-import { Sizes } from 'shared/styles/constants/sizes.ts';
+import { lightTheme } from 'shared/styles/theme/theme.ts';
+import { SPACING } from 'shared/styles/tokens/spacing.ts';
 import { KeyboardAvoidWrapper } from 'shared/ui/KeyboardAvoid/KeyboardAvoidWrapper.tsx';
-import { ScreenLayout } from 'shared/ui/ScreenLayout';
-import { Spinner } from 'shared/ui/Spinner';
 import { TextInputAction } from 'shared/ui/TextInputAction';
+import { ScreenLayout } from 'widgets/ScreenLayout';
 
 export const PrivateChatScreen = () => {
   const from = useFrom();
@@ -61,10 +60,10 @@ export const PrivateChatScreen = () => {
 
   return (
     <ScreenLayout
-      headerTitle={<FormattedMessage defaultMessage="Чат с поддержкой" />}
+      headerContent={<FormattedMessage defaultMessage="Чат с поддержкой" />}
+      loading={loading}
       hasBackButton
     >
-      {!from && <Spinner />}
       {!!from && (
         <KeyboardAvoidWrapper
           style={styles.wrapper}
@@ -72,7 +71,6 @@ export const PrivateChatScreen = () => {
           includeSafeBottom={true}
         >
           <View style={styles.messagesBlock}>
-            {loading && <Spinner />}
             {!!messages?.length && (
               <FlatList
                 data={messages}
@@ -85,7 +83,7 @@ export const PrivateChatScreen = () => {
             inputValue={text}
             onChangeText={setText}
             onPress={sendMessage}
-            Icon={<Send color={LIGHT_COLOR} />}
+            Icon={<Send color={lightTheme.main} />}
           />
         </KeyboardAvoidWrapper>
       )}
@@ -96,7 +94,7 @@ export const PrivateChatScreen = () => {
 const styles = StyleSheet.create({
   wrapper: {
     flex: 1,
-    gap: Sizes.Big,
+    gap: SPACING.BIG,
   },
   messagesBlock: {
     flex: 1,

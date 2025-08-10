@@ -1,28 +1,11 @@
 import { ActivityIndicator, StyleSheet, View } from 'react-native';
-import { BRAND_COLOR } from 'shared/styles/constants/colors.ts';
-import { useStyles } from 'shared/styles/useStyles.ts';
+import { lightTheme } from 'shared/styles/theme/theme.ts';
 
-interface Props {
-  isVisible?: boolean;
-}
-
-export const Spinner = ({ isVisible = true }: Props) => {
-  const { colors } = useStyles();
+export const Spinner = () => {
   return (
-    <>
-      {isVisible && (
-        <View style={[StyleSheet.absoluteFill, styles.container]}>
-          <View
-            style={[StyleSheet.absoluteFill, styles.background, colors().main]}
-          />
-          <ActivityIndicator
-            style={styles.indicator}
-            size={32}
-            color={BRAND_COLOR}
-          />
-        </View>
-      )}
-    </>
+    <View style={[StyleSheet.absoluteFill, styles.container]}>
+      <ActivityIndicator size={32} color={lightTheme.brand} />
+    </View>
   );
 };
 
@@ -30,13 +13,8 @@ const styles = StyleSheet.create({
   container: {
     alignItems: 'center',
     justifyContent: 'center',
-    zIndex: 14,
-  },
-  background: {
+    backgroundColor: lightTheme.main,
     opacity: 0.6,
-    zIndex: 1,
-  },
-  indicator: {
-    zIndex: 2,
+    zIndex: 14,
   },
 });

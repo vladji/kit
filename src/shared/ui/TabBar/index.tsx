@@ -8,8 +8,8 @@ import {
   BRAND_LIGHT,
   LIGHT_COLOR,
   TRANSPARENT,
-} from 'shared/styles/constants/colors.ts';
-import { Sizes } from 'shared/styles/constants/sizes.ts';
+} from 'shared/styles/tokens/colors.ts';
+import { SPACING } from 'shared/styles/tokens/spacing.ts';
 import { Typography } from 'shared/ui/Typography';
 
 export const TabBar = memo(({ state, navigation }: MaterialTopTabBarProps) => {
@@ -73,8 +73,8 @@ export const TabBar = memo(({ state, navigation }: MaterialTopTabBarProps) => {
                 backgroundColor: isFocused ? BRAND_LIGHT : LIGHT_COLOR,
                 borderBottomWidth: isFocused ? 2 : 0,
                 borderBottomColor: isFocused ? BRAND_COLOR : TRANSPARENT,
-                borderBottomLeftRadius: isFocused ? 0 : Sizes.Mini,
-                borderBottomRightRadius: isFocused ? 0 : Sizes.Mini,
+                borderBottomLeftRadius: isFocused ? 0 : SPACING.MINI,
+                borderBottomRightRadius: isFocused ? 0 : SPACING.MINI,
               }}
               onPress={onPress}
             >
@@ -89,16 +89,16 @@ export const TabBar = memo(({ state, navigation }: MaterialTopTabBarProps) => {
 
 const styles = StyleSheet.create({
   scrollView: {
-    marginHorizontal: Sizes.Default,
+    marginHorizontal: SPACING.DEFAULT,
   },
   scrollContainer: {
     flexDirection: 'row',
-    gap: Sizes.Default,
+    gap: SPACING.DEFAULT,
   },
   button: {
-    paddingHorizontal: Sizes.Default,
-    paddingVertical: Sizes.Micro,
-    borderTopRightRadius: Sizes.Mini,
-    borderTopLeftRadius: Sizes.Mini,
+    paddingHorizontal: SPACING.DEFAULT,
+    paddingVertical: SPACING.MICRO,
+    borderTopRightRadius: SPACING.MINI,
+    borderTopLeftRadius: SPACING.MINI,
   },
 });

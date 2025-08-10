@@ -12,14 +12,14 @@ import Animated, {
   withTiming,
 } from 'react-native-reanimated';
 import { IS_IOS } from 'app/config/constants.ts';
-import { ANIMATION_DURATION } from 'shared/styles/constants/animation.ts';
-import { Sizes } from 'shared/styles/constants/sizes.ts';
+import { ANIMATION_DURATION } from 'shared/styles/tokens/animation.ts';
+import { SPACING } from 'shared/styles/tokens/spacing.ts';
 
 interface ScrollKeyboardAvoidProps extends ScrollViewProps {
   children: ReactNode;
 }
 
-const SAFE_AREA = Sizes.Default;
+const SAFE_AREA = SPACING.DEFAULT;
 
 export const ScrollKeyboardAvoid: FC<ScrollKeyboardAvoidProps> = ({
   children,
