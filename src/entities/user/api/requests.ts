@@ -20,7 +20,7 @@ export const getUserById = (
     url: `/user/profile/id/${id}`,
   });
 
-export const createUser = (
+export const postCreateUser = (
   data: CreateUserDocument,
 ): Promise<ApiResponse<UserProps>> =>
   api({
