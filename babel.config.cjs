@@ -21,6 +21,6 @@ module.exports = {
       idInterpolationPattern: "[sha512:contenthash:base64:6]",
       ast: true,
     }],
-    "react-native-reanimated/plugin",
+    "react-native-worklets/plugin"
   ],
 };

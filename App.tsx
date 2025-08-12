@@ -8,6 +8,7 @@ import { SocketConnect } from 'app/providers/Socket';
 import { UserInitialize } from 'app/providers/UserInitialize';
 import RootRouter from 'app/router/RootRouter';
 import { ErrorFallback } from 'widgets/ErrorFallback';
+import 'app/storage';
 
 function App(): React.JSX.Element {
   return (
