@@ -5,7 +5,7 @@ import {
   AsyncStorageKeys,
 } from 'app/storage/model/types.ts';
 
-export const useGetAsyncStorage = <T>(key: AsyncStorageKeys) => {
+export const useGetAsyncStorage = <T = string>(key: AsyncStorageKeys) => {
   return useQuery<T | null>({
     queryKey: [ASYNC_STORAGE_GET, key],
     queryFn: () => getAsyncStorageValue<T>(key),

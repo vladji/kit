@@ -23,3 +23,5 @@ export const darkTheme = {
   messagePrimary: COLORS.MESSAGE_PRIMARY,
   messageSecondary: COLORS.MESSAGE_SECONDARY,
 };
+
+export type ThemeType = typeof lightTheme;
