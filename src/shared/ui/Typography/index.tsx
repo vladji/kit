@@ -1,4 +1,4 @@
-import { FC, useMemo } from 'react';
+import { FC } from 'react';
 import { StyleSheet, Text, TextProps, TextStyle } from 'react-native';
 import { lightThemeText } from 'shared/styles/theme/themeText.ts';
 
@@ -22,17 +22,13 @@ export const Typography: FC<Props> = ({
   align = 'left',
   ...props
 }) => {
-  const styles = useMemo(
-    () =>
-      getStyles({
-        size,
-        weight,
-        leading,
-        color,
-        align,
-      }),
-    [size, weight, leading, color, align],
-  );
+  const styles = getStyles({
+    size,
+    weight,
+    leading,
+    color,
+    align,
+  });
 
   return <Text {...props} style={[styles[type], props.style]} />;
 };

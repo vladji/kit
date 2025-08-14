@@ -1,8 +1,13 @@
 import { FC, ReactElement } from 'react';
-import { StyleSheet, TextInput, TextInputProps, View } from 'react-native';
+import {
+  StyleSheet,
+  TextInput,
+  TextInputProps,
+  View,
+  useColorScheme,
+} from 'react-native';
 import { lightTheme } from 'shared/styles/theme/theme.ts';
 import { ComponentSize, SPACING } from 'shared/styles/tokens/spacing.ts';
-import { useIsLightTheme } from 'shared/styles/useIsLightTheme.ts';
 import { Typography } from 'shared/ui/Typography';
 
 export interface TextInputComponentProps extends TextInputProps {
@@ -17,7 +22,8 @@ export const TextInputComponent: FC<TextInputComponentProps> = ({
   endAdornment,
   ...props
 }) => {
-  const isLight = useIsLightTheme();
+  const theme = useColorScheme();
+  const isLight = theme === 'light';
   return (
     <View style={styles.wrapper}>
       {!!label && (
