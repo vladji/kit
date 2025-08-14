@@ -9,9 +9,19 @@ const URL = SERVER_URL;
 
 let socket: Socket | null = null;
 
+const clearSocket = () => {
+  socket?.removeAllListeners();
+  socket?.disconnect();
+  socket = null;
+};
+
 export const connectSocket = (userId: string, token: string | null) => {
+  if (socket && socket.connected) {
+    return socket;
+  }
+
   if (socket) {
-    socket.disconnect();
+    clearSocket();
   }
 
   socket = io(URL, {
@@ -25,23 +35,16 @@ export const connectSocket = (userId: string, token: string | null) => {
     socket!.emit('register', userId);
   });
 
-  socket.on('disconnect', () => {
-    console.log('❌ Disconnected from socket server');
+  socket.on('disconnect', (event) => {
+    console.log('❌ Disconnected from socket server', event);
   });
 
   socket.on('connect_error', async (err: Error) => {
     console.log('❌ Socket connect error:', err.message);
+    clearSocket();
 
     if (err.message === SocketError.TokenExpired) {
-      const refreshTokenResponse = await refreshToken();
-      const newAccessToken = refreshTokenResponse.data.accessToken;
-
-      socket!.auth = {
-        ...(socket!.auth || {}),
-        token: `Bearer ${newAccessToken}`,
-      };
-
-      socket!.connect();
+      await refreshToken();
     }
 
     if (
@@ -53,13 +56,6 @@ export const connectSocket = (userId: string, token: string | null) => {
       // TODO: add 'reset app'
     }
   });
-};
-
-export const disconnectSocket = () => {
-  if (socket) {
-    socket.disconnect();
-    socket = null;
-  }
 };
 
 export const safeSocket = (): Socket | void => {
