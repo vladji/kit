@@ -10,7 +10,7 @@ import {
   ChatMessageProps,
   PrivateMessageProps,
 } from 'entities/chat/model/types.ts';
-import { useFrom } from 'screens/PrivateChat/model/useFrom.ts';
+import { useSelfProfile } from 'entities/chat/model/useSelfProfile.ts';
 import { Message } from 'screens/PrivateChat/ui/Message.tsx';
 import { lightTheme } from 'shared/styles/theme/theme.ts';
 import { SPACING } from 'shared/styles/tokens/spacing.ts';
@@ -24,7 +24,7 @@ type PrivateChatRouteProp = RouteProp<
 >;
 
 export const PrivateChatScreen = () => {
-  const from = useFrom();
+  const selfProfile = useSelfProfile();
   const { params } = useRoute<PrivateChatRouteProp>();
 
   const [chatId, setChatId] = useState<string | null>(params.chatId || null);
@@ -52,12 +52,13 @@ export const PrivateChatScreen = () => {
   }, [chatId]);
 
   const sendMessage = () => {
-    if (!from) return;
+    if (!selfProfile || !params.peer.id || !text) return;
 
     const privateMessage: PrivateMessageProps = {
-      from,
-      to: params.to,
+      from: selfProfile,
+      to: params.peer,
       text,
+      knownChatId: chatId,
     };
     safeSocket()?.emit('private_message', privateMessage);
     setText('');
@@ -69,7 +70,7 @@ export const PrivateChatScreen = () => {
       loading={loading}
       hasBackButton
     >
-      {!!from && (
+      {!!selfProfile && (
         <KeyboardAvoidWrapper
           style={styles.wrapper}
           correction={6}
@@ -79,7 +80,9 @@ export const PrivateChatScreen = () => {
             {!!messages?.length && (
               <FlatList
                 data={messages}
-                renderItem={(item) => <Message data={item} ownerId={from.id} />}
+                renderItem={(item) => (
+                  <Message data={item} ownerId={selfProfile.id} />
+                )}
                 keyExtractor={(item) => item.id}
               />
             )}

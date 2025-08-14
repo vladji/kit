@@ -21,7 +21,6 @@ interface Props {
 
 export const ChatsList = ({ loading, refetch, chats }: Props) => {
   useChatUpdated({ refetch });
-
   return (
     <>
       {loading && <Spinner />}
