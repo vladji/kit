@@ -1,3 +1,5 @@
+import { createTypeGuard } from 'shared/lib/types/fabric.ts';
+
 export enum UserRoles {
   Client = 'client',
   Store = 'store',
@@ -23,3 +25,14 @@ export interface UserProps {
   avatarUrl?: string;
   storeId?: string;
 }
+
+export const isUser = createTypeGuard<UserProps>({
+  id: { type: 'string' },
+  uniqueId: { type: 'string' },
+  deviceData: { type: 'object' },
+  createdAt: { type: 'string' },
+  updatedAt: { type: 'string' },
+  publicName: { type: 'string', optional: true },
+  avatarUrl: { type: 'string', optional: true },
+  storeId: { type: 'string', optional: true },
+});

@@ -1,9 +1,8 @@
-import { useContext } from 'react';
-import { AppContext } from 'app/appContext';
+import { useSessionStore } from 'app/storage/useSessionStore.ts';
 import { UserRoles } from 'entities/user/model/types.ts';
 
 export const useIsAdmin = () => {
-  const { roles } = useContext(AppContext);
+  const roles = useSessionStore((store) => store.roles);
   const anyAdmin = !!roles[UserRoles.Admin] || !!roles[UserRoles.RootAdmin];
 
   return {

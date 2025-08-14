@@ -1,3 +1,4 @@
+import { createTypeGuard } from 'shared/lib/types/fabric.ts';
 import { WeekDays } from 'shared/types/common.ts';
 
 interface StoreWorkingTime {
@@ -24,6 +25,7 @@ interface ShowcaseProps {
 }
 
 export interface StoreProps {
+  id: string;
   userId: string;
   storeName: string;
   storeAvatarUrl: string;
@@ -32,3 +34,14 @@ export interface StoreProps {
   contacts?: StoreContactsProps;
   showcases?: ShowcaseProps[];
 }
+
+export const isStore = createTypeGuard<StoreProps>({
+  id: { type: 'string' },
+  userId: { type: 'string' },
+  storeName: { type: 'string' },
+  storeAvatarUrl: { type: 'string' },
+  storeImageUrl: { type: 'array' },
+  workingTime: { type: 'array', optional: true },
+  contacts: { type: 'object', optional: true },
+  showcases: { type: 'array', optional: true },
+});

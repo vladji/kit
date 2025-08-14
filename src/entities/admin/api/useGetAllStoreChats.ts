@@ -6,7 +6,6 @@ export const useGetAllStoreChats = () => {
   const { data, isLoading, refetch } = useQuery({
     queryKey: [QUERY_KEYS.GET_SUPPORT_ALL_STORE_CHATS],
     queryFn: () => getAllStoreChats({ page: 1, limit: 10 }),
-    refetchOnWindowFocus: true,
   });
 
   return {

@@ -36,7 +36,7 @@ export interface PrivateMessageProps {
   from: ChatMemberProps;
   to: ChatMemberProps;
   text: string;
-  knownChatId?: string;
+  knownChatId: string | null;
 }
 
 export interface ChatProfileProps {

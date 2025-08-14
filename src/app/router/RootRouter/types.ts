@@ -7,7 +7,7 @@ export enum RootRouter {
 }
 
 export interface ChatRouteParams {
-  to: ChatMemberProps;
+  peer: ChatMemberProps;
   chatId: string | null;
 }
 
