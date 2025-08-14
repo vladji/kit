@@ -2,11 +2,7 @@ import { REACT_API_KEY } from '@env';
 import axios, { AxiosError } from 'axios';
 import { API_URL, STATUS } from 'app/api/constants.ts';
 import { AxiosApiResponse } from 'app/api/types.ts';
-import {
-  getAsyncStorageValue,
-  setAsyncStorageValue,
-} from 'app/storage/lib/asyncStorage.ts';
-import { AsyncStorageKeys } from 'app/storage/model/types.ts';
+import { usePersistentStore } from 'app/storage/usePersistentStore.ts';
 import { REFRESH_TOKEN_URL } from 'shared/lib/auth/constants.ts';
 import { logout } from 'shared/lib/auth/logout.ts';
 
@@ -16,9 +12,7 @@ export const refreshToken = async (): Promise<
   }>
 > => {
   try {
-    const refreshToken = await getAsyncStorageValue<string>(
-      AsyncStorageKeys.RefreshToken,
-    );
+    const refreshToken = usePersistentStore.getState().refreshToken;
 
     const response = await axios.post(
       `${API_URL}${REFRESH_TOKEN_URL}`,
@@ -32,10 +26,7 @@ export const refreshToken = async (): Promise<
     );
 
     if (response.data.success) {
-      await setAsyncStorageValue(
-        AsyncStorageKeys.Token,
-        response.data.accessToken,
-      );
+      usePersistentStore.setState({ token: response.data.accessToken });
     }
 
     if (response.status === STATUS.UNAUTHORIZED) {

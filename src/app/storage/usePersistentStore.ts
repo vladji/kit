@@ -1,8 +1,8 @@
 import { MMKV } from 'react-native-mmkv';
 import { create } from 'zustand';
 import { StateStorage, createJSONStorage, persist } from 'zustand/middleware';
-import { Locales } from 'app/locales/types.ts';
-import { ThemeType, lightTheme } from 'shared/styles/theme/theme.ts';
+import { PersistentStoreProps } from 'app/storage/model/types.ts';
+import { lightTheme } from 'shared/styles/theme/theme.ts';
 
 const storage = new MMKV();
 
@@ -19,18 +19,7 @@ const zustandStorage: StateStorage = {
   },
 };
 
-interface PersistStoreProps {
-  locale: Locales | null;
-  theme: ThemeType;
-  token: string | null;
-  refreshToken: string | null;
-  setLocale: (locale: Locales) => void;
-  setTheme: (theme: ThemeType) => void;
-  setToken: (token: string | null) => void;
-  setRefreshToken: (refreshToken: string | null) => void;
-}
-
-export const usePersistStore = create<PersistStoreProps>()(
+export const usePersistentStore = create<PersistentStoreProps>()(
   persist(
     (set, get) => ({
       locale: null,
