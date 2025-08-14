@@ -21,7 +21,7 @@ const zustandStorage: StateStorage = {
 
 export const usePersistentStore = create<PersistentStoreProps>()(
   persist(
-    (set, get) => ({
+    (set) => ({
       locale: null,
       theme: lightTheme,
       token: null,

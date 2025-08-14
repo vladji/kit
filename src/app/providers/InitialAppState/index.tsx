@@ -2,10 +2,10 @@ import { ReactNode, useEffect } from 'react';
 import BootSplash from 'react-native-bootsplash';
 import { useShallow } from 'zustand/react/shallow';
 import { getDefaultLocale } from 'app/locales/lib/getLocale.ts';
-import { usePersistStore } from 'app/storage/usePersistStore.ts';
+import { usePersistentStore } from 'app/storage/usePersistentStore.ts';
 
 export const InitialAppState = ({ children }: { children: ReactNode }) => {
-  const [locale, setLocale] = usePersistStore(
+  const [locale, setLocale] = usePersistentStore(
     useShallow((state) => [state.locale, state.setLocale]),
   );
 

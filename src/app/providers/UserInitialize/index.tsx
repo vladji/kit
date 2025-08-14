@@ -1,7 +1,11 @@
 import { ReactNode } from 'react';
-import { useInitialize } from 'app/providers/UserInitialize/model/useInitialize.ts';
+import { useInitializeAdmin } from 'app/providers/UserInitialize/model/useInitializeAdmin.ts';
+import { useInitializeUser } from 'app/providers/UserInitialize/model/useInitializeUser.ts';
+import { useSetRoles } from 'app/providers/UserInitialize/model/useSetRole.ts';
 
 export const UserInitialize = ({ children }: { children: ReactNode }) => {
-  useInitialize();
+  useInitializeUser();
+  useSetRoles();
+  useInitializeAdmin();
   return children;
 };

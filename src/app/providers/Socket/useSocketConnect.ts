@@ -1,21 +1,15 @@
 import { useEffect } from 'react';
 import { connectSocket } from 'app/providers/Socket/socket.ts';
-import { useGetAsyncStorage } from 'app/storage/lib/useGetAsyncStorage.ts';
-import { AsyncStorageKeys } from 'app/storage/model/types.ts';
+import { usePersistentStore } from 'app/storage/usePersistentStore.ts';
+import { useCurrentUser } from 'entities/user/model/useCurrentUser.ts';
 
 export const useSocketConnect = () => {
-  const { data: token, isFetched: tokenFetched } = useGetAsyncStorage<string>(
-    AsyncStorageKeys.Token,
-  );
-  const { data: userId, isFetched: userIdFetched } = useGetAsyncStorage<string>(
-    AsyncStorageKeys.UserId,
-  );
-
-  const fetched = tokenFetched && userIdFetched;
+  const token = usePersistentStore((store) => store.token);
+  const { userId } = useCurrentUser();
 
   useEffect(() => {
-    if (userId && fetched) {
+    if (userId) {
       connectSocket(userId, token);
     }
-  }, [token, userId, fetched]);
+  }, [token, userId]);
 };

@@ -2,10 +2,10 @@ import { ReactNode } from 'react';
 import { IntlProvider } from 'react-intl';
 import { DEFAULT_LOCALE } from 'app/config/constants.ts';
 import { useMessages } from 'app/locales/useMessages.ts';
-import { usePersistStore } from 'app/storage/usePersistStore.ts';
+import { usePersistentStore } from 'app/storage/usePersistentStore.ts';
 
 export const LocaleProvider = ({ children }: { children: ReactNode }) => {
-  const locale = usePersistStore((state) => state.locale) || DEFAULT_LOCALE;
+  const locale = usePersistentStore((state) => state.locale) || DEFAULT_LOCALE;
   const messages = useMessages(locale);
 
   return (

@@ -4,8 +4,7 @@ import axios from 'axios';
 import { API_URL, STATUS } from 'app/api/constants.ts';
 import { fillQueue, processQueue } from 'app/api/model/errorsQueue.ts';
 import { CustomAxiosRequestConfig } from 'app/api/types.ts';
-import { getAsyncStorageValue } from 'app/storage/lib/asyncStorage.ts';
-import { AsyncStorageKeys } from 'app/storage/model/types.ts';
+import { usePersistentStore } from 'app/storage/usePersistentStore.ts';
 import { refreshToken } from 'shared/lib/auth/refreshToken.ts';
 
 const jwtApi = axios.create({
@@ -17,15 +16,11 @@ const jwtApi = axios.create({
   },
 });
 
-jwtApi.interceptors.request.use(async (config) => {
-  const accessToken = await getAsyncStorageValue<string>(
-    AsyncStorageKeys.Token,
-  );
-
-  if (accessToken) {
-    config.headers.Authorization = `Bearer ${accessToken}`;
+jwtApi.interceptors.request.use((config) => {
+  const token = usePersistentStore.getState().token;
+  if (token) {
+    config.headers.Authorization = `Bearer ${token}`;
   }
-
   return config;
 });
 

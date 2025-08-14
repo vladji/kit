@@ -3,9 +3,9 @@ import { View } from 'react-native';
 import { NavigationProp, useNavigation } from '@react-navigation/native';
 import { FormattedMessage } from 'react-intl';
 import { RootRouter, RootStackParams } from 'app/router/RootRouter/types.ts';
+import { useIsAdmin } from 'entities/admin/model/useIsAdmin.ts';
 import { Login } from 'features/Login';
 import { Logout } from 'features/Logout';
-import { useIsAdmin } from 'shared/hooks/useIsAdmin.ts';
 import { MenuButton } from 'shared/ui/MenuButton';
 
 export const SettingsAuth = () => {

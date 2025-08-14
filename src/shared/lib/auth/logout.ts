@@ -1,16 +1,10 @@
 import { Alert } from 'react-native';
-import { setAsyncStorageValue } from 'app/storage/lib/asyncStorage.ts';
-import { AsyncStorageKeys } from 'app/storage/model/types.ts';
-import { invalidateUser } from 'shared/lib/auth/invalidateUser.ts';
+import { usePersistentStore } from 'app/storage/usePersistentStore.ts';
+import { useSessionStore } from 'app/storage/useSessionStore.ts';
 
 export const logout = async () => {
-  await Promise.all([
-    setAsyncStorageValue(AsyncStorageKeys.UserId, null),
-    setAsyncStorageValue(AsyncStorageKeys.Token, null),
-    setAsyncStorageValue(AsyncStorageKeys.RefreshToken, null),
-  ]);
-
-  await invalidateUser();
+  usePersistentStore.setState({ token: null, refreshToken: null });
+  useSessionStore.setState({ adminProfile: null, storeProfile: null });
 
   Alert.alert('Logout', 'Successfully logged out');
 };
