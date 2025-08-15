@@ -14,7 +14,7 @@ type Props = {
   correction?: number;
   includeSafeBottom?: boolean;
 } & ViewProps &
-  Omit<KeyboardAvoidProps, 'translateY'>;
+  Omit<KeyboardAvoidProps, 'translate'>;
 
 export const KeyboardAvoidWrapper: FC<Props> = ({
   children,
@@ -22,15 +22,15 @@ export const KeyboardAvoidWrapper: FC<Props> = ({
   includeSafeBottom,
   ...props
 }) => {
-  const translateY = useSharedValue(0);
+  const translate = useSharedValue(0);
   const animationStyles = useAnimatedStyle(() => {
     return {
-      paddingBottom: translateY.value,
+      paddingBottom: translate.value,
     };
   });
 
   useKeyboardAvoid({
-    translateY,
+    translate,
     correction,
     includeSafeBottom,
   });

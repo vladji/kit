@@ -61,10 +61,9 @@ export const BottomSheet = memo(
 
     const top = useSharedValue(screenHeight);
     const bottom = useSharedValue(-screenHeight);
-    const translateY = useSharedValue(0);
     const paddingBottom = useSharedValue(0);
 
-    useKeyboardAvoid({ translateY });
+    useKeyboardAvoid({ translate: paddingBottom });
 
     const animation = useCallback<Animation>(
       ({ topValue, bottomValue, onClose }) => {
@@ -90,7 +89,7 @@ export const BottomSheet = memo(
         onStartShouldSetPanResponder: () => true,
         onPanResponderMove: (_, gestureState) => {
           if (gestureState.dy > 0) {
-            translateY.value = gestureState.dy;
+            paddingBottom.value = gestureState.dy;
           }
           if (gestureState.dy < 0) {
             paddingBottom.value = Math.abs(gestureState.dy / 2);
@@ -100,7 +99,10 @@ export const BottomSheet = memo(
           paddingBottom.value = withSpring(0, { damping: 20, stiffness: 200 });
 
           if (gestureState.dy >= 0 && gestureState.dy <= 50) {
-            translateY.value = withSpring(0, { damping: 20, stiffness: 200 });
+            paddingBottom.value = withSpring(0, {
+              damping: 20,
+              stiffness: 200,
+            });
           }
 
           if (gestureState.dy > 50) {
@@ -108,14 +110,14 @@ export const BottomSheet = memo(
               topValue: screenHeight,
               bottomValue: -screenHeight,
               onClose: () => {
-                translateY.value = 0;
+                paddingBottom.value = 0;
                 onClose();
               },
             });
           }
         },
       });
-    }, [translateY, paddingBottom, screenHeight, onClose, animation]);
+    }, [paddingBottom, screenHeight, onClose, animation]);
 
     const onShow = useCallback(() => {
       animation({ topValue: 0, bottomValue: 0 });
@@ -153,7 +155,6 @@ export const BottomSheet = memo(
     const sheetAnimationStyle = useAnimatedStyle(() => {
       return {
         paddingBottom: paddingBottom.value,
-        transform: [{ translateY: translateY.value }],
       };
     });
 

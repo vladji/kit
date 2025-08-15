@@ -6,13 +6,13 @@ import { IS_IOS } from 'app/config/constants.ts';
 import { KEYBOARD_ANIMATION_DURATION } from 'shared/styles/tokens/animation.ts';
 
 export interface KeyboardAvoidProps {
-  translateY: SharedValue<number>;
+  translate: SharedValue<number>;
   correction?: number;
   includeSafeBottom?: boolean;
 }
 
 export const useKeyboardAvoid = ({
-  translateY,
+  translate,
   correction = 0,
   includeSafeBottom = false,
 }: KeyboardAvoidProps) => {
@@ -21,11 +21,11 @@ export const useKeyboardAvoid = ({
 
   const animation = useCallback(
     (value: number) => {
-      translateY.value = withSpring(value, {
+      translate.value = withSpring(value, {
         duration: KEYBOARD_ANIMATION_DURATION,
       });
     },
-    [translateY],
+    [translate],
   );
 
   useEffect(() => {
