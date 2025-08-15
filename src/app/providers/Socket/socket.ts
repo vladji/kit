@@ -28,6 +28,8 @@ export const connectSocket = (userId: string, token: string | null) => {
     auth: token ? { token: `Bearer ${token}` } : undefined,
     transports: ['websocket'],
     reconnection: true,
+    reconnectionAttempts: Infinity,
+    reconnectionDelay: 1000,
   });
 
   socket.on('connect', () => {
@@ -35,8 +37,8 @@ export const connectSocket = (userId: string, token: string | null) => {
     socket!.emit('register', userId);
   });
 
-  socket.on('disconnect', (event) => {
-    console.log('❌ Disconnected from socket server', event);
+  socket.on('disconnect', (reason) => {
+    console.log('❌ Disconnected from socket server', reason);
   });
 
   socket.on('connect_error', async (err: Error) => {
