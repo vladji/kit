@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { FlatList, StyleSheet, View } from 'react-native';
+import { FlatList, Image, StyleSheet, View } from 'react-native';
 import { RouteProp, useRoute } from '@react-navigation/native';
 import { Send } from 'lucide-react-native';
 import { FormattedMessage } from 'react-intl';
@@ -71,12 +71,13 @@ export const PrivateChatScreen = () => {
       hasBackButton
     >
       {!!selfProfile && (
-        <KeyboardAvoidWrapper
-          style={styles.wrapper}
-          correction={6}
-          includeSafeBottom={true}
-        >
-          <View style={styles.messagesBlock}>
+        <View style={styles.wrapper}>
+          <Image
+            style={StyleSheet.absoluteFill}
+            source={require('shared/assets/images/pattern-hexagon.jpg')}
+            resizeMode="cover"
+          />
+          <KeyboardAvoidWrapper style={styles.content} includeSafeBottom={true}>
             {!!messages?.length && (
               <FlatList
                 contentContainerStyle={styles.scrollContent}
@@ -88,14 +89,16 @@ export const PrivateChatScreen = () => {
                 inverted
               />
             )}
-          </View>
-          <TextInputAction
-            inputValue={text}
-            onChangeText={setText}
-            onPress={sendMessage}
-            Icon={<Send color={lightTheme.main} />}
-          />
-        </KeyboardAvoidWrapper>
+            <View style={styles.inputBlock}>
+              <TextInputAction
+                inputValue={text}
+                onChangeText={setText}
+                onPress={sendMessage}
+                Icon={<Send color={lightTheme.main} />}
+              />
+            </View>
+          </KeyboardAvoidWrapper>
+        </View>
       )}
     </ScreenLayout>
   );
@@ -104,13 +107,20 @@ export const PrivateChatScreen = () => {
 const styles = StyleSheet.create({
   wrapper: {
     flex: 1,
-    gap: SPACING.BIG,
-    paddingHorizontal: SPACING.DEFAULT,
+    backgroundColor: lightTheme.main,
+    overflow: 'hidden',
   },
-  messagesBlock: {
+  content: {
     flex: 1,
   },
   scrollContent: {
     gap: SPACING.MINI,
+    paddingVertical: SPACING.MINI,
+    paddingHorizontal: SPACING.DEFAULT,
+  },
+  inputBlock: {
+    paddingVertical: SPACING.MINI_S,
+    paddingHorizontal: SPACING.DEFAULT,
+    backgroundColor: lightTheme.main,
   },
 });

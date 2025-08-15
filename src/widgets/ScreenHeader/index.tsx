@@ -41,7 +41,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: ComponentSize.ScreenPaddingHorizontal,
     paddingBottom: SPACING.MICRO,
     backgroundColor: lightTheme.main,
-    zIndex: 1,
+    zIndex: 99,
   },
   startBlock: {
     width: 32,

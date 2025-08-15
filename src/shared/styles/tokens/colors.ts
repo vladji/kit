@@ -12,8 +12,8 @@ export const COLORS = {
   MUTED_LIGHT_THEME: '#dadada',
   MUTED_DARK_THEME: '#dadada',
   BORDER: '#c6c6c6',
-  MESSAGE_PRIMARY: '#d5bca4',
-  MESSAGE_SECONDARY: '#81b3be',
+  MESSAGE_PRIMARY: '#58a5b6',
+  MESSAGE_SECONDARY: '#b6ab92',
 };
 
 export const SHADOW_COLOR = IS_IOS ? 'rgba(146, 146, 146, 0.3)' : '#0e0e0e';

@@ -51,6 +51,6 @@ const styles = StyleSheet.create({
     left: 0,
     right: 0,
     backgroundColor: lightTheme.main,
-    zIndex: 1,
+    zIndex: 99,
   },
 });

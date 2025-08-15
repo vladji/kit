@@ -1,38 +1,45 @@
 import { ListRenderItemInfo, StyleSheet, View, ViewStyle } from 'react-native';
 import { ChatMessageProps } from 'entities/chat/model/types.ts';
+import { lightThemeText } from 'shared/styles/theme/themeText.ts';
+import { COLORS } from 'shared/styles/tokens/colors.ts';
 import { SPACING } from 'shared/styles/tokens/spacing.ts';
 import { Typography } from 'shared/ui/Typography';
 
 interface Props {
   data: ListRenderItemInfo<ChatMessageProps>;
-  ownerId: string;
+  selfId: string;
 }
 
-export const Message = ({ data, ownerId }: Props) => {
-  const { item } = data;
-  const { to, text, createdAt } = item;
-  const isOwner = ownerId === to.id;
+export const Message = ({ data, selfId }: Props) => {
+  const { item: message } = data;
+  const { from, to, text, createdAt } = message;
+  const isSelf = from === selfId;
 
-  const customStyles: ViewStyle = isOwner
+  const customStyles: ViewStyle = isSelf
     ? {
+        alignSelf: 'flex-end',
         alignItems: 'flex-end',
-        backgroundColor: '#81b3be',
+        backgroundColor: COLORS.MESSAGE_PRIMARY,
       }
     : {
+        alignSelf: 'flex-start',
         alignItems: 'flex-start',
-        backgroundColor: '#d5bca4',
+        backgroundColor: COLORS.MESSAGE_SECONDARY,
       };
 
   return (
     <View style={[styles.wrapper, customStyles]}>
-      <Typography>{text}</Typography>
+      <Typography color={isSelf ? lightThemeText.light : lightThemeText.light}>
+        {text}
+      </Typography>
     </View>
   );
 };
 
 const styles = StyleSheet.create({
   wrapper: {
-    padding: SPACING.MICRO,
+    paddingHorizontal: SPACING.MEDIUM,
+    paddingVertical: SPACING.MICRO,
     borderRadius: SPACING.MEDIUM,
   },
 });

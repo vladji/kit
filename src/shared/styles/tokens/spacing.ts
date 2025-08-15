@@ -1,6 +1,7 @@
 export const SPACING = {
   NANO: 2,
   MICRO: 4,
+  MINI_S: 6,
   MINI: 8,
   MEDIUM: 12,
   DEFAULT: 16,
