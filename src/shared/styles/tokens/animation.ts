@@ -1,1 +1,2 @@
 export const ANIMATION_DURATION = 250;
+export const KEYBOARD_ANIMATION_DURATION = 400;

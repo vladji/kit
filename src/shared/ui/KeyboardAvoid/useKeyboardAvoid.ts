@@ -1,9 +1,9 @@
 import { useCallback, useEffect } from 'react';
 import { Keyboard } from 'react-native';
-import { SharedValue, withTiming } from 'react-native-reanimated';
+import { SharedValue, withSpring } from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { IS_IOS } from 'app/config/constants.ts';
-import { ANIMATION_DURATION } from 'shared/styles/tokens/animation.ts';
+import { KEYBOARD_ANIMATION_DURATION } from 'shared/styles/tokens/animation.ts';
 
 export interface KeyboardAvoidProps {
   translateY: SharedValue<number>;
@@ -21,7 +21,9 @@ export const useKeyboardAvoid = ({
 
   const animation = useCallback(
     (value: number) => {
-      translateY.value = withTiming(value, { duration: ANIMATION_DURATION });
+      translateY.value = withSpring(value, {
+        duration: KEYBOARD_ANIMATION_DURATION,
+      });
     },
     [translateY],
   );
@@ -33,7 +35,7 @@ export const useKeyboardAvoid = ({
         (event) => {
           const keyboardHeight = event.endCoordinates.height;
           const value = keyboardHeight - safeBottom + correction;
-          animation(-value);
+          animation(value);
         },
       );
 
