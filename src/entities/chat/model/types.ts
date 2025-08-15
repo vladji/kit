@@ -16,8 +16,8 @@ export interface ChatProps {
   chatId: string;
   members: ChatMemberProps[];
   lastMessage: string;
-  createdAt: Date;
-  updatedAt: Date;
+  createdAt: string;
+  updatedAt: string;
   support?: SupportChatProps;
 }
 
@@ -28,8 +28,8 @@ export interface ChatMessageProps {
   to: string;
   text: string;
   read: boolean;
-  createdAt: Date;
-  updatedAt: Date;
+  createdAt: string;
+  updatedAt: string;
 }
 
 export interface PrivateMessageProps {
