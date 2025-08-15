@@ -24,8 +24,8 @@ export interface ChatProps {
 export interface ChatMessageProps {
   id: string;
   chatId: string;
-  from: ChatMemberProps;
-  to: ChatMemberProps;
+  from: string;
+  to: string;
   text: string;
   read: boolean;
   createdAt: Date;
@@ -37,10 +37,4 @@ export interface PrivateMessageProps {
   to: ChatMemberProps;
   text: string;
   knownChatId: string | null;
-}
-
-export interface ChatProfileProps {
-  userId: string;
-  chatName: string | null;
-  avatarUrl: string | null;
 }

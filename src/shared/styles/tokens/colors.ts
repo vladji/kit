@@ -1,3 +1,4 @@
+import { Platform } from 'react-native';
 import { IS_IOS } from 'app/config/constants.ts';
 
 export const COLORS = {
@@ -18,12 +19,15 @@ export const COLORS = {
 export const SHADOW_COLOR = IS_IOS ? 'rgba(146, 146, 146, 0.3)' : '#0e0e0e';
 
 export const SHADOW = {
-  shadowOffset: {
-    width: 0,
-    height: 0,
-  },
-  shadowOpacity: 1,
-  shadowRadius: 4,
-  shadowColor: SHADOW_COLOR,
-  elevation: 3,
+  ...Platform.select({
+    ios: {
+      shadowColor: SHADOW_COLOR,
+      shadowOffset: { width: 0, height: 0 },
+      shadowOpacity: 0.5,
+      shadowRadius: 3,
+    },
+    android: {
+      elevation: 3,
+    },
+  }),
 };

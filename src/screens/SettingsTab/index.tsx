@@ -28,5 +28,6 @@ export const SettingsTab = () => {
 const styles = StyleSheet.create({
   scrollContainer: {
     gap: SPACING.BIG,
+    paddingHorizontal: SPACING.DEFAULT,
   },
 });

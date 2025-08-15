@@ -42,7 +42,7 @@ export const PrivateChatScreen = () => {
         setChatId(msg.chatId);
       }
       if (msg.chatId === chatId) {
-        setMessages((prev) => [...prev, msg]);
+        setMessages((prev) => [msg, ...prev]);
       }
     });
 
@@ -79,11 +79,13 @@ export const PrivateChatScreen = () => {
           <View style={styles.messagesBlock}>
             {!!messages?.length && (
               <FlatList
+                contentContainerStyle={styles.scrollContent}
                 data={messages}
                 renderItem={(item) => (
-                  <Message data={item} ownerId={selfProfile.id} />
+                  <Message data={item} selfId={selfProfile.id} />
                 )}
                 keyExtractor={(item) => item.id}
+                inverted
               />
             )}
           </View>
@@ -103,11 +105,12 @@ const styles = StyleSheet.create({
   wrapper: {
     flex: 1,
     gap: SPACING.BIG,
+    paddingHorizontal: SPACING.DEFAULT,
   },
   messagesBlock: {
     flex: 1,
   },
-  scrollContainer: {
-    flex: 1,
+  scrollContent: {
+    gap: SPACING.MINI,
   },
 });

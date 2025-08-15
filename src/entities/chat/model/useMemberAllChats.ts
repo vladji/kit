@@ -4,7 +4,6 @@ import { useCurrentUser } from 'entities/user/model/useCurrentUser.ts';
 
 export const useMemberAllChats = (support?: boolean) => {
   const { userId } = useCurrentUser();
-  console.log('useMemberAllChats-userId', userId);
 
   const { data, isLoading, refetch } = useGetMemberChats({
     memberId: userId,

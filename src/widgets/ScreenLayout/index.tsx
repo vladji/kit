@@ -1,15 +1,16 @@
-import React, { FC, ReactElement, ReactNode, useMemo } from 'react';
+import React, { FC, ReactElement, ReactNode } from 'react';
 import { StatusBar, StyleSheet, View } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import {
+  SafeAreaView,
+  useSafeAreaInsets,
+} from 'react-native-safe-area-context';
 import { lightTheme } from 'shared/styles/theme/theme.ts';
-import { ComponentSize, SPACING } from 'shared/styles/tokens/spacing.ts';
 import { Spinner } from 'shared/ui/Spinner';
 import { ScreenHeader } from 'widgets/ScreenHeader';
 
 interface Props {
   children: ReactNode;
   headerContent?: ReactElement;
-  hasHorizonInsets?: boolean;
   hasBackButton?: boolean;
   loading?: boolean;
 }
@@ -17,47 +18,39 @@ interface Props {
 export const ScreenLayout: FC<Props> = ({
   children,
   headerContent,
-  hasHorizonInsets = true,
   hasBackButton = false,
   loading,
 }) => {
-  const paddingHorizontal = hasHorizonInsets
-    ? ComponentSize.ScreenPaddingHorizontal
-    : 0;
-
-  const styles = useMemo(
-    () => getStyles(paddingHorizontal),
-    [paddingHorizontal],
-  );
+  const { top } = useSafeAreaInsets();
 
   return (
-    <View style={styles.layout}>
+    <SafeAreaView style={styles.layout}>
+      <View style={[styles.statusBar, { height: top }]} />
       <StatusBar
         barStyle="dark-content"
         backgroundColor="transparent"
         translucent
       />
-      <SafeAreaView style={styles.wrapper}>
-        {loading && <Spinner />}
-        {!!headerContent && (
-          <ScreenHeader content={headerContent} hasBackButton={hasBackButton} />
-        )}
-        {children}
-      </SafeAreaView>
-    </View>
+      {!!headerContent && (
+        <ScreenHeader content={headerContent} hasBackButton={hasBackButton} />
+      )}
+      {loading && <Spinner />}
+      {children}
+    </SafeAreaView>
   );
 };
 
-const getStyles = (paddingHorizontal: number) =>
-  StyleSheet.create({
-    layout: {
-      flex: 1,
-      backgroundColor: lightTheme.main,
-    },
-    wrapper: {
-      flex: 1,
-      paddingTop: SPACING.DEFAULT,
-      paddingBottom: SPACING.DEFAULT,
-      paddingHorizontal,
-    },
-  });
+const styles = StyleSheet.create({
+  layout: {
+    flex: 1,
+    backgroundColor: lightTheme.main,
+  },
+  statusBar: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    backgroundColor: lightTheme.main,
+    zIndex: 1,
+  },
+});

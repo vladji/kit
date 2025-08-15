@@ -32,7 +32,7 @@ export const useKeyboardAvoid = ({
         'keyboardWillShow',
         (event) => {
           const keyboardHeight = event.endCoordinates.height;
-          const value = keyboardHeight - correction - safeBottom;
+          const value = keyboardHeight - safeBottom + correction;
           animation(-value);
         },
       );

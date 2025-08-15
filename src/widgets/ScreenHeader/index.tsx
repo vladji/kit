@@ -3,7 +3,7 @@ import { StyleSheet, TouchableOpacity, View } from 'react-native';
 import { NavigationProp, useNavigation } from '@react-navigation/native';
 import { ArrowLeft } from 'lucide-react-native';
 import { RootStackParams } from 'app/router/RootRouter/types.ts';
-import { SHADOW } from 'shared/styles/tokens/colors.ts';
+import { lightTheme } from 'shared/styles/theme/theme.ts';
 import { ComponentSize, SPACING } from 'shared/styles/tokens/spacing.ts';
 import { Typography } from 'shared/ui/Typography';
 
@@ -37,10 +37,11 @@ const styles = StyleSheet.create({
   wrapper: {
     flexDirection: 'row',
     height: ComponentSize.HeaderSize,
+    marginBottom: SPACING.MICRO,
     paddingHorizontal: ComponentSize.ScreenPaddingHorizontal,
     paddingBottom: SPACING.MICRO,
-    zIndex: 2,
-    ...SHADOW,
+    backgroundColor: lightTheme.main,
+    zIndex: 1,
   },
   startBlock: {
     width: 32,
