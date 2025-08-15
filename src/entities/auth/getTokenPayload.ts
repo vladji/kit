@@ -1,6 +1,6 @@
 import { Alert } from 'react-native';
 import { jwtDecode } from 'jwt-decode';
-import { TokenPayload } from 'shared/lib/jwt/types.ts';
+import { TokenPayload } from 'entities/auth/types.ts';
 
 export const getTokenPayload = (token: string) => {
   try {

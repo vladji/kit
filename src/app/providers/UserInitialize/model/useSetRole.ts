@@ -1,8 +1,8 @@
 import { useEffect } from 'react';
 import { usePersistentStore } from 'app/storage/usePersistentStore.ts';
 import { useSessionStore } from 'app/storage/useSessionStore.ts';
+import { getTokenPayload } from 'entities/auth/getTokenPayload.ts';
 import { UserRoles } from 'entities/user/model/types.ts';
-import { getTokenPayload } from 'shared/lib/jwt/getTokenPayload.ts';
 
 export const useSetRoles = () => {
   const token = usePersistentStore((store) => store.token);

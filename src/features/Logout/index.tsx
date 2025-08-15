@@ -1,7 +1,7 @@
 import { FC } from 'react';
 import { LogOut } from 'lucide-react-native';
 import { FormattedMessage } from 'react-intl';
-import { logout } from 'shared/lib/auth/logout.ts';
+import { logout } from 'entities/auth/logout.ts';
 import { lightThemeText } from 'shared/styles/theme/themeText.ts';
 import { MenuButton } from 'shared/ui/MenuButton';
 

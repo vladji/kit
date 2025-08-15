@@ -1,5 +1,5 @@
-import { createTypeGuard } from 'shared/lib/types/fabric.ts';
 import { WeekDays } from 'shared/types/common.ts';
+import { createTypeGuard } from 'shared/types/lib/fabric.ts';
 
 interface StoreWorkingTime {
   weekDay: WeekDays;

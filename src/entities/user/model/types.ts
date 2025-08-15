@@ -1,4 +1,4 @@
-import { createTypeGuard } from 'shared/lib/types/fabric.ts';
+import { createTypeGuard } from 'shared/types/lib/fabric.ts';
 
 export enum UserRoles {
   Client = 'client',

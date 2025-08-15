@@ -3,8 +3,8 @@ import axios, { AxiosError } from 'axios';
 import { API_URL, STATUS } from 'app/api/constants.ts';
 import { AxiosApiResponse } from 'app/api/types.ts';
 import { usePersistentStore } from 'app/storage/usePersistentStore.ts';
-import { REFRESH_TOKEN_URL } from 'shared/lib/auth/constants.ts';
-import { logout } from 'shared/lib/auth/logout.ts';
+import { REFRESH_TOKEN_URL } from 'entities/auth/constants.ts';
+import { logout } from 'entities/auth/logout.ts';
 
 export const refreshToken = async (): Promise<
   AxiosApiResponse<{

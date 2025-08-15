@@ -5,7 +5,7 @@ import { usePersistentStore } from 'app/storage/usePersistentStore.ts';
 import { useSessionStore } from 'app/storage/useSessionStore.ts';
 import { getAdmin } from 'entities/admin/api/requests.ts';
 import { useIsAdmin } from 'entities/admin/model/useIsAdmin.ts';
-import { getTokenPayload } from 'shared/lib/jwt/getTokenPayload.ts';
+import { getTokenPayload } from 'entities/auth/getTokenPayload.ts';
 
 export const useInitializeAdmin = () => {
   const [adminProfile, setAdminProfile] = useSessionStore(

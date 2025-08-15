@@ -5,7 +5,7 @@ import { API_URL, STATUS } from 'app/api/constants.ts';
 import { fillQueue, processQueue } from 'app/api/model/errorsQueue.ts';
 import { CustomAxiosRequestConfig } from 'app/api/types.ts';
 import { usePersistentStore } from 'app/storage/usePersistentStore.ts';
-import { refreshToken } from 'shared/lib/auth/refreshToken.ts';
+import { refreshToken } from 'entities/auth/refreshToken.ts';
 
 const jwtApi = axios.create({
   baseURL: API_URL,

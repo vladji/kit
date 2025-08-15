@@ -2,8 +2,8 @@ import { Alert } from 'react-native';
 import { Socket, io } from 'socket.io-client';
 import { SERVER_URL } from 'app/api/constants.ts';
 import { SocketError } from 'app/providers/Socket/constants.ts';
-import { logout } from 'shared/lib/auth/logout.ts';
-import { refreshToken } from 'shared/lib/auth/refreshToken.ts';
+import { logout } from 'entities/auth/logout.ts';
+import { refreshToken } from 'entities/auth/refreshToken.ts';
 
 const URL = SERVER_URL;
 
