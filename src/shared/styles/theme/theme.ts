@@ -10,6 +10,7 @@ export const lightTheme = {
   border: COLORS.BORDER,
   messagePrimary: COLORS.MESSAGE_PRIMARY,
   messageSecondary: COLORS.MESSAGE_SECONDARY,
+  input: COLORS._LIGHT,
 };
 
 export const darkTheme = {

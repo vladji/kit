@@ -3,7 +3,6 @@ import { Keyboard } from 'react-native';
 import { REACT_ADMIN_LOGIN_PHRASE } from '@env';
 import { Search as SearchIcon } from 'lucide-react-native';
 import { AdminLogin } from 'features/AdminLogin';
-import { lightTheme } from 'shared/styles/theme/theme.ts';
 import { TextInputAction } from 'shared/ui/TextInputAction';
 
 export const Search = memo(() => {
@@ -32,7 +31,7 @@ export const Search = memo(() => {
         inputValue={searchValue}
         onChangeText={setSearchValue}
         onPress={onSearchPress}
-        Icon={<SearchIcon color={lightTheme.main} />}
+        Icon={SearchIcon}
         inputMode="search"
       />
       <AdminLogin show={showAdminLogin} onClose={toggleShowAdmin} />

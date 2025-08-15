@@ -99,7 +99,8 @@ export const PrivateChatScreen = () => {
                 inputValue={text}
                 onChangeText={setText}
                 onPress={sendMessage}
-                Icon={<Send color={lightTheme.main} />}
+                Icon={Send}
+                chatting
               />
             </View>
           </KeyboardAvoidWrapper>

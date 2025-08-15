@@ -14,6 +14,7 @@ export const ComponentSize = {
   HeaderSize: 38,
   MainButtonSize: 42,
   InputSize: 38,
+  InputSizeS: 32,
   ButtonBorderRadius: SPACING.MINI,
   AvatarSize: 58,
 };

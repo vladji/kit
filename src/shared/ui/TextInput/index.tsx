@@ -14,18 +14,25 @@ export interface TextInputComponentProps extends TextInputProps {
   label?: ReactElement | string;
   startAdornment?: ReactElement;
   endAdornment?: ReactElement;
+  chatting?: boolean;
 }
 
 export const TextInputComponent: FC<TextInputComponentProps> = ({
   label,
   startAdornment,
   endAdornment,
+  chatting = false,
   ...props
 }) => {
   const theme = useColorScheme();
   const isLight = theme === 'light';
   return (
-    <View style={styles.wrapper}>
+    <View
+      style={[
+        styles.wrapper,
+        chatting ? styles.wrapperChatting : styles.wrapperBase,
+      ]}
+    >
       {!!label && (
         <View style={styles.label}>
           <Typography type="label">{label}</Typography>
@@ -34,7 +41,10 @@ export const TextInputComponent: FC<TextInputComponentProps> = ({
       {!!startAdornment && startAdornment}
       <TextInput
         {...props}
-        style={styles.input}
+        style={[
+          styles.input,
+          chatting ? styles.inputChatting : styles.inputBase,
+        ]}
         keyboardAppearance={isLight ? 'light' : 'dark'}
       />
       {!!endAdornment && endAdornment}
@@ -47,22 +57,31 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     gap: SPACING.MICRO,
-    paddingHorizontal: SPACING.MINI,
-    borderWidth: 1,
+    paddingHorizontal: 10,
+    backgroundColor: lightTheme.input,
+  },
+  wrapperBase: {
     borderRadius: ComponentSize.ButtonBorderRadius,
-    borderColor: lightTheme.border,
+  },
+  wrapperChatting: {
+    borderRadius: 24,
   },
   label: {
     position: 'absolute',
     top: 0,
-    left: 12,
+    left: 8,
     transform: [{ translateY: '-55%' }],
     paddingHorizontal: SPACING.MICRO,
     backgroundColor: lightTheme.main,
   },
   input: {
     flex: 1,
-    height: ComponentSize.InputSize,
     fontSize: 16,
+  },
+  inputBase: {
+    height: ComponentSize.InputSize,
+  },
+  inputChatting: {
+    height: ComponentSize.InputSizeS,
   },
 });

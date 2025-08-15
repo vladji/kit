@@ -1,5 +1,6 @@
-import { FC, ReactElement } from 'react';
+import { FC } from 'react';
 import { StyleSheet, TouchableOpacity, View } from 'react-native';
+import { LucideProps } from 'lucide-react-native';
 import { lightTheme } from 'shared/styles/theme/theme.ts';
 import { ComponentSize, SPACING } from 'shared/styles/tokens/spacing.ts';
 import {
@@ -11,7 +12,8 @@ export interface TextInputActionProps extends TextInputComponentProps {
   inputValue: string;
   onChangeText: (text: string) => void;
   onPress: () => void;
-  Icon: ReactElement;
+  Icon: FC<LucideProps>;
+  chatting?: boolean;
 }
 
 export const TextInputAction: FC<TextInputActionProps> = ({
@@ -19,6 +21,7 @@ export const TextInputAction: FC<TextInputActionProps> = ({
   onChangeText,
   onPress,
   Icon,
+  chatting = false,
   ...inputProps
 }) => {
   return (
@@ -28,10 +31,14 @@ export const TextInputAction: FC<TextInputActionProps> = ({
           {...inputProps}
           value={inputValue}
           onChangeText={onChangeText}
+          chatting={chatting}
         />
       </View>
-      <TouchableOpacity style={styles.button} onPress={onPress}>
-        {Icon}
+      <TouchableOpacity
+        style={chatting ? styles.roundedButton : styles.button}
+        onPress={onPress}
+      >
+        <Icon color={lightTheme.main} size={16} />
       </TouchableOpacity>
     </View>
   );
@@ -46,14 +53,19 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   button: {
-    flexDirection: 'row',
-    height: '100%',
-    width: 48,
+    height: 'auto',
+    width: 42,
     justifyContent: 'center',
     alignItems: 'center',
-    borderWidth: 1,
     borderRadius: ComponentSize.ButtonBorderRadius,
-    borderColor: 'transparent',
+    backgroundColor: lightTheme.brand,
+  },
+  roundedButton: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    height: ComponentSize.InputSizeS,
+    width: ComponentSize.InputSizeS,
+    borderRadius: 888,
     backgroundColor: lightTheme.brand,
   },
 });
