@@ -2,6 +2,9 @@
 SERVICE.md
 DRAFT.md
 
+**/google-services.json
+**/GoogleService-Info.plist
+
 # OSX
 #
 .DS_Store
