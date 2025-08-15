@@ -47,7 +47,7 @@ export const TextInputAction: FC<TextInputActionProps> = ({
 const styles = StyleSheet.create({
   wrapper: {
     flexDirection: 'row',
-    gap: SPACING.MEDIUM,
+    gap: SPACING.MINI_S,
   },
   inputWrapper: {
     flex: 1,

@@ -45,6 +45,7 @@ export const TextInputComponent: FC<TextInputComponentProps> = ({
           styles.input,
           chatting ? styles.inputChatting : styles.inputBase,
         ]}
+        multiline={chatting}
         keyboardAppearance={isLight ? 'light' : 'dark'}
       />
       {!!endAdornment && endAdornment}
@@ -64,7 +65,7 @@ const styles = StyleSheet.create({
     borderRadius: ComponentSize.ButtonBorderRadius,
   },
   wrapperChatting: {
-    borderRadius: 24,
+    borderRadius: ComponentSize.InputSizeS / 2,
   },
   label: {
     position: 'absolute',
@@ -77,11 +78,14 @@ const styles = StyleSheet.create({
   input: {
     flex: 1,
     fontSize: 16,
+    paddingHorizontal: 4,
+    paddingVertical: 4,
   },
   inputBase: {
     height: ComponentSize.InputSize,
   },
   inputChatting: {
-    height: ComponentSize.InputSizeS,
+    minHeight: ComponentSize.InputSizeS,
+    lineHeight: 21,
   },
 });

@@ -120,7 +120,7 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   scrollContent: {
-    gap: SPACING.MINI,
+    gap: SPACING.NANO,
     paddingVertical: SPACING.MINI,
     paddingHorizontal: SPACING.DEFAULT,
   },

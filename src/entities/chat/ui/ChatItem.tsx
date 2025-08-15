@@ -44,7 +44,9 @@ export const ChatItem: FC<Props> = ({
       />
       <View style={styles.textWrapper}>
         <Typography weight="600">{peer.name}</Typography>
-        <Typography weight="300">{lastMessage}</Typography>
+        <Typography numberOfLines={2} ellipsizeMode="tail" weight="300">
+          {lastMessage}
+        </Typography>
       </View>
     </TouchableOpacity>
   );
@@ -53,16 +55,18 @@ export const ChatItem: FC<Props> = ({
 const styles = StyleSheet.create({
   wrapper: {
     flexDirection: 'row',
-    gap: SPACING.MINI,
     borderBottomWidth: 1,
     borderColor: lightTheme.border,
   },
   avatar: {
     width: ComponentSize.AvatarSize,
     height: ComponentSize.AvatarSize,
-    borderRadius: 9999,
+    borderRadius: 888,
   },
   textWrapper: {
+    flex: 1,
     paddingVertical: SPACING.NANO,
+    paddingLeft: SPACING.MINI,
+    paddingRight: SPACING.DEFAULT,
   },
 });

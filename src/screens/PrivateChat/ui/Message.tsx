@@ -1,5 +1,5 @@
 import { memo } from 'react';
-import { StyleSheet, View } from 'react-native';
+import { StyleSheet, Text, View } from 'react-native';
 import { getHhMm } from 'shared/lib/dates.ts';
 import { lightThemeText } from 'shared/styles/theme/themeText.ts';
 import { COLORS } from 'shared/styles/tokens/colors.ts';
@@ -19,10 +19,20 @@ export const Message = memo(({ from, text, createdAt, selfId }: Props) => {
 
   return (
     <View style={[styles.wrapper, styleMessage]}>
-      <Typography color={lightThemeText.light} leading={16}>
+      <Typography weight="500" color={lightThemeText.light}>
         {text}
+        <Text style={{ color: 'transparent' }}>{'       .'}</Text>
       </Typography>
-      <Typography size={10} color={lightThemeText.muted}>
+      <Typography
+        style={{
+          position: 'absolute',
+          bottom: SPACING.MINI_S,
+          right: SPACING.MEDIUM,
+        }}
+        size={10}
+        color={lightThemeText.muted}
+        align="right"
+      >
         {getHhMm(createdAt)}
       </Typography>
     </View>
@@ -31,20 +41,17 @@ export const Message = memo(({ from, text, createdAt, selfId }: Props) => {
 
 const styles = StyleSheet.create({
   wrapper: {
-    flexDirection: 'row',
-    gap: 6,
+    maxWidth: '85%',
     paddingHorizontal: SPACING.MEDIUM,
     paddingVertical: SPACING.MINI_S,
     borderRadius: SPACING.MEDIUM,
   },
   selfMessage: {
     alignSelf: 'flex-end',
-    alignItems: 'flex-end',
     backgroundColor: COLORS.MESSAGE_PRIMARY,
   },
   peerMessage: {
     alignSelf: 'flex-start',
-    alignItems: 'flex-end',
     backgroundColor: COLORS.MESSAGE_SECONDARY,
   },
 });
