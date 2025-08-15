@@ -78,12 +78,17 @@ export const PrivateChatScreen = () => {
             resizeMode="cover"
           />
           <KeyboardAvoidWrapper style={styles.content} includeSafeBottom={true}>
-            {!!messages?.length && (
+            {!!messages?.length && selfProfile && (
               <FlatList
                 contentContainerStyle={styles.scrollContent}
                 data={messages}
-                renderItem={(item) => (
-                  <Message data={item} selfId={selfProfile.id} />
+                renderItem={({ item }) => (
+                  <Message
+                    from={item.from}
+                    text={item.text}
+                    createdAt={item.createdAt}
+                    selfId={selfProfile!.id}
+                  />
                 )}
                 keyExtractor={(item) => item.id}
                 inverted
