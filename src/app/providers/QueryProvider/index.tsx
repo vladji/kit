@@ -1,9 +1,9 @@
 import type { ReactNode } from 'react';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import { createAsyncStoragePersister } from '@tanstack/query-async-storage-persister';
 import { QueryClient } from '@tanstack/react-query';
 import { PersistQueryClientProvider } from '@tanstack/react-query-persist-client';
 import { useRefetchOnAppStateActive } from 'app/providers/QueryProvider/lib/refetchOnAppStateActive.ts';
+import { queryStorage } from 'app/storage/usePersistentStore.ts';
 
 export const queryClient = new QueryClient({
   defaultOptions: {
@@ -13,8 +13,8 @@ export const queryClient = new QueryClient({
   },
 });
 
-const asyncStoragePersister = createAsyncStoragePersister({
-  storage: AsyncStorage,
+const storagePersister = createAsyncStoragePersister({
+  storage: queryStorage,
 });
 
 export const QueryProvider = ({ children }: { children: ReactNode }) => {
@@ -22,7 +22,7 @@ export const QueryProvider = ({ children }: { children: ReactNode }) => {
   return (
     <PersistQueryClientProvider
       client={queryClient}
-      persistOptions={{ persister: asyncStoragePersister }}
+      persistOptions={{ persister: storagePersister }}
     >
       {children}
     </PersistQueryClientProvider>

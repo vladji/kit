@@ -4,7 +4,20 @@ import { StateStorage, createJSONStorage, persist } from 'zustand/middleware';
 import { PersistentStoreProps } from 'app/storage/model/types.ts';
 import { lightTheme } from 'shared/styles/theme/theme.ts';
 
-const storage = new MMKV();
+export const storage = new MMKV();
+
+export const queryStorage = {
+  setItem: (name: string, value: string) => {
+    return storage.set(name, value);
+  },
+  getItem: (name: string) => {
+    const value = storage.getString(name);
+    return value ?? null;
+  },
+  removeItem: (name: string) => {
+    return storage.delete(name);
+  },
+};
 
 const zustandStorage: StateStorage = {
   setItem: (name, value) => {

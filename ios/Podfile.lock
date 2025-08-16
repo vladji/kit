@@ -2348,7 +2348,16 @@ PODS:
     - ReactCommon/turbomodule/core
     - SocketRocket
     - Yoga
-  - RNCAsyncStorage (2.2.0):
+  - RNDeviceInfo (14.0.4):
+    - React-Core
+  - RNFBApp (22.4.0):
+    - Firebase/CoreOnly (= 11.15.0)
+    - React-Core
+  - RNFBAuth (22.4.0):
+    - Firebase/Auth (= 11.15.0)
+    - React-Core
+    - RNFBApp
+  - RNGestureHandler (2.28.0):
     - boost
     - DoubleConversion
     - fast_float
@@ -2362,6 +2371,7 @@ PODS:
     - React-Core
     - React-debug
     - React-Fabric
+    - React-FabricComponents
     - React-featureflags
     - React-graphics
     - React-hermes
@@ -2377,15 +2387,6 @@ PODS:
     - ReactCommon/turbomodule/core
     - SocketRocket
     - Yoga
-  - RNDeviceInfo (14.0.4):
-    - React-Core
-  - RNFBApp (22.4.0):
-    - Firebase/CoreOnly (= 11.15.0)
-    - React-Core
-  - RNFBAuth (22.4.0):
-    - Firebase/Auth (= 11.15.0)
-    - React-Core
-    - RNFBApp
   - RNLocalize (3.5.1):
     - boost
     - DoubleConversion
@@ -2797,10 +2798,10 @@ DEPENDENCIES:
   - ReactCodegen (from `build/generated/ios`)
   - ReactCommon/turbomodule/core (from `../node_modules/react-native/ReactCommon`)
   - RNBootSplash (from `../node_modules/react-native-bootsplash`)
-  - "RNCAsyncStorage (from `../node_modules/@react-native-async-storage/async-storage`)"
   - RNDeviceInfo (from `../node_modules/react-native-device-info`)
   - "RNFBApp (from `../node_modules/@react-native-firebase/app`)"
   - "RNFBAuth (from `../node_modules/@react-native-firebase/auth`)"
+  - RNGestureHandler (from `../node_modules/react-native-gesture-handler`)
   - RNLocalize (from `../node_modules/react-native-localize`)
   - RNReanimated (from `../node_modules/react-native-reanimated`)
   - RNScreens (from `../node_modules/react-native-screens`)
@@ -2977,14 +2978,14 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native/ReactCommon"
   RNBootSplash:
     :path: "../node_modules/react-native-bootsplash"
-  RNCAsyncStorage:
-    :path: "../node_modules/@react-native-async-storage/async-storage"
   RNDeviceInfo:
     :path: "../node_modules/react-native-device-info"
   RNFBApp:
     :path: "../node_modules/@react-native-firebase/app"
   RNFBAuth:
     :path: "../node_modules/@react-native-firebase/auth"
+  RNGestureHandler:
+    :path: "../node_modules/react-native-gesture-handler"
   RNLocalize:
     :path: "../node_modules/react-native-localize"
   RNReanimated:
@@ -3085,10 +3086,10 @@ SPEC CHECKSUMS:
   ReactCommon: 4c7015a078757bb1f3032df5f75dd61b2121f297
   RecaptchaInterop: 11e0b637842dfb48308d242afc3f448062325aba
   RNBootSplash: 6ff879149fd4438777d6fdf98a860ec94c814636
-  RNCAsyncStorage: f30b3a83064e28b0fc46f1fbd3834589ed64c7b9
   RNDeviceInfo: d863506092aef7e7af3a1c350c913d867d795047
   RNFBApp: 90cf0209fb8f0460ab069a7de857d7ec851c8476
   RNFBAuth: 7a28922f8ae64c5079211ca7af299c9842206839
+  RNGestureHandler: a52292df4f8fc7daab354ad2c37be401d4c3bed8
   RNLocalize: 7a74b29785cd0bc55514c1faba75cf59351838e1
   RNReanimated: 79f7013af18614d4bda402ef9cd157f28d3a1ff1
   RNScreens: eff474e98669c2a4dbe7e43ee9464682711182ea
