@@ -21,14 +21,10 @@ export const Message = memo(({ from, text, createdAt, selfId }: Props) => {
     <View style={[styles.wrapper, styleMessage]}>
       <Typography weight="500" color={lightThemeText.light}>
         {text}
-        <Text style={{ color: 'transparent' }}>{'       .'}</Text>
+        <Text style={styles.emptyString}>{'       .'}</Text>
       </Typography>
       <Typography
-        style={{
-          position: 'absolute',
-          bottom: SPACING.MINI_S,
-          right: SPACING.MEDIUM,
-        }}
+        style={styles.timeString}
         size={10}
         color={lightThemeText.muted}
         align="right"
@@ -53,5 +49,13 @@ const styles = StyleSheet.create({
   peerMessage: {
     alignSelf: 'flex-start',
     backgroundColor: COLORS.MESSAGE_SECONDARY,
+  },
+  emptyString: {
+    color: 'transparent',
+  },
+  timeString: {
+    position: 'absolute',
+    bottom: SPACING.MINI_S,
+    right: SPACING.MEDIUM,
   },
 });

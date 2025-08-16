@@ -39,6 +39,7 @@ export const connectSocket = (userId: string, token: string | null) => {
 
   socket.on('disconnect', (reason) => {
     console.log('❌ Disconnected from socket server', reason);
+    //server ping timeout
   });
 
   socket.on('connect_error', async (err: Error) => {

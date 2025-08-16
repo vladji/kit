@@ -29,6 +29,7 @@ export const ChatItem: FC<Props> = ({
     });
   };
 
+  // TODO: implement react-native-fast-image
   return (
     <TouchableOpacity style={styles.wrapper} onPress={onChatOpen}>
       <Image
