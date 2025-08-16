@@ -29,6 +29,7 @@ export const ScrollKeyboardAvoid: FC<ScrollKeyboardAvoidProps> = ({
   const { height: screenHeight } = useWindowDimensions();
   const translateY = useSharedValue(0);
 
+  // TODO: deprecated
   const panResponder = useMemo(() => {
     return PanResponder.create({
       onStartShouldSetPanResponderCapture: ({ target }) => {

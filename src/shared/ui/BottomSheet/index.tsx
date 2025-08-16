@@ -74,7 +74,7 @@ export const BottomSheet = memo(
         top.value = withTiming(
           topValue,
           { duration: ANIMATION_DURATION * 1.2 },
-          (finished, current) => {
+          (finished) => {
             if (finished && onClose) {
               runOnJS(onClose)();
             }

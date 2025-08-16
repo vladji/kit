@@ -1,5 +1,11 @@
-import { useEffect, useState } from 'react';
-import { FlatList, Image, StyleSheet, View } from 'react-native';
+import { useCallback, useEffect, useState } from 'react';
+import {
+  FlatList,
+  Image,
+  ListRenderItemInfo,
+  StyleSheet,
+  View,
+} from 'react-native';
 import { RouteProp, useRoute } from '@react-navigation/native';
 import { Send } from 'lucide-react-native';
 import { FormattedMessage } from 'react-intl';
@@ -64,6 +70,21 @@ export const PrivateChatScreen = () => {
     setText('');
   };
 
+  const renderMessage = useCallback(
+    ({ item }: ListRenderItemInfo<ChatMessageProps>) => {
+      if (!selfProfile) return null;
+      return (
+        <Message
+          from={item.from}
+          text={item.text}
+          createdAt={item.createdAt}
+          selfId={selfProfile.id}
+        />
+      );
+    },
+    [selfProfile],
+  );
+
   return (
     <ScreenLayout
       headerContent={<FormattedMessage defaultMessage="Чат с поддержкой" />}
@@ -78,22 +99,15 @@ export const PrivateChatScreen = () => {
             resizeMode="cover"
           />
           <KeyboardAvoidWrapper style={styles.content} includeSafeBottom={true}>
-            {!!messages?.length && selfProfile && (
-              <FlatList
-                contentContainerStyle={styles.scrollContent}
-                data={messages}
-                renderItem={({ item }) => (
-                  <Message
-                    from={item.from}
-                    text={item.text}
-                    createdAt={item.createdAt}
-                    selfId={selfProfile!.id}
-                  />
-                )}
-                keyExtractor={(item) => item.id}
-                inverted
-              />
-            )}
+            <FlatList
+              contentContainerStyle={styles.scrollContent}
+              data={messages}
+              renderItem={renderMessage}
+              keyExtractor={(item) => item.id}
+              keyboardDismissMode="interactive"
+              keyboardShouldPersistTaps="handled"
+              inverted
+            />
             <View style={styles.inputBlock}>
               <TextInputAction
                 inputValue={text}
