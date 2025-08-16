@@ -1,11 +1,15 @@
-import { ReactElement, ReactNode, memo, useCallback, useMemo } from 'react';
+import { ReactElement, ReactNode, memo, useCallback } from 'react';
 import {
   Modal,
-  PanResponder,
   StyleSheet,
   TouchableWithoutFeedback,
   View,
 } from 'react-native';
+import {
+  Gesture,
+  GestureDetector,
+  GestureHandlerRootView,
+} from 'react-native-gesture-handler';
 import Animated, {
   interpolateColor,
   runOnJS,
@@ -70,8 +74,8 @@ export const BottomSheet = memo(
         top.value = withTiming(
           topValue,
           { duration: ANIMATION_DURATION * 1.2 },
-          () => {
-            if (onClose) {
+          (finished, current) => {
+            if (finished && onClose) {
               runOnJS(onClose)();
             }
           },
@@ -84,41 +88,6 @@ export const BottomSheet = memo(
       [top, bottom],
     );
 
-    const panResponder = useMemo(() => {
-      return PanResponder.create({
-        onStartShouldSetPanResponder: () => true,
-        onPanResponderMove: (_, gestureState) => {
-          if (gestureState.dy > 0) {
-            paddingBottom.value = gestureState.dy;
-          }
-          if (gestureState.dy < 0) {
-            paddingBottom.value = Math.abs(gestureState.dy / 2);
-          }
-        },
-        onPanResponderRelease: (_, gestureState) => {
-          paddingBottom.value = withSpring(0, { damping: 20, stiffness: 200 });
-
-          if (gestureState.dy >= 0 && gestureState.dy <= 50) {
-            paddingBottom.value = withSpring(0, {
-              damping: 20,
-              stiffness: 200,
-            });
-          }
-
-          if (gestureState.dy > 50) {
-            animation({
-              topValue: screenHeight,
-              bottomValue: -screenHeight,
-              onClose: () => {
-                paddingBottom.value = 0;
-                onClose();
-              },
-            });
-          }
-        },
-      });
-    }, [paddingBottom, screenHeight, onClose, animation]);
-
     const onShow = useCallback(() => {
       animation({ topValue: 0, bottomValue: 0 });
     }, [animation]);
@@ -127,11 +96,32 @@ export const BottomSheet = memo(
       animation({
         topValue: screenHeight,
         bottomValue: -screenHeight,
-        onClose: () => {
-          onClose();
-        },
+        onClose,
       });
     }, [animation, screenHeight, onClose]);
+
+    const panGesture = Gesture.Pan()
+      .onUpdate((event) => {
+        if (event.translationY > 0) {
+          paddingBottom.value = -event.translationY;
+        }
+        if (event.translationY < 0) {
+          paddingBottom.value = Math.abs(event.translationY / 2);
+        }
+      })
+      .onEnd((event) => {
+        paddingBottom.value = withSpring(0, {
+          damping: 200,
+        });
+
+        if (event.translationY > 50) {
+          runOnJS(animation)({
+            topValue: screenHeight,
+            bottomValue: -screenHeight,
+            onClose,
+          });
+        }
+      });
 
     const backgroundAnimationStyle = useAnimatedStyle(() => {
       const interpolatedColor = interpolateColor(
@@ -160,25 +150,28 @@ export const BottomSheet = memo(
 
     return (
       <Modal visible={show} transparent animationType="none" onShow={onShow}>
-        {loading && <Spinner />}
-        <TouchableWithoutFeedback onPress={onRequestClose}>
-          <Animated.View style={[backgroundAnimationStyle, styles.background]}>
+        <GestureHandlerRootView>
+          {loading && <Spinner />}
+          <TouchableWithoutFeedback onPress={onRequestClose}>
             <Animated.View
-              style={[styles.sheetLayout, sheetLayoutAnimationStyle]}
+              style={[backgroundAnimationStyle, styles.background]}
             >
               <Animated.View
-                style={[styles.sheet, sheetAnimationStyle]}
-                {...panResponder.panHandlers}
+                style={[styles.sheetLayout, sheetLayoutAnimationStyle]}
               >
-                {showDecor && <View style={styles.decor} />}
-                <View style={contentStyles.wrapper}>
-                  {!!title && <Typography weight="500">{title}</Typography>}
-                  {children}
-                </View>
+                <GestureDetector gesture={panGesture}>
+                  <Animated.View style={[styles.sheet, sheetAnimationStyle]}>
+                    {showDecor && <View style={styles.decor} />}
+                    <View style={contentStyles.wrapper}>
+                      {!!title && <Typography weight="500">{title}</Typography>}
+                      {children}
+                    </View>
+                  </Animated.View>
+                </GestureDetector>
               </Animated.View>
             </Animated.View>
-          </Animated.View>
-        </TouchableWithoutFeedback>
+          </TouchableWithoutFeedback>
+        </GestureHandlerRootView>
       </Modal>
     );
   },

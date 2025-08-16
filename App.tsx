@@ -1,5 +1,6 @@
 import React from 'react';
 import ErrorBoundary from 'react-native-error-boundary';
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { InitialAppState } from 'app/providers/InitialAppState';
 import { LocaleProvider } from 'app/providers/Locale';
@@ -12,21 +13,23 @@ import 'app/storage/usePersistentStore.ts';
 
 function App(): React.JSX.Element {
   return (
-    <ErrorBoundary FallbackComponent={ErrorFallback}>
-      <InitialAppState>
-        <LocaleProvider>
-          <QueryProvider>
-            <SafeAreaProvider>
-              <UserInitialize>
-                <SocketConnect>
-                  <RootRouter />
-                </SocketConnect>
-              </UserInitialize>
-            </SafeAreaProvider>
-          </QueryProvider>
-        </LocaleProvider>
-      </InitialAppState>
-    </ErrorBoundary>
+    <GestureHandlerRootView>
+      <ErrorBoundary FallbackComponent={ErrorFallback}>
+        <InitialAppState>
+          <LocaleProvider>
+            <QueryProvider>
+              <SafeAreaProvider>
+                <UserInitialize>
+                  <SocketConnect>
+                    <RootRouter />
+                  </SocketConnect>
+                </UserInitialize>
+              </SafeAreaProvider>
+            </QueryProvider>
+          </LocaleProvider>
+        </InitialAppState>
+      </ErrorBoundary>
+    </GestureHandlerRootView>
   );
 }
 
