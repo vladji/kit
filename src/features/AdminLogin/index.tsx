@@ -2,10 +2,10 @@ import { FC, useState } from 'react';
 import { Keyboard, StyleSheet, View } from 'react-native';
 import { usePostAdminLogin } from 'features/AdminLogin/api/usePostAdminLogin.ts';
 import { SPACING } from 'shared/styles/tokens/spacing.ts';
-import { BottomSheet } from 'shared/ui/BottomSheet';
 import { MainButton } from 'shared/ui/MainButton';
 import { PasswordInput } from 'shared/ui/PasswordInput';
 import { TextInputComponent } from 'shared/ui/TextInput';
+import { BottomSheet } from 'widgets/BottomSheet';
 
 interface Props {
   show: boolean;

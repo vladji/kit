@@ -1,10 +1,5 @@
-import { ReactElement, ReactNode, memo, useCallback } from 'react';
-import {
-  Modal,
-  StyleSheet,
-  TouchableWithoutFeedback,
-  View,
-} from 'react-native';
+import { ReactElement, ReactNode, memo, useCallback, useMemo } from 'react';
+import { Modal, Pressable, StyleSheet, View } from 'react-native';
 import {
   Gesture,
   GestureDetector,
@@ -31,11 +26,9 @@ import { Spinner } from 'shared/ui/Spinner';
 import { Typography } from 'shared/ui/Typography';
 
 type Animation = ({
-  topValue,
   bottomValue,
   onClose,
 }: {
-  topValue: number;
   bottomValue: number;
   onClose?: () => void;
 }) => void;
@@ -61,71 +54,72 @@ export const BottomSheet = memo(
     const { height: screenHeight } = useSafeAreaFrame();
     const { bottom: safeBottom } = useSafeAreaInsets();
 
-    const contentStyles = getContentStyles(showDecor, safeBottom);
-
-    const top = useSharedValue(screenHeight);
     const bottom = useSharedValue(-screenHeight);
     const paddingBottom = useSharedValue(0);
+    const translateY = useSharedValue(0);
 
     useKeyboardAvoid({ translate: paddingBottom });
 
     const animation = useCallback<Animation>(
-      ({ topValue, bottomValue, onClose }) => {
-        top.value = withTiming(
-          topValue,
-          { duration: ANIMATION_DURATION * 1.2 },
+      ({ bottomValue, onClose }) => {
+        bottom.value = withTiming(
+          bottomValue,
+          {
+            duration: ANIMATION_DURATION * 1.2,
+          },
           (finished) => {
             if (finished && onClose) {
               runOnJS(onClose)();
             }
           },
         );
-
-        bottom.value = withTiming(bottomValue, {
-          duration: ANIMATION_DURATION * 1.2,
-        });
       },
-      [top, bottom],
+      [bottom],
     );
 
     const onShow = useCallback(() => {
-      animation({ topValue: 0, bottomValue: 0 });
+      animation({ bottomValue: 0 });
     }, [animation]);
 
     const onRequestClose = useCallback(() => {
       animation({
-        topValue: screenHeight,
         bottomValue: -screenHeight,
         onClose,
       });
     }, [animation, screenHeight, onClose]);
 
-    const panGesture = Gesture.Pan()
-      .onUpdate((event) => {
-        if (event.translationY > 0) {
-          paddingBottom.value = -event.translationY;
-        }
-        if (event.translationY < 0) {
-          paddingBottom.value = Math.abs(event.translationY / 2);
-        }
-      })
-      .onEnd((event) => {
-        paddingBottom.value = withSpring(0, {
-          damping: 200,
-        });
+    const panGesture = useMemo(
+      () =>
+        Gesture.Pan()
+          .onUpdate((event) => {
+            if (event.translationY > 0) {
+              translateY.value = event.translationY;
+            }
+            if (event.translationY < 0) {
+              paddingBottom.value = Math.abs(event.translationY / 2);
+            }
+          })
+          .onEnd((event) => {
+            paddingBottom.value = withSpring(0, {
+              damping: 200,
+            });
+            translateY.value = withSpring(0, {
+              damping: 200,
+            });
 
-        if (event.translationY > 50) {
-          runOnJS(animation)({
-            topValue: screenHeight,
-            bottomValue: -screenHeight,
-            onClose,
-          });
-        }
-      });
+            if (event.translationY > 50) {
+              runOnJS(animation)({
+                bottomValue: -screenHeight,
+                onClose,
+              });
+            }
+          }),
+      [animation, onClose, paddingBottom, translateY, screenHeight],
+    );
 
     const backgroundAnimationStyle = useAnimatedStyle(() => {
       const interpolatedColor = interpolateColor(
-        top.value,
+        -bottom.value,
         [screenHeight, 0],
         ['rgba(32, 6, 1, 0)', 'rgba(32, 6, 1, 0.20)'],
       );
@@ -135,42 +129,35 @@ export const BottomSheet = memo(
       };
     });
 
-    const sheetLayoutAnimationStyle = useAnimatedStyle(() => {
+    const sheetAnimationStyle = useAnimatedStyle(() => {
       return {
-        top: top.value,
         bottom: bottom.value,
+        paddingBottom: paddingBottom.value,
+        transform: [{ translateY: translateY.value }],
       };
     });
 
-    const sheetAnimationStyle = useAnimatedStyle(() => {
-      return {
-        paddingBottom: paddingBottom.value,
-      };
-    });
+    const contentStyles = useMemo(
+      () => getContentStyles(showDecor, safeBottom),
+      [showDecor, safeBottom],
+    );
 
     return (
       <Modal visible={show} transparent animationType="none" onShow={onShow}>
+        {loading && <Spinner />}
         <GestureHandlerRootView>
-          {loading && <Spinner />}
-          <TouchableWithoutFeedback onPress={onRequestClose}>
-            <Animated.View
-              style={[backgroundAnimationStyle, styles.background]}
-            >
-              <Animated.View
-                style={[styles.sheetLayout, sheetLayoutAnimationStyle]}
-              >
-                <GestureDetector gesture={panGesture}>
-                  <Animated.View style={[styles.sheet, sheetAnimationStyle]}>
-                    {showDecor && <View style={styles.decor} />}
-                    <View style={contentStyles.wrapper}>
-                      {!!title && <Typography weight="500">{title}</Typography>}
-                      {children}
-                    </View>
-                  </Animated.View>
-                </GestureDetector>
-              </Animated.View>
+          <Pressable style={StyleSheet.absoluteFill} onPress={onRequestClose}>
+            <Animated.View style={[styles.flex, backgroundAnimationStyle]} />
+          </Pressable>
+          <GestureDetector gesture={panGesture}>
+            <Animated.View style={[styles.sheet, sheetAnimationStyle]}>
+              {showDecor && <View style={styles.decor} />}
+              <View style={contentStyles.wrapper}>
+                {!!title && <Typography weight="500">{title}</Typography>}
+                {children}
+              </View>
             </Animated.View>
-          </TouchableWithoutFeedback>
+          </GestureDetector>
         </GestureHandlerRootView>
       </Modal>
     );
@@ -178,33 +165,25 @@ export const BottomSheet = memo(
 );
 
 const styles = StyleSheet.create({
-  background: {
+  flex: {
     flex: 1,
   },
-  sheetLayout: {
-    position: 'absolute',
-    left: 0,
-    right: 0,
-    justifyContent: 'flex-end',
-    paddingLeft: SPACING.MINI,
-    paddingRight: SPACING.MINI,
-    backgroundColor: 'transparent',
-  },
   sheet: {
-    paddingTop: SPACING.DEFAULT,
+    position: 'absolute',
+    left: SPACING.MINI,
+    right: SPACING.MINI,
+
+    paddingTop: SPACING.MINI,
     borderTopRightRadius: SPACING.DEFAULT,
     borderTopLeftRadius: SPACING.DEFAULT,
     backgroundColor: lightTheme.main,
   },
   decor: {
-    position: 'absolute',
-    top: SPACING.MEDIUM,
-    left: '50%',
-    transform: [{ translateX: -32 }],
-    width: 64,
+    width: 48,
     height: 4,
+    alignSelf: 'center',
     borderRadius: 2,
-    backgroundColor: lightTheme.muted,
+    backgroundColor: lightTheme.border,
   },
 });
 

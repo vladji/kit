@@ -3,7 +3,7 @@ import { StyleSheet, View } from 'react-native';
 import { AppleLogin } from 'features/AppleLogin';
 import { GoogleLogin } from 'features/GoogleLogin';
 import { SPACING } from 'shared/styles/tokens/spacing.ts';
-import { BottomSheet } from 'shared/ui/BottomSheet';
+import { BottomSheet } from 'widgets/BottomSheet';
 
 interface Props {
   show: boolean;
