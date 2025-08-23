@@ -8,6 +8,7 @@ export const COLORS = {
   ACCENT_LIGHT: '#b18121',
   ACCENT_DARK: '#71450e',
   DARK: '#201c19',
+  DARK_MUTED: 'rgba(0,0,0,0.56)',
   _LIGHT: '#fff',
   LIGHT: '#f1f1f1',
   MUTED_LIGHT_THEME: '#f3f3f3',

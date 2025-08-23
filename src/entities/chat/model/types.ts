@@ -21,7 +21,7 @@ export interface ChatProps {
   support?: SupportChatProps;
 }
 
-export interface ChatMessageProps {
+export interface MessageProps {
   _id: string;
   chatId: string;
   from: string;
@@ -31,6 +31,18 @@ export interface ChatMessageProps {
   createdAt: string;
   updatedAt: string;
 }
+
+type ChatItemType = 'message' | 'date';
+
+export type ChatMessageProps = MessageProps & { type: ChatItemType };
+
+export interface ChatDateProps {
+  _id: string;
+  type: ChatItemType;
+  date: string;
+}
+
+export type MessagesListProps = ChatMessageProps | ChatDateProps;
 
 export interface PrivateMessageProps {
   from: ChatMemberProps;

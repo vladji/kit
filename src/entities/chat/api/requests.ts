@@ -1,7 +1,7 @@
 import api from 'app/api/api.ts';
 import { PaginationRequest, PaginationResponse } from 'app/api/types.ts';
 import { GetMemberChatsRequest } from 'entities/chat/api/types.ts';
-import { ChatMessageProps, ChatProps } from 'entities/chat/model/types.ts';
+import { ChatProps, MessageProps } from 'entities/chat/model/types.ts';
 
 export const getMemberChats = ({
   memberId,
@@ -25,7 +25,7 @@ export const getMessages = ({
 }: {
   chatId: string | null;
   limit: number;
-}): Promise<ChatMessageProps[]> =>
+}): Promise<MessageProps[]> =>
   api({
     url: `/chat/messages?chatId=${chatId}&limit=${limit}`,
   });

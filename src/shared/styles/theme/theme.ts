@@ -7,6 +7,7 @@ export const lightTheme = {
   accentLight: COLORS.ACCENT_LIGHT,
   accentDark: COLORS.ACCENT_DARK,
   muted: COLORS.MUTED_LIGHT_THEME,
+  darkMuted: COLORS.DARK_MUTED,
   border: COLORS.BORDER,
   messagePrimary: COLORS.MESSAGE_PRIMARY,
   messageSecondary: COLORS.MESSAGE_SECONDARY,

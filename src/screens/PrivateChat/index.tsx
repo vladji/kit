@@ -5,24 +5,21 @@ import {
   useRef,
   useState,
 } from 'react';
-import {
-  FlatList,
-  Image,
-  ListRenderItemInfo,
-  StyleSheet,
-  View,
-} from 'react-native';
+import { FlatList, Image, StyleSheet, View } from 'react-native';
 import { useRoute } from '@react-navigation/native';
 import { Send } from 'lucide-react-native';
 import { safeSocket } from 'app/providers/Socket/socket.ts';
 import { useGetMessages } from 'entities/chat/api/useGetMessages.ts';
 import { MESSAGES_DEFAULT_LIMIT } from 'entities/chat/model/constants.ts';
 import {
+  ChatDateProps,
   ChatMessageProps,
+  MessagesListProps,
   PrivateMessageProps,
 } from 'entities/chat/model/types.ts';
 import { useSelfProfile } from 'entities/chat/model/useSelfProfile.ts';
 import { PrivateChatRouteProp } from 'screens/PrivateChat/types.ts';
+import { Date } from 'screens/PrivateChat/ui/Date.tsx';
 import { ChatHeader } from 'screens/PrivateChat/ui/Header.tsx';
 import { Message } from 'screens/PrivateChat/ui/Message.tsx';
 import { lightTheme } from 'shared/styles/theme/theme.ts';
@@ -32,13 +29,13 @@ import { TextInputAction } from 'shared/ui/TextInputAction';
 import { ScreenLayout } from 'widgets/ScreenLayout';
 
 export const PrivateChatScreen = () => {
-  const listRef = useRef<FlatList<ChatMessageProps>>(null);
+  const listRef = useRef<FlatList<MessagesListProps>>(null);
 
   const selfProfile = useSelfProfile();
   const { params } = useRoute<PrivateChatRouteProp>();
 
   const [chatId, setChatId] = useState<string | null>(params.chatId || null);
-  const [messages, setMessages] = useState<ChatMessageProps[]>([]);
+  const [messages, setMessages] = useState<MessagesListProps[]>([]);
   const [text, setText] = useState('');
 
   const scrollToIndex = useCallback(
@@ -66,7 +63,7 @@ export const PrivateChatScreen = () => {
         startTransition(() => setChatId(msg.chatId));
       }
       if (msg.chatId === chatId) {
-        setMessages((prev) => [msg, ...prev]);
+        setMessages((prev) => [{ type: 'message', ...msg }, ...prev]);
 
         const fromSelf = msg.from === selfProfile?.id;
         if (fromSelf) {
@@ -94,13 +91,13 @@ export const PrivateChatScreen = () => {
   };
 
   const renderMessage = useCallback(
-    ({ item }: ListRenderItemInfo<ChatMessageProps>) => {
+    (props: ChatMessageProps) => {
       if (!selfProfile) return null;
       return (
         <Message
-          from={item.from}
-          text={item.text}
-          createdAt={item.createdAt}
+          from={props.from}
+          text={props.text}
+          createdAt={props.createdAt}
           selfId={selfProfile.id}
         />
       );
@@ -128,7 +125,16 @@ export const PrivateChatScreen = () => {
               initialNumToRender={MESSAGES_DEFAULT_LIMIT}
               keyExtractor={(item) => item._id}
               data={messages}
-              renderItem={renderMessage}
+              renderItem={({ item }) => {
+                if (item.type === 'message') {
+                  return renderMessage(item as ChatMessageProps);
+                }
+                if (item.type === 'date') {
+                  const date = (item as ChatDateProps).date;
+                  return <Date date={date} />;
+                }
+                return null;
+              }}
               maintainVisibleContentPosition={{ minIndexForVisible: 0 }}
               inverted
             />

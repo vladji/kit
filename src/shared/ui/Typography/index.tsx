@@ -37,9 +37,10 @@ const getStyles = ({ size, weight, leading, color, align }: StyleProps) =>
   StyleSheet.create({
     label: {
       fontSize: 12,
-      fontWeight: '400',
+      fontWeight: weight ?? '400',
       color,
       textAlign: align,
+      lineHeight: leading,
     },
     caption: {
       fontSize: 14,
