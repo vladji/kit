@@ -23,8 +23,10 @@ export const KeyboardAvoidWrapper: FC<Props> = ({
   ...props
 }) => {
   const translate = useSharedValue(0);
-  const animationStyles = useAnimatedStyle(() => {
+
+  const animatedStyle = useAnimatedStyle(() => {
     return {
+      // transform: [{ translateY: -translate.value }],
       paddingBottom: translate.value,
     };
   });
@@ -36,7 +38,7 @@ export const KeyboardAvoidWrapper: FC<Props> = ({
   });
 
   return (
-    <Animated.View {...props} style={[animationStyles, props.style]}>
+    <Animated.View {...props} style={[animatedStyle, props.style]}>
       {children}
     </Animated.View>
   );

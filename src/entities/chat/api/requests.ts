@@ -1,9 +1,6 @@
 import api from 'app/api/api.ts';
 import { PaginationRequest, PaginationResponse } from 'app/api/types.ts';
-import {
-  GetMemberChatsRequest,
-  GetMessagesRequest,
-} from 'entities/chat/api/types.ts';
+import { GetMemberChatsRequest } from 'entities/chat/api/types.ts';
 import { ChatMessageProps, ChatProps } from 'entities/chat/model/types.ts';
 
 export const getMemberChats = ({
@@ -24,11 +21,11 @@ export const getMemberChats = ({
 
 export const getMessages = ({
   chatId,
-  page,
   limit,
-}: PaginationRequest<GetMessagesRequest>): Promise<
-  PaginationResponse<{ messages: ChatMessageProps[] }>
-> =>
+}: {
+  chatId: string | null;
+  limit: number;
+}): Promise<ChatMessageProps[]> =>
   api({
-    url: `/chat/messages?chatId=${chatId}&page=${page}&limit=${limit}`,
+    url: `/chat/messages?chatId=${chatId}&limit=${limit}`,
   });

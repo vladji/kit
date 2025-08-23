@@ -33,15 +33,20 @@ export const useKeyboardAvoid = ({
       const showSubscription = Keyboard.addListener(
         'keyboardWillShow',
         (event) => {
+          Keyboard.scheduleLayoutAnimation(event);
           const keyboardHeight = event.endCoordinates.height;
-          const value = keyboardHeight - safeBottom + correction;
-          animation(value);
+          const height = keyboardHeight - safeBottom + correction;
+          animation(height);
         },
       );
 
-      const hideSubscription = Keyboard.addListener('keyboardWillHide', () => {
-        animation(0);
-      });
+      const hideSubscription = Keyboard.addListener(
+        'keyboardWillHide',
+        (event) => {
+          Keyboard.scheduleLayoutAnimation(event);
+          animation(0);
+        },
+      );
 
       return () => {
         showSubscription.remove();

@@ -22,7 +22,7 @@ export interface ChatProps {
 }
 
 export interface ChatMessageProps {
-  id: string;
+  _id: string;
   chatId: string;
   from: string;
   to: string;
