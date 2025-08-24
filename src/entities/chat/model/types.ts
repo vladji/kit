@@ -1,3 +1,4 @@
+import { ReactElement } from 'react';
 import { UserRoles } from 'entities/user/model/types.ts';
 
 export interface ChatMemberProps {
@@ -22,7 +23,7 @@ export interface ChatProps {
 }
 
 export interface MessageProps {
-  _id: string;
+  id: string;
   chatId: string;
   from: string;
   to: string;
@@ -37,9 +38,9 @@ type ChatItemType = 'message' | 'date';
 export type ChatMessageProps = MessageProps & { type: ChatItemType };
 
 export interface ChatDateProps {
-  _id: string;
+  id: string;
   type: ChatItemType;
-  date: string;
+  date: string | ReactElement;
 }
 
 export type MessagesListProps = ChatMessageProps | ChatDateProps;

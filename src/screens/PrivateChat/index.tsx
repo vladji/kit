@@ -9,7 +9,8 @@ import { FlatList, Image, StyleSheet, View } from 'react-native';
 import { useRoute } from '@react-navigation/native';
 import { Send } from 'lucide-react-native';
 import { safeSocket } from 'app/providers/Socket/socket.ts';
-import { useGetMessages } from 'entities/chat/api/useGetMessages.ts';
+import { useFetchMessagesLatest } from 'entities/chat/api/useFetchMessagesLatest.ts';
+import { useGetMessagesBefore } from 'entities/chat/api/useGetMessagesBefore.ts';
 import { MESSAGES_DEFAULT_LIMIT } from 'entities/chat/model/constants.ts';
 import {
   ChatDateProps,
@@ -38,6 +39,16 @@ export const PrivateChatScreen = () => {
   const [messages, setMessages] = useState<MessagesListProps[]>([]);
   const [text, setText] = useState('');
 
+  const { loading } = useFetchMessagesLatest({
+    chatId,
+    setMessages,
+  });
+
+  const { mutate: getMessagesBefore } = useGetMessagesBefore({
+    messagesState: messages,
+    setMessages,
+  });
+
   const scrollToIndex = useCallback(
     ({ animated = false }: { animated?: boolean }) => {
       requestAnimationFrame(() => {
@@ -52,10 +63,12 @@ export const PrivateChatScreen = () => {
     [messages.length],
   );
 
-  const { loading } = useGetMessages({
-    chatId,
-    setMessages,
-  });
+  const onEndReached = useCallback(async () => {
+    const firstMessage = messages[messages.length - 1];
+    if (firstMessage.type === 'message') {
+      getMessagesBefore({ chatId, messageId: firstMessage.id });
+    }
+  }, [chatId, messages, getMessagesBefore]);
 
   useEffect(() => {
     safeSocket()?.on('private_message', (msg) => {
@@ -90,17 +103,25 @@ export const PrivateChatScreen = () => {
     startTransition(() => setText(''));
   };
 
-  const renderMessage = useCallback(
-    (props: ChatMessageProps) => {
+  const renderItem = useCallback(
+    ({ item }: { item: MessagesListProps }) => {
       if (!selfProfile) return null;
-      return (
-        <Message
-          from={props.from}
-          text={props.text}
-          createdAt={props.createdAt}
-          selfId={selfProfile.id}
-        />
-      );
+      if (item.type === 'message') {
+        const message = item as ChatMessageProps;
+        return (
+          <Message
+            from={message.from}
+            text={message.text}
+            createdAt={message.createdAt}
+            selfId={selfProfile.id}
+          />
+        );
+      }
+      if (item.type === 'date') {
+        const date = (item as ChatDateProps).date;
+        return <Date date={date} />;
+      }
+      return null;
     },
     [selfProfile],
   );
@@ -123,19 +144,12 @@ export const PrivateChatScreen = () => {
               ref={listRef}
               contentContainerStyle={styles.scrollContent}
               initialNumToRender={MESSAGES_DEFAULT_LIMIT}
-              keyExtractor={(item) => item._id}
+              keyExtractor={(item) => item.id}
               data={messages}
-              renderItem={({ item }) => {
-                if (item.type === 'message') {
-                  return renderMessage(item as ChatMessageProps);
-                }
-                if (item.type === 'date') {
-                  const date = (item as ChatDateProps).date;
-                  return <Date date={date} />;
-                }
-                return null;
-              }}
+              renderItem={renderItem}
               maintainVisibleContentPosition={{ minIndexForVisible: 0 }}
+              onEndReachedThreshold={0.5}
+              onEndReached={onEndReached}
               inverted
             />
             <View style={styles.inputBlock}>

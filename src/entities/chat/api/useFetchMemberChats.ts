@@ -3,7 +3,7 @@ import { QUERY_KEYS } from 'app/api/constants.ts';
 import { getMemberChats } from 'entities/chat/api/requests.ts';
 import { GetMemberChatsRequest } from 'entities/chat/api/types.ts';
 
-export const useGetMemberChats = ({
+export const useFetchMemberChats = ({
   memberId,
   support = false,
 }: GetMemberChatsRequest) => {

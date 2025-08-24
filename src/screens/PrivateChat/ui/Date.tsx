@@ -1,4 +1,4 @@
-import { memo } from 'react';
+import { ReactElement, memo } from 'react';
 import { StyleSheet, View } from 'react-native';
 import { lightTheme } from 'shared/styles/theme/theme.ts';
 import { lightThemeText } from 'shared/styles/theme/themeText.ts';
@@ -6,7 +6,7 @@ import { SPACING } from 'shared/styles/tokens/spacing.ts';
 import { Typography } from 'shared/ui/Typography';
 
 interface Props {
-  date: string;
+  date: string | ReactElement;
 }
 
 export const Date = memo(({ date }: Props) => {

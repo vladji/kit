@@ -12,7 +12,7 @@ export const getHhMm = (ISODate: string) => {
   }
 };
 
-export const getCurrentDate = (locale: Locales | null) => {
+export const getTodayDate = (locale: Locales | null) => {
   const formatted = new Intl.DateTimeFormat(localeMap[locale || Locales.EN], {
     day: 'numeric',
     month: 'long',
