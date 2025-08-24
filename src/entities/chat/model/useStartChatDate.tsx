@@ -1,4 +1,9 @@
-import { Dispatch, SetStateAction, useCallback } from 'react';
+import {
+  Dispatch,
+  SetStateAction,
+  TransitionStartFunction,
+  useCallback,
+} from 'react';
 import { FormattedMessage } from 'react-intl';
 import { usePersistentStore } from 'app/storage/usePersistentStore.ts';
 import {
@@ -11,15 +16,22 @@ import { getDate, getTodayDate } from 'shared/lib/dates.ts';
 interface Props {
   messages: MessagesListProps[];
   setMessages: Dispatch<SetStateAction<MessagesListProps[]>>;
+  startTransition: TransitionStartFunction;
+  isTransition: boolean;
 }
 
-export const useStartChatDate = ({ messages, setMessages }: Props) => {
+export const useStartChatDate = ({
+  messages,
+  setMessages,
+  startTransition,
+  isTransition,
+}: Props) => {
   const locale = usePersistentStore((store) => store.locale);
 
   return useCallback(() => {
-    const firstMessage = messages[messages.length - 1];
+    const firstMessage = messages.at(-1);
 
-    if (firstMessage.type === 'message') {
+    if (firstMessage?.type === 'message' && !isTransition) {
       const date = (firstMessage as ChatMessageProps).createdAt;
       const formattedDate = getDate(locale, date);
       const todayDate = getTodayDate(locale);
@@ -34,7 +46,10 @@ export const useStartChatDate = ({ messages, setMessages }: Props) => {
             formattedDate
           ),
       };
-      setMessages((prev) => [...prev, chatDate]);
+
+      startTransition(() => {
+        setMessages((prev) => [...prev, chatDate]);
+      });
     }
-  }, [locale, messages, setMessages]);
+  }, [locale, messages, setMessages, startTransition, isTransition]);
 };

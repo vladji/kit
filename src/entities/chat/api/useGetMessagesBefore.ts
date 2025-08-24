@@ -1,4 +1,4 @@
-import { Dispatch, SetStateAction } from 'react';
+import { Dispatch, SetStateAction, TransitionStartFunction } from 'react';
 import { useMutation } from '@tanstack/react-query';
 import { getMessages } from 'entities/chat/api/requests.ts';
 import { GetMessagesRequest } from 'entities/chat/api/types.ts';
@@ -10,12 +10,21 @@ import { useStartChatDate } from 'entities/chat/model/useStartChatDate.tsx';
 interface Props {
   messagesState: MessagesListProps[];
   setMessages: Dispatch<SetStateAction<MessagesListProps[]>>;
+  startTransition: TransitionStartFunction;
+  isTransition: boolean;
 }
 
-export const useGetMessagesBefore = ({ messagesState, setMessages }: Props) => {
+export const useGetMessagesBefore = ({
+  messagesState,
+  setMessages,
+  startTransition,
+  isTransition,
+}: Props) => {
   const setStartChatDate = useStartChatDate({
     messages: messagesState,
     setMessages,
+    startTransition,
+    isTransition,
   });
   const formatList = useFormatListMessages();
 
@@ -33,7 +42,11 @@ export const useGetMessagesBefore = ({ messagesState, setMessages }: Props) => {
     onSuccess: (messages) => {
       if (messages?.length) {
         const list = formatList(messages);
-        setMessages((prev) => [...prev, ...list]);
+        if (!isTransition) {
+          startTransition(() => {
+            setMessages((prev) => [...prev, ...list]);
+          });
+        }
       } else {
         setStartChatDate();
       }

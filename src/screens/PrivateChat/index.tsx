@@ -1,10 +1,4 @@
-import {
-  startTransition,
-  useCallback,
-  useEffect,
-  useRef,
-  useState,
-} from 'react';
+import { useCallback, useEffect, useRef, useState, useTransition } from 'react';
 import { FlatList, Image, StyleSheet, View } from 'react-native';
 import { useRoute } from '@react-navigation/native';
 import { Send } from 'lucide-react-native';
@@ -19,6 +13,7 @@ import {
   PrivateMessageProps,
 } from 'entities/chat/model/types.ts';
 import { useSelfProfile } from 'entities/chat/model/useSelfProfile.ts';
+import { useSetLocalMessage } from 'entities/chat/model/useSetLocalMessage.tsx';
 import { PrivateChatRouteProp } from 'screens/PrivateChat/types.ts';
 import { Date } from 'screens/PrivateChat/ui/Date.tsx';
 import { ChatHeader } from 'screens/PrivateChat/ui/Header.tsx';
@@ -39,36 +34,31 @@ export const PrivateChatScreen = () => {
   const [messages, setMessages] = useState<MessagesListProps[]>([]);
   const [text, setText] = useState('');
 
+  const setLocalMessage = useSetLocalMessage({
+    messagesState: messages,
+    setMessages,
+  });
+
   const { loading } = useFetchMessagesLatest({
     chatId,
     setMessages,
   });
 
-  const { mutate: getMessagesBefore } = useGetMessagesBefore({
+  const [isTransition, startTransition] = useTransition();
+
+  const { mutate: getMessagesBefore, isPending } = useGetMessagesBefore({
     messagesState: messages,
     setMessages,
+    startTransition,
+    isTransition,
   });
 
-  const scrollToIndex = useCallback(
-    ({ animated = false }: { animated?: boolean }) => {
-      requestAnimationFrame(() => {
-        if (messages.length) {
-          listRef.current?.scrollToIndex({
-            index: 0,
-            animated,
-          });
-        }
-      });
-    },
-    [messages.length],
-  );
-
   const onEndReached = useCallback(async () => {
-    const firstMessage = messages[messages.length - 1];
-    if (firstMessage.type === 'message') {
+    const firstMessage = messages.at(-1);
+    if (!isPending && !isTransition && firstMessage?.type === 'message') {
       getMessagesBefore({ chatId, messageId: firstMessage.id });
     }
-  }, [chatId, messages, getMessagesBefore]);
+  }, [chatId, messages, getMessagesBefore, isPending, isTransition]);
 
   useEffect(() => {
     safeSocket()?.on('private_message', (msg) => {
@@ -76,19 +66,14 @@ export const PrivateChatScreen = () => {
         startTransition(() => setChatId(msg.chatId));
       }
       if (msg.chatId === chatId) {
-        setMessages((prev) => [{ type: 'message', ...msg }, ...prev]);
-
-        const fromSelf = msg.from === selfProfile?.id;
-        if (fromSelf) {
-          requestAnimationFrame(() => scrollToIndex({ animated: true }));
-        }
+        setLocalMessage(msg);
       }
     });
 
     return () => {
       safeSocket()?.off('private_message');
     };
-  }, [chatId, scrollToIndex, selfProfile?.id]);
+  }, [chatId, setLocalMessage]);
 
   const sendMessage = () => {
     if (!selfProfile || !params.peer.id || !text) return;
@@ -147,8 +132,11 @@ export const PrivateChatScreen = () => {
               keyExtractor={(item) => item.id}
               data={messages}
               renderItem={renderItem}
-              maintainVisibleContentPosition={{ minIndexForVisible: 0 }}
-              onEndReachedThreshold={0.5}
+              maintainVisibleContentPosition={{
+                minIndexForVisible: 0,
+                autoscrollToTopThreshold: 50,
+              }}
+              onEndReachedThreshold={1}
               onEndReached={onEndReached}
               inverted
             />
