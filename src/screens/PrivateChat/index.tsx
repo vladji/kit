@@ -14,6 +14,7 @@ import {
 } from 'entities/chat/model/types.ts';
 import { useSelfProfile } from 'entities/chat/model/useSelfProfile.ts';
 import { useSetLocalMessage } from 'entities/chat/model/useSetLocalMessage.tsx';
+import { getMessageAtIndex } from 'entities/chat/utils/getChatItemAtIndex.ts';
 import { PrivateChatRouteProp } from 'screens/PrivateChat/types.ts';
 import { Date } from 'screens/PrivateChat/ui/Date.tsx';
 import { ChatHeader } from 'screens/PrivateChat/ui/Header.tsx';
@@ -54,11 +55,15 @@ export const PrivateChatScreen = () => {
   });
 
   const onEndReached = useCallback(async () => {
-    const firstMessage = messages.at(-1);
+    const { item: firstMessage } = getMessageAtIndex(-1, messages);
     if (!isPending && !isTransition && firstMessage?.type === 'message') {
       getMessagesBefore({ chatId, messageId: firstMessage.id });
     }
   }, [chatId, messages, getMessagesBefore, isPending, isTransition]);
+
+  const onStartReached = useCallback(() => {
+    const lastMessage = messages[0];
+  }, [messages]);
 
   useEffect(() => {
     safeSocket()?.on('private_message', (msg) => {
@@ -134,10 +139,12 @@ export const PrivateChatScreen = () => {
               renderItem={renderItem}
               maintainVisibleContentPosition={{
                 minIndexForVisible: 0,
-                autoscrollToTopThreshold: 50,
+                autoscrollToTopThreshold: 100,
               }}
-              onEndReachedThreshold={1}
+              onEndReachedThreshold={0.5}
               onEndReached={onEndReached}
+              onStartReachedThreshold={0.5}
+              onStartReached={onStartReached}
               inverted
             />
             <View style={styles.inputBlock}>

@@ -24,9 +24,10 @@ export const getMessages = ({
   limit,
   chatId,
   messageId,
+  direction,
 }: GetMessagesRequest): Promise<MessageProps[]> => {
   const url = messageId
-    ? `/chat/messages?chatId=${chatId}&messageId=${messageId}&limit=${limit}`
+    ? `/chat/messages?chatId=${chatId}&messageId=${messageId}&direction=${direction}&limit=${limit}`
     : `/chat/messages?chatId=${chatId}&limit=${limit}`;
   return api({ url });
 };

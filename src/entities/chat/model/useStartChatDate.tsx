@@ -11,6 +11,7 @@ import {
   ChatMessageProps,
   MessagesListProps,
 } from 'entities/chat/model/types.ts';
+import { getMessageAtIndex } from 'entities/chat/utils/getChatItemAtIndex.ts';
 import { getDate, getTodayDate } from 'shared/lib/dates.ts';
 
 interface Props {
@@ -29,7 +30,7 @@ export const useStartChatDate = ({
   const locale = usePersistentStore((store) => store.locale);
 
   return useCallback(() => {
-    const firstMessage = messages.at(-1);
+    const { item: firstMessage } = getMessageAtIndex(-1, messages);
 
     if (firstMessage?.type === 'message' && !isTransition) {
       const date = (firstMessage as ChatMessageProps).createdAt;

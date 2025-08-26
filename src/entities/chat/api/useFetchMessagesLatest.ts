@@ -28,6 +28,7 @@ export const useFetchMessagesLatest = ({ chatId, setMessages }: Props) => {
       getMessages({
         chatId,
         messageId: null,
+        direction: null,
         limit: MESSAGES_DEFAULT_LIMIT,
       }),
     select,
