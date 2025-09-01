@@ -8,25 +8,17 @@ import {
 } from 'entities/chat/model/constants.ts';
 import { MessageProps, MessagesListProps } from 'entities/chat/model/types.ts';
 import { useFormatListMessages } from 'entities/chat/model/useFormatListMessages.tsx';
-import { useStartChatDate } from 'entities/chat/model/useStartChatDate.tsx';
 import { getMessageAtIndex } from 'entities/chat/utils/getChatItemAtIndex.ts';
 
 interface Props {
-  messagesState: MessagesListProps[];
   setMessages: Dispatch<SetStateAction<MessagesListProps[]>>;
   startTransition: TransitionStartFunction;
 }
 
-export const useGetMessagesBefore = ({
-  messagesState,
+export const useGetMessagesAfter = ({
   setMessages,
   startTransition,
 }: Props) => {
-  const setStartChatDate = useStartChatDate({
-    messages: messagesState,
-    setMessages,
-    startTransition,
-  });
   const formatList = useFormatListMessages();
 
   return useMutation<
@@ -38,27 +30,24 @@ export const useGetMessagesBefore = ({
       getMessages({
         chatId,
         messageId,
-        direction: Direction.Before,
+        direction: Direction.After,
         limit: MESSAGES_DEFAULT_LIMIT,
       }),
     onSuccess: (messages) => {
       if (messages?.length) {
-        const list = formatList(messages);
+        let list = formatList(messages);
 
         startTransition(() => {
           setMessages((prev) => {
             if (prev.length > 150) {
-              const trimIndex = prev.length - 150;
-              const { index } = getMessageAtIndex(trimIndex, prev);
-              const chunk = prev.slice(index);
-              return [...chunk, ...list];
+              const { index } = getMessageAtIndex(99, prev);
+              const chunk = prev.slice(0, index);
+              return [...list, ...chunk];
             }
 
-            return [...prev, ...list];
+            return [...list, ...prev];
           });
         });
-      } else {
-        setStartChatDate();
       }
     },
   });

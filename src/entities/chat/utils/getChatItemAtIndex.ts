@@ -16,7 +16,7 @@ export const getMessageAtIndex = (
   if (item && item.type !== 'message') {
     getMessageAtIndex(index - 1, list);
   }
-  if (!item) {
+  if (!item || item.type !== 'message') {
     return {
       item: null,
       index,

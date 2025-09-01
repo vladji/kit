@@ -4,6 +4,7 @@ import { useRoute } from '@react-navigation/native';
 import { Send } from 'lucide-react-native';
 import { safeSocket } from 'app/providers/Socket/socket.ts';
 import { useFetchMessagesLatest } from 'entities/chat/api/useFetchMessagesLatest.ts';
+import { useGetMessagesAfter } from 'entities/chat/api/useGetMessagesAfter.ts';
 import { useGetMessagesBefore } from 'entities/chat/api/useGetMessagesBefore.ts';
 import { MESSAGES_DEFAULT_LIMIT } from 'entities/chat/model/constants.ts';
 import {
@@ -12,6 +13,7 @@ import {
   MessagesListProps,
   PrivateMessageProps,
 } from 'entities/chat/model/types.ts';
+import { useDeferredMessages } from 'entities/chat/model/useDeferredMessages.ts';
 import { useSelfProfile } from 'entities/chat/model/useSelfProfile.ts';
 import { useSetLocalMessage } from 'entities/chat/model/useSetLocalMessage.tsx';
 import { getMessageAtIndex } from 'entities/chat/utils/getChatItemAtIndex.ts';
@@ -32,8 +34,9 @@ export const PrivateChatScreen = () => {
   const { params } = useRoute<PrivateChatRouteProp>();
 
   const [chatId, setChatId] = useState<string | null>(params.chatId || null);
-  const [messages, setMessages] = useState<MessagesListProps[]>([]);
   const [text, setText] = useState('');
+  const [messages, setMessages] = useState<MessagesListProps[]>([]);
+  const deferredMessages = useDeferredMessages(messages);
 
   const setLocalMessage = useSetLocalMessage({
     messagesState: messages,
@@ -47,23 +50,38 @@ export const PrivateChatScreen = () => {
 
   const [isTransition, startTransition] = useTransition();
 
-  const { mutate: getMessagesBefore, isPending } = useGetMessagesBefore({
-    messagesState: messages,
-    setMessages,
-    startTransition,
-    isTransition,
-  });
+  const { mutate: getMessagesBefore, isPending: messagesBeforeLoading } =
+    useGetMessagesBefore({
+      messagesState: messages,
+      setMessages,
+      startTransition,
+    });
+
+  const { mutate: getMessagesAfter, isPending: messagesAfterLoading } =
+    useGetMessagesAfter({
+      setMessages,
+      startTransition,
+    });
 
   const onEndReached = useCallback(async () => {
     const { item: firstMessage } = getMessageAtIndex(-1, messages);
-    if (!isPending && !isTransition && firstMessage?.type === 'message') {
+    if (firstMessage?.id && !messagesBeforeLoading && !isTransition) {
       getMessagesBefore({ chatId, messageId: firstMessage.id });
     }
-  }, [chatId, messages, getMessagesBefore, isPending, isTransition]);
+  }, [
+    chatId,
+    messages,
+    getMessagesBefore,
+    messagesBeforeLoading,
+    isTransition,
+  ]);
 
   const onStartReached = useCallback(() => {
-    const lastMessage = messages[0];
-  }, [messages]);
+    const { item: lastMessage } = getMessageAtIndex(0, messages);
+    if (lastMessage?.id && !messagesAfterLoading && !isTransition) {
+      getMessagesAfter({ chatId, messageId: lastMessage.id });
+    }
+  }, [chatId, messages, getMessagesAfter, messagesAfterLoading, isTransition]);
 
   useEffect(() => {
     safeSocket()?.on('private_message', (msg) => {
@@ -135,7 +153,7 @@ export const PrivateChatScreen = () => {
               contentContainerStyle={styles.scrollContent}
               initialNumToRender={MESSAGES_DEFAULT_LIMIT}
               keyExtractor={(item) => item.id}
-              data={messages}
+              data={deferredMessages}
               renderItem={renderItem}
               maintainVisibleContentPosition={{
                 minIndexForVisible: 0,
