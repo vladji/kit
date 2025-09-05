@@ -1,4 +1,5 @@
 import { useDeferredValue, useRef } from 'react';
+import { EMPTY_MESSAGE } from 'entities/chat/model/constants.ts';
 import {
   ChatMessageProps,
   MessagesListProps,
@@ -7,7 +8,7 @@ import {
 export const useDeferredMessages = (messages: MessagesListProps[]) => {
   const fakeFirstMessage = useRef<ChatMessageProps>({
     type: 'message',
-    id: 'kit',
+    id: EMPTY_MESSAGE,
     chatId: '',
     from: '',
     to: '',

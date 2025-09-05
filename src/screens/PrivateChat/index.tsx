@@ -118,6 +118,7 @@ export const PrivateChatScreen = () => {
         const message = item as ChatMessageProps;
         return (
           <Message
+            id={message.id}
             from={message.from}
             text={message.text}
             createdAt={message.createdAt}

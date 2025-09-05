@@ -26,8 +26,8 @@ export const KeyboardAvoidWrapper: FC<Props> = ({
 
   const animatedStyle = useAnimatedStyle(() => {
     return {
-      // transform: [{ translateY: -translate.value }],
-      paddingBottom: translate.value,
+      transform: [{ translateY: -translate.value }],
+      // paddingBottom: translate.value,
     };
   });
 

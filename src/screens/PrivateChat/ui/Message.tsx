@@ -1,5 +1,6 @@
 import { memo } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
+import { EMPTY_MESSAGE } from 'entities/chat/model/constants.ts';
 import { getHhMm } from 'shared/lib/dates.ts';
 import { lightThemeText } from 'shared/styles/theme/themeText.ts';
 import { COLORS } from 'shared/styles/tokens/colors.ts';
@@ -7,15 +8,20 @@ import { SPACING } from 'shared/styles/tokens/spacing.ts';
 import { Typography } from 'shared/ui/Typography';
 
 interface Props {
+  id: string;
   from: string;
   text: string;
   createdAt: string;
   selfId: string;
 }
 
-export const Message = memo(({ from, text, createdAt, selfId }: Props) => {
+export const Message = memo(({ id, from, text, createdAt, selfId }: Props) => {
   const isSelf = from === selfId;
   const styleMessage = isSelf ? styles.selfMessage : styles.peerMessage;
+
+  if (id === EMPTY_MESSAGE) {
+    return null;
+  }
 
   return (
     <View style={[styles.wrapper, styleMessage]}>
