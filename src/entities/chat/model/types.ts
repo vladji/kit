@@ -37,7 +37,7 @@ type ChatItemType = 'message' | 'date';
 
 export type ChatMessageProps = MessageProps & { type: ChatItemType };
 
-export interface ChatDateProps {
+export interface ChatDateProps extends Partial<ChatMessageProps> {
   id: string;
   type: ChatItemType;
   date: string | ReactElement;

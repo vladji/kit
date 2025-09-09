@@ -1,5 +1,4 @@
 import { useEffect } from 'react';
-import { Alert } from 'react-native';
 import { useShallow } from 'zustand/react/shallow';
 import { usePersistentStore } from 'app/storage/usePersistentStore.ts';
 import { useSessionStore } from 'app/storage/useSessionStore.ts';
@@ -27,7 +26,7 @@ export const useInitializeAdmin = () => {
           }
         }
       } catch {
-        Alert.alert('Error', 'while get user admin profile');
+        console.warn('Error while get admin profile');
       }
     })();
   }, [token, anyAdmin, adminProfile, setAdminProfile]);

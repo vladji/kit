@@ -1,5 +1,4 @@
 import { useEffect } from 'react';
-import { Alert } from 'react-native';
 import { useShallow } from 'zustand/react/shallow';
 import { checkUser } from 'app/providers/UserInitialize/lib/checkUser.ts';
 import { useSessionStore } from 'app/storage/useSessionStore.ts';
@@ -19,7 +18,7 @@ export const useInitializeUser = () => {
           }
         }
       } catch {
-        Alert.alert('Error', 'while get user profile');
+        console.warn('Error while get user profile');
       }
     })();
   }, [userProfile, setUserProfile]);
