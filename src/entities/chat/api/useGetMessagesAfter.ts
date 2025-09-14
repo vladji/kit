@@ -8,7 +8,6 @@ import {
 } from 'entities/chat/model/constants.ts';
 import { MessageProps, MessagesListProps } from 'entities/chat/model/types.ts';
 import { useFormatListMessages } from 'entities/chat/model/useFormatListMessages.tsx';
-import { getMessageAtIndex } from 'entities/chat/utils/getChatItemAtIndex.ts';
 
 interface Props {
   setMessages: Dispatch<SetStateAction<MessagesListProps[]>>;
@@ -39,13 +38,7 @@ export const useGetMessagesAfter = ({
 
         startTransition(() => {
           setMessages((prev) => {
-            if (prev.length > 150) {
-              const { index } = getMessageAtIndex(99, prev);
-              const trimmedPrev = prev.slice(index);
-              return [...new Set([...trimmedPrev, ...list])];
-            }
-
-            return [...new Set([...prev, ...list])];
+            return [...prev, ...list];
           });
         });
       }

@@ -1,10 +1,4 @@
-import {
-  Dispatch,
-  SetStateAction,
-  useCallback,
-  useRef,
-  useTransition,
-} from 'react';
+import { Dispatch, SetStateAction, useCallback, useTransition } from 'react';
 import { useGetMessagesAfter } from 'entities/chat/api/useGetMessagesAfter.ts';
 import { useGetMessagesBefore } from 'entities/chat/api/useGetMessagesBefore.ts';
 import { Direction } from 'entities/chat/model/constants.ts';
@@ -19,11 +13,6 @@ interface Props {
 
 export const useFetchMessages = ({ chatId, messages, setMessages }: Props) => {
   const [isTransition, startTransition] = useTransition();
-  const fetchAllowedRef = useRef(false);
-
-  const onScroll = useCallback(() => {
-    fetchAllowedRef.current = true;
-  }, []);
 
   const { mutate: getMessagesBefore, isPending: messagesBeforeLoading } =
     useGetMessagesBefore({
@@ -39,8 +28,6 @@ export const useFetchMessages = ({ chatId, messages, setMessages }: Props) => {
     });
 
   const onStartReached = useCallback(() => {
-    if (!fetchAllowedRef?.current) return;
-
     const { item } = getMessageAtIndex(0, messages, Direction.Before);
     if (item?.id && !messagesAfterLoading && !isTransition) {
       getMessagesBefore({ chatId, messageId: item.id });
@@ -48,8 +35,6 @@ export const useFetchMessages = ({ chatId, messages, setMessages }: Props) => {
   }, [chatId, messages, getMessagesBefore, messagesAfterLoading, isTransition]);
 
   const onEndReached = useCallback(async () => {
-    if (!fetchAllowedRef?.current) return;
-
     const { item } = getMessageAtIndex(-1, messages);
     if (item?.id && !messagesBeforeLoading && !isTransition) {
       getMessagesAfter({ chatId, messageId: item.id });
@@ -60,7 +45,5 @@ export const useFetchMessages = ({ chatId, messages, setMessages }: Props) => {
     startTransition,
     onStartReached,
     onEndReached,
-    onScroll,
-    fetchAllowed: fetchAllowedRef?.current,
   };
 };

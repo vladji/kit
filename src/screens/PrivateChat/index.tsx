@@ -45,12 +45,11 @@ export const PrivateChatScreen = () => {
 
   useGetMessagesAround({ chatId, setMessages });
 
-  const { startTransition, onScroll, onStartReached, onEndReached } =
-    useFetchMessages({
-      messages,
-      setMessages,
-      chatId,
-    });
+  const { startTransition, onStartReached, onEndReached } = useFetchMessages({
+    messages,
+    setMessages,
+    chatId,
+  });
 
   const onViewableItemsChanged = ({
     viewableItems,
@@ -68,6 +67,16 @@ export const PrivateChatScreen = () => {
   const debouncedOnViewableItemsChanged = useDebounce<{
     viewableItems: ViewToken<MessagesListProps>[];
   }>(onViewableItemsChanged, 500)();
+
+  const scrollTo = useCallback((index: number) => {
+    requestAnimationFrame(() => {
+      listRef.current?.scrollToIndex({
+        index,
+        animated: false,
+        viewPosition: 0,
+      });
+    });
+  }, []);
 
   useEffect(() => {
     // requestAnimationFrame(() => {
@@ -107,6 +116,7 @@ export const PrivateChatScreen = () => {
     };
     safeSocket()?.emit('private_message', privateMessage);
     startTransition(() => setText(''));
+    scrollTo(deferredMessages.length - 1);
   };
 
   const renderItem = useCallback(
@@ -121,6 +131,7 @@ export const PrivateChatScreen = () => {
             text={message.text}
             createdAt={message.createdAt}
             selfId={selfProfile.id}
+            read={message.read}
           />
         );
       }
@@ -150,7 +161,6 @@ export const PrivateChatScreen = () => {
               keyExtractor={(item) => item.id}
               data={deferredMessages}
               renderItem={renderItem}
-              onScroll={onScroll}
               onStartReachedThreshold={1}
               onStartReached={onStartReached}
               onEndReachedThreshold={1}
