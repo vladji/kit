@@ -1,11 +1,9 @@
-import { useCallback, useEffect, useRef, useState, useTransition } from 'react';
-import { FlatList, Image, StyleSheet, View } from 'react-native';
+import { useCallback, useEffect, useRef, useState } from 'react';
+import { FlatList, Image, StyleSheet, View, ViewToken } from 'react-native';
 import { useRoute } from '@react-navigation/native';
 import { Send } from 'lucide-react-native';
 import { safeSocket } from 'app/providers/Socket/socket.ts';
-import { useFetchMessagesLatest } from 'entities/chat/api/useFetchMessagesLatest.ts';
-import { useGetMessagesAfter } from 'entities/chat/api/useGetMessagesAfter.ts';
-import { useGetMessagesBefore } from 'entities/chat/api/useGetMessagesBefore.ts';
+import { useGetMessagesAround } from 'entities/chat/api/useGetMessagesAround.ts';
 import { MESSAGES_DEFAULT_LIMIT } from 'entities/chat/model/constants.ts';
 import {
   ChatDateProps,
@@ -16,11 +14,12 @@ import {
 import { useDeferredMessages } from 'entities/chat/model/useDeferredMessages.ts';
 import { useSelfProfile } from 'entities/chat/model/useSelfProfile.ts';
 import { useSetLocalMessage } from 'entities/chat/model/useSetLocalMessage.tsx';
-import { getMessageAtIndex } from 'entities/chat/utils/getChatItemAtIndex.ts';
+import { useFetchMessages } from 'screens/PrivateChat/model/useFetchMessages.ts';
 import { PrivateChatRouteProp } from 'screens/PrivateChat/types.ts';
 import { Date } from 'screens/PrivateChat/ui/Date.tsx';
 import { ChatHeader } from 'screens/PrivateChat/ui/Header.tsx';
 import { Message } from 'screens/PrivateChat/ui/Message.tsx';
+import { useDebounce } from 'shared/lib/useDebounce.ts';
 import { lightTheme } from 'shared/styles/theme/theme.ts';
 import { SPACING } from 'shared/styles/tokens/spacing.ts';
 import { KeyboardAvoidWrapper } from 'shared/ui/KeyboardAvoid/KeyboardAvoidWrapper.tsx';
@@ -36,6 +35,7 @@ export const PrivateChatScreen = () => {
   const [chatId, setChatId] = useState<string | null>(params.chatId || null);
   const [text, setText] = useState('');
   const [messages, setMessages] = useState<MessagesListProps[]>([]);
+
   const deferredMessages = useDeferredMessages(messages);
 
   const setLocalMessage = useSetLocalMessage({
@@ -43,45 +43,43 @@ export const PrivateChatScreen = () => {
     setMessages,
   });
 
-  const { loading } = useFetchMessagesLatest({
-    chatId,
-    setMessages,
-  });
+  useGetMessagesAround({ chatId, setMessages });
 
-  const [isTransition, startTransition] = useTransition();
-
-  const { mutate: getMessagesBefore, isPending: messagesBeforeLoading } =
-    useGetMessagesBefore({
-      messagesState: messages,
+  const { startTransition, onScroll, onStartReached, onEndReached } =
+    useFetchMessages({
+      messages,
       setMessages,
-      startTransition,
+      chatId,
     });
 
-  const { mutate: getMessagesAfter, isPending: messagesAfterLoading } =
-    useGetMessagesAfter({
-      setMessages,
-      startTransition,
-    });
+  const onViewableItemsChanged = ({
+    viewableItems,
+  }: {
+    viewableItems: ViewToken<MessagesListProps>[];
+  }) => {
+    const ids = viewableItems
+      .filter((item) => item.item.type === 'message' && !item.item.read)
+      ?.map((item) => item.key)
+      .join(',');
+    // console.log('ids', ids);
+    // safeSocket()?.emit('test', ids);
+  };
 
-  const onEndReached = useCallback(async () => {
-    const { item: firstMessage } = getMessageAtIndex(-1, messages);
-    if (firstMessage?.id && !messagesBeforeLoading && !isTransition) {
-      getMessagesBefore({ chatId, messageId: firstMessage.id });
-    }
-  }, [
-    chatId,
-    messages,
-    getMessagesBefore,
-    messagesBeforeLoading,
-    isTransition,
-  ]);
+  const debouncedOnViewableItemsChanged = useDebounce<{
+    viewableItems: ViewToken<MessagesListProps>[];
+  }>(onViewableItemsChanged, 500)();
 
-  const onStartReached = useCallback(() => {
-    const { item: lastMessage } = getMessageAtIndex(0, messages);
-    if (lastMessage?.id && !messagesAfterLoading && !isTransition) {
-      getMessagesAfter({ chatId, messageId: lastMessage.id });
-    }
-  }, [chatId, messages, getMessagesAfter, messagesAfterLoading, isTransition]);
+  useEffect(() => {
+    // requestAnimationFrame(() => {
+    //   if (!deferredMessages.length) return;
+    //
+    //   listRef.current?.scrollToIndex({
+    //     index: deferredMessages.length - 1,
+    //     animated: false,
+    //     viewPosition: 0,
+    //   });
+    // });
+  }, [deferredMessages]);
 
   useEffect(() => {
     safeSocket()?.on('private_message', (msg) => {
@@ -96,7 +94,7 @@ export const PrivateChatScreen = () => {
     return () => {
       safeSocket()?.off('private_message');
     };
-  }, [chatId, setLocalMessage]);
+  }, [chatId, setLocalMessage, startTransition]);
 
   const sendMessage = () => {
     if (!selfProfile || !params.peer.id || !text) return;
@@ -136,11 +134,7 @@ export const PrivateChatScreen = () => {
   );
 
   return (
-    <ScreenLayout
-      headerContent={<ChatHeader />}
-      loading={loading}
-      hasBackButton
-    >
+    <ScreenLayout headerContent={<ChatHeader />} hasBackButton>
       {!!selfProfile && (
         <View style={styles.wrapper}>
           <Image
@@ -156,15 +150,22 @@ export const PrivateChatScreen = () => {
               keyExtractor={(item) => item.id}
               data={deferredMessages}
               renderItem={renderItem}
-              maintainVisibleContentPosition={{
-                minIndexForVisible: 0,
-                autoscrollToTopThreshold: 100,
-              }}
-              onEndReachedThreshold={0.5}
-              onEndReached={onEndReached}
-              onStartReachedThreshold={0.5}
+              onScroll={onScroll}
+              onStartReachedThreshold={1}
               onStartReached={onStartReached}
-              inverted
+              onEndReachedThreshold={1}
+              onEndReached={onEndReached}
+              viewabilityConfig={{ viewAreaCoveragePercentThreshold: 95 }}
+              onViewableItemsChanged={debouncedOnViewableItemsChanged}
+              // onScrollToIndexFailed={(info) => {
+              //   requestAnimationFrame(() => {
+              //     listRef.current?.scrollToOffset({
+              //       offset: info.averageItemLength * info.index,
+              //       animated: false,
+              //     });
+              //   });
+              // }}
+              // inverted
             />
             <View style={styles.inputBlock}>
               <TextInputAction

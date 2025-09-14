@@ -41,11 +41,11 @@ export const useGetMessagesAfter = ({
           setMessages((prev) => {
             if (prev.length > 150) {
               const { index } = getMessageAtIndex(99, prev);
-              const chunk = prev.slice(0, index);
-              return [...list, ...chunk];
+              const trimmedPrev = prev.slice(index);
+              return [...new Set([...trimmedPrev, ...list])];
             }
 
-            return [...list, ...prev];
+            return [...new Set([...prev, ...list])];
           });
         });
       }

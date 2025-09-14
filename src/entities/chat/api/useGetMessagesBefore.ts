@@ -23,7 +23,6 @@ export const useGetMessagesBefore = ({
   startTransition,
 }: Props) => {
   const setStartChatDate = useStartChatDate({
-    messages: messagesState,
     setMessages,
     startTransition,
   });
@@ -48,17 +47,16 @@ export const useGetMessagesBefore = ({
         startTransition(() => {
           setMessages((prev) => {
             if (prev.length > 150) {
-              const trimIndex = prev.length - 150;
-              const { index } = getMessageAtIndex(trimIndex, prev);
-              const chunk = prev.slice(index);
-              return [...chunk, ...list];
+              const { index } = getMessageAtIndex(150, prev);
+              const trimmedPrev = prev.slice(0, index);
+              return [...new Set([...list, ...trimmedPrev])];
             }
 
-            return [...prev, ...list];
+            return [...new Set([...list, ...prev])];
           });
         });
       } else {
-        setStartChatDate();
+        setStartChatDate(messagesState);
       }
     },
   });

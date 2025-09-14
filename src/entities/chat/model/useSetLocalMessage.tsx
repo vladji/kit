@@ -20,9 +20,9 @@ export const useSetLocalMessage = ({ messagesState, setMessages }: Props) => {
   return useCallback(
     (message: MessageProps) => {
       const todayDate = getTodayDate(locale);
-      const lastMessage = messagesState[0];
+      const lastMessage = messagesState.at(-1);
 
-      if (lastMessage.type === 'message') {
+      if (lastMessage?.type === 'message') {
         const lastMessageISODate = (lastMessage as ChatMessageProps).createdAt;
         const lastMessageDate = getDate(locale, lastMessageISODate);
 
@@ -33,12 +33,12 @@ export const useSetLocalMessage = ({ messagesState, setMessages }: Props) => {
             date: <FormattedMessage defaultMessage="Сегодня" />,
           };
           setMessages((prev) => [
-            { type: 'message', ...message },
-            date,
             ...prev,
+            date,
+            { type: 'message', ...message },
           ]);
         } else {
-          setMessages((prev) => [{ type: 'message', ...message }, ...prev]);
+          setMessages((prev) => [...prev, { type: 'message', ...message }]);
         }
       }
     },
