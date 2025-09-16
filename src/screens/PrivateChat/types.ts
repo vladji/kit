@@ -5,3 +5,8 @@ export type PrivateChatRouteProp = RouteProp<
   RootStackParams,
   RootRouter.PrivateChatRoute
 >;
+
+export interface ContentMetaRefProps {
+  firstRender: boolean;
+  isReady: boolean;
+}

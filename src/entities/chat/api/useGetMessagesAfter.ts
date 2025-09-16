@@ -28,6 +28,7 @@ export const useGetMessagesAfter = ({
     mutationFn: ({ chatId, messageId }) =>
       getMessages({
         chatId,
+        readerId: null,
         messageId,
         direction: Direction.After,
         limit: MESSAGES_DEFAULT_LIMIT,

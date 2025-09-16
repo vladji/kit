@@ -30,14 +30,14 @@ export const useFetchMessages = ({ chatId, messages, setMessages }: Props) => {
   const onStartReached = useCallback(() => {
     const { item } = getMessageAtIndex(0, messages, Direction.Before);
     if (item?.id && !messagesAfterLoading && !isTransition) {
-      getMessagesBefore({ chatId, messageId: item.id });
+      getMessagesBefore({ chatId, readerId: null, messageId: item.id });
     }
   }, [chatId, messages, getMessagesBefore, messagesAfterLoading, isTransition]);
 
   const onEndReached = useCallback(async () => {
     const { item } = getMessageAtIndex(-1, messages);
     if (item?.id && !messagesBeforeLoading && !isTransition) {
-      getMessagesAfter({ chatId, messageId: item.id });
+      getMessagesAfter({ chatId, readerId: null, messageId: item.id });
     }
   }, [chatId, messages, getMessagesAfter, messagesBeforeLoading, isTransition]);
 

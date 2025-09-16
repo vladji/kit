@@ -35,6 +35,7 @@ export const useGetMessagesBefore = ({
     mutationFn: ({ chatId, messageId }) =>
       getMessages({
         chatId,
+        readerId: null,
         messageId,
         direction: Direction.Before,
         limit: Math.round(MESSAGES_DEFAULT_LIMIT),

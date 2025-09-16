@@ -13,7 +13,10 @@ interface Props {
   support?: SupportChatProps;
 }
 
-export const usePeerProfile = ({ members, support }: Props) => {
+export const usePeerProfile = ({
+  members,
+  support,
+}: Props): ChatMemberProps => {
   const { userId, roles } = useCurrentUser();
   const { anyAdmin } = useIsAdmin();
 
@@ -35,9 +38,9 @@ export const usePeerProfile = ({ members, support }: Props) => {
 
     if (isClient) {
       if (support) {
-        if (support.admin) {
-          return support.admin;
-        }
+        // if (support.admin) {
+        //   return support.admin;
+        // }
         return DEFAULT_ADMIN;
       }
       return members.filter((member) => member.id !== userId)[0];

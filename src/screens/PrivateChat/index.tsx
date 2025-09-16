@@ -1,25 +1,30 @@
-import { useCallback, useEffect, useRef, useState } from 'react';
-import { FlatList, Image, StyleSheet, View, ViewToken } from 'react-native';
+import { useCallback, useRef, useState } from 'react';
+import { FlatList, Image, StyleSheet, View } from 'react-native';
 import { useRoute } from '@react-navigation/native';
 import { Send } from 'lucide-react-native';
 import { safeSocket } from 'app/providers/Socket/socket.ts';
+import { useIsAdmin } from 'entities/admin/model/useIsAdmin.ts';
 import { useGetMessagesAround } from 'entities/chat/api/useGetMessagesAround.ts';
-import { MESSAGES_DEFAULT_LIMIT } from 'entities/chat/model/constants.ts';
 import {
-  ChatDateProps,
-  ChatMessageProps,
+  CHAT_SUPPORT,
+  MESSAGES_DEFAULT_LIMIT,
+} from 'entities/chat/model/constants.ts';
+import {
   MessagesListProps,
   PrivateMessageProps,
 } from 'entities/chat/model/types.ts';
 import { useDeferredMessages } from 'entities/chat/model/useDeferredMessages.ts';
 import { useSelfProfile } from 'entities/chat/model/useSelfProfile.ts';
-import { useSetLocalMessage } from 'entities/chat/model/useSetLocalMessage.tsx';
 import { useFetchMessages } from 'screens/PrivateChat/model/useFetchMessages.ts';
-import { PrivateChatRouteProp } from 'screens/PrivateChat/types.ts';
-import { Date } from 'screens/PrivateChat/ui/Date.tsx';
+import { useInitialPosition } from 'screens/PrivateChat/model/useInitialPosition.ts';
+import { useRenderItem } from 'screens/PrivateChat/model/useRenderItem.tsx';
+import { useSocketListeners } from 'screens/PrivateChat/model/useSocketListeners.ts';
+import { useViewableChanges } from 'screens/PrivateChat/model/useViewableChanges.ts';
+import {
+  ContentMetaRefProps,
+  PrivateChatRouteProp,
+} from 'screens/PrivateChat/types.ts';
 import { ChatHeader } from 'screens/PrivateChat/ui/Header.tsx';
-import { Message } from 'screens/PrivateChat/ui/Message.tsx';
-import { useDebounce } from 'shared/lib/useDebounce.ts';
 import { lightTheme } from 'shared/styles/theme/theme.ts';
 import { SPACING } from 'shared/styles/tokens/spacing.ts';
 import { KeyboardAvoidWrapper } from 'shared/ui/KeyboardAvoid/KeyboardAvoidWrapper.tsx';
@@ -28,8 +33,14 @@ import { ScreenLayout } from 'widgets/ScreenLayout';
 
 export const PrivateChatScreen = () => {
   const listRef = useRef<FlatList<MessagesListProps>>(null);
+  const contentMetaRef = useRef<ContentMetaRefProps>({
+    firstRender: true,
+    isReady: false,
+  });
 
+  const { anyAdmin } = useIsAdmin();
   const selfProfile = useSelfProfile();
+  const readerId = anyAdmin ? CHAT_SUPPORT : selfProfile?.id || null;
   const { params } = useRoute<PrivateChatRouteProp>();
 
   const [chatId, setChatId] = useState<string | null>(params.chatId || null);
@@ -38,12 +49,13 @@ export const PrivateChatScreen = () => {
 
   const deferredMessages = useDeferredMessages(messages);
 
-  const setLocalMessage = useSetLocalMessage({
-    messagesState: messages,
+  const {
+    data: { firstUnreadMessageId },
+  } = useGetMessagesAround({
+    chatId,
+    readerId,
     setMessages,
   });
-
-  useGetMessagesAround({ chatId, setMessages });
 
   const { startTransition, onStartReached, onEndReached } = useFetchMessages({
     messages,
@@ -51,22 +63,25 @@ export const PrivateChatScreen = () => {
     chatId,
   });
 
-  const onViewableItemsChanged = ({
-    viewableItems,
-  }: {
-    viewableItems: ViewToken<MessagesListProps>[];
-  }) => {
-    const ids = viewableItems
-      .filter((item) => item.item.type === 'message' && !item.item.read)
-      ?.map((item) => item.key)
-      .join(',');
-    // console.log('ids', ids);
-    // safeSocket()?.emit('test', ids);
-  };
+  const { onViewableItemsChanged } = useViewableChanges({
+    anyAdmin,
+    readerId,
+  });
 
-  const debouncedOnViewableItemsChanged = useDebounce<{
-    viewableItems: ViewToken<MessagesListProps>[];
-  }>(onViewableItemsChanged, 500)();
+  useInitialPosition({
+    listRef,
+    contentMetaRef,
+    deferredMessages,
+    firstUnreadMessageId,
+  });
+
+  useSocketListeners({
+    chatId,
+    setChatId,
+    messages,
+    setMessages,
+    startTransition,
+  });
 
   const scrollTo = useCallback((index: number) => {
     requestAnimationFrame(() => {
@@ -78,32 +93,9 @@ export const PrivateChatScreen = () => {
     });
   }, []);
 
-  useEffect(() => {
-    // requestAnimationFrame(() => {
-    //   if (!deferredMessages.length) return;
-    //
-    //   listRef.current?.scrollToIndex({
-    //     index: deferredMessages.length - 1,
-    //     animated: false,
-    //     viewPosition: 0,
-    //   });
-    // });
-  }, [deferredMessages]);
-
-  useEffect(() => {
-    safeSocket()?.on('private_message', (msg) => {
-      if (!chatId) {
-        startTransition(() => setChatId(msg.chatId));
-      }
-      if (msg.chatId === chatId) {
-        setLocalMessage(msg);
-      }
-    });
-
-    return () => {
-      safeSocket()?.off('private_message');
-    };
-  }, [chatId, setLocalMessage, startTransition]);
+  const onContentSizeChange = useCallback(() => {
+    contentMetaRef.current.isReady = true;
+  }, []);
 
   const sendMessage = () => {
     if (!selfProfile || !params.peer.id || !text) return;
@@ -119,30 +111,7 @@ export const PrivateChatScreen = () => {
     scrollTo(deferredMessages.length - 1);
   };
 
-  const renderItem = useCallback(
-    ({ item }: { item: MessagesListProps }) => {
-      if (!selfProfile) return null;
-      if (item.type === 'message') {
-        const message = item as ChatMessageProps;
-        return (
-          <Message
-            id={message.id}
-            from={message.from}
-            text={message.text}
-            createdAt={message.createdAt}
-            selfId={selfProfile.id}
-            read={message.read}
-          />
-        );
-      }
-      if (item.type === 'date') {
-        const date = (item as ChatDateProps).date;
-        return <Date date={date} />;
-      }
-      return null;
-    },
-    [selfProfile],
-  );
+  const renderItem = useRenderItem({ selfProfile });
 
   return (
     <ScreenLayout headerContent={<ChatHeader />} hasBackButton>
@@ -161,21 +130,21 @@ export const PrivateChatScreen = () => {
               keyExtractor={(item) => item.id}
               data={deferredMessages}
               renderItem={renderItem}
+              onContentSizeChange={onContentSizeChange}
               onStartReachedThreshold={1}
               onStartReached={onStartReached}
               onEndReachedThreshold={1}
               onEndReached={onEndReached}
-              viewabilityConfig={{ viewAreaCoveragePercentThreshold: 95 }}
-              onViewableItemsChanged={debouncedOnViewableItemsChanged}
-              // onScrollToIndexFailed={(info) => {
-              //   requestAnimationFrame(() => {
-              //     listRef.current?.scrollToOffset({
-              //       offset: info.averageItemLength * info.index,
-              //       animated: false,
-              //     });
-              //   });
-              // }}
-              // inverted
+              viewabilityConfig={{ viewAreaCoveragePercentThreshold: 80 }}
+              onViewableItemsChanged={onViewableItemsChanged}
+              onScrollToIndexFailed={(info) => {
+                requestAnimationFrame(() => {
+                  listRef.current?.scrollToOffset({
+                    offset: info.averageItemLength * info.index,
+                    animated: false,
+                  });
+                });
+              }}
             />
             <View style={styles.inputBlock}>
               <TextInputAction

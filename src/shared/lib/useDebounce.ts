@@ -4,13 +4,15 @@ export const useDebounce = <T extends unknown>(
   func: (args: T) => void,
   delay: number,
 ) => {
-  return useRef(() => {
-    let timer: number;
-    return (args: T) => {
-      clearTimeout(timer);
-      timer = setTimeout(() => {
-        func(args);
-      }, delay);
-    };
-  }).current;
+  return useRef(
+    (() => {
+      let timer: ReturnType<typeof setTimeout>;
+      return (args: T) => {
+        clearTimeout(timer);
+        timer = setTimeout(() => {
+          func(args);
+        }, delay);
+      };
+    })(),
+  ).current;
 };

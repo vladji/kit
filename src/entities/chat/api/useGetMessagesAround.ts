@@ -9,10 +9,15 @@ import { useFormatListMessages } from 'entities/chat/model/useFormatListMessages
 
 interface Props {
   chatId: string | null;
+  readerId: string | null;
   setMessages: Dispatch<SetStateAction<MessagesListProps[]>>;
 }
 
-export const useGetMessagesAround = ({ chatId, setMessages }: Props) => {
+export const useGetMessagesAround = ({
+  chatId,
+  readerId,
+  setMessages,
+}: Props) => {
   const formatList = useFormatListMessages();
 
   const select = useCallback(
@@ -34,10 +39,11 @@ export const useGetMessagesAround = ({ chatId, setMessages }: Props) => {
   );
 
   const { data, isLoading } = useQuery({
-    queryKey: [QUERY_KEYS.GET_MESSAGES_AROUND, chatId],
+    queryKey: [QUERY_KEYS.GET_MESSAGES_AROUND, chatId, readerId],
     queryFn: () =>
       getMessagesAround({
         chatId,
+        readerId,
         limit: MESSAGES_DEFAULT_LIMIT,
         messageId: null,
         direction: null,
@@ -47,7 +53,7 @@ export const useGetMessagesAround = ({ chatId, setMessages }: Props) => {
   });
 
   return {
-    data,
+    data: data || { firstUnreadMessageId: null },
     loading: isLoading,
   };
 };

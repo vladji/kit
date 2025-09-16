@@ -51,3 +51,10 @@ export interface PrivateMessageProps {
   text: string;
   knownChatId: string | null;
 }
+
+export interface MarkAsReadProps {
+  chatId: string;
+  lastSeenMessageId: string;
+  readerId: string;
+  isAdmin: boolean;
+}

@@ -9,6 +9,7 @@ export interface GetMemberChatsRequest {
 export interface GetMessagesRequest {
   limit: number;
   chatId: string | null;
+  readerId: string | null;
   messageId: string | null;
   direction: Direction | null;
 }

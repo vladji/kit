@@ -35,7 +35,10 @@ export const getMessages = ({
 
 export const getMessagesAround = ({
   chatId,
+  readerId,
   limit,
 }: GetMessagesRequest): Promise<MessagesAroundResponse> => {
-  return api({ url: `/chat/messages/around?chatId=${chatId}&limit=${limit}` });
+  return api({
+    url: `/chat/messages/around?chatId=${chatId}&readerId=${readerId}&limit=${limit}`,
+  });
 };
