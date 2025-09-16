@@ -1,5 +1,6 @@
 import { memo } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
+import { Check, CheckCheck } from 'lucide-react-native';
 import { EMPTY_MESSAGE } from 'entities/chat/model/constants.ts';
 import { getHhMm } from 'shared/lib/dates.ts';
 import { lightThemeText } from 'shared/styles/theme/themeText.ts';
@@ -13,33 +14,42 @@ interface Props {
   text: string;
   createdAt: string;
   selfId: string;
+  read: boolean;
 }
 
-export const Message = memo(({ id, from, text, createdAt, selfId }: Props) => {
-  const isSelf = from === selfId;
-  const styleMessage = isSelf ? styles.selfMessage : styles.peerMessage;
+export const Message = memo(
+  ({ id, from, text, createdAt, selfId, read }: Props) => {
+    const isSelf = from === selfId;
+    const styleMessage = isSelf ? styles.selfMessage : styles.peerMessage;
+    const emptyString = isSelf ? '           .' : '        .';
 
-  if (id === EMPTY_MESSAGE) {
-    return null;
-  }
+    if (id === EMPTY_MESSAGE) {
+      return null;
+    }
 
-  return (
-    <View style={[styles.wrapper, styleMessage]}>
-      <Typography weight="500" color={lightThemeText.light}>
-        {text}
-        <Text style={styles.emptyString}>{'       .'}</Text>
-      </Typography>
-      <Typography
-        style={styles.timeString}
-        size={10}
-        color={lightThemeText.muted}
-        align="right"
-      >
-        {getHhMm(createdAt)}
-      </Typography>
-    </View>
-  );
-});
+    return (
+      <View style={[styles.wrapper, styleMessage]}>
+        <Typography weight="500" color={lightThemeText.light}>
+          {text}
+          <Text style={styles.emptyString}>{emptyString}</Text>
+        </Typography>
+        <View style={styles.badge}>
+          <Typography size={10} color={lightThemeText.muted} align="right">
+            {getHhMm(createdAt)}
+          </Typography>
+          <View>
+            {isSelf && !read && (
+              <Check size={14} color={lightThemeText.muted} />
+            )}
+            {isSelf && read && (
+              <CheckCheck size={14} color={lightThemeText.muted} />
+            )}
+          </View>
+        </View>
+      </View>
+    );
+  },
+);
 
 const styles = StyleSheet.create({
   wrapper: {
@@ -59,9 +69,12 @@ const styles = StyleSheet.create({
   emptyString: {
     color: 'transparent',
   },
-  timeString: {
+  badge: {
     position: 'absolute',
     bottom: SPACING.MINI_S,
     right: SPACING.MEDIUM,
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 4,
   },
 });
