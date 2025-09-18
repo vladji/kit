@@ -14,7 +14,10 @@ interface Props {
   setMessages: Dispatch<SetStateAction<MessagesListProps[]>>;
 }
 
-export const useSetLocalMessage = ({ messagesState, setMessages }: Props) => {
+export const useSetNewLocalMessage = ({
+  messagesState,
+  setMessages,
+}: Props) => {
   const locale = usePersistentStore((store) => store.locale);
 
   return useCallback(

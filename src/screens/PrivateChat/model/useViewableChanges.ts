@@ -1,9 +1,10 @@
+import { useRef } from 'react';
 import { ViewToken } from 'react-native';
 import { safeSocket } from 'app/providers/Socket/socket.ts';
 import { CHAT_SUPPORT } from 'entities/chat/model/constants.ts';
 import {
   ChatMessageProps,
-  MarkAsReadProps,
+  MarkAsReadSocketProps,
   MessagesListProps,
 } from 'entities/chat/model/types.ts';
 import { useDebounce } from 'shared/lib/useDebounce.ts';
@@ -14,11 +15,15 @@ interface Props {
 }
 
 export const useViewableChanges = ({ anyAdmin, readerId }: Props) => {
+  const viewableItemsRef = useRef<ViewToken<MessagesListProps>[]>([]);
+
   const onViewableItemsChanged = ({
     viewableItems,
   }: {
     viewableItems: ViewToken<MessagesListProps>[];
   }) => {
+    viewableItemsRef.current = viewableItems;
+
     const filtered = viewableItems.filter(
       (item) =>
         item.item.type === 'message' &&
@@ -32,7 +37,7 @@ export const useViewableChanges = ({ anyAdmin, readerId }: Props) => {
 
     const { id, chatId, to } = lastVisibleItem.item;
 
-    const markAsReadData: MarkAsReadProps = {
+    const markAsReadData: MarkAsReadSocketProps = {
       chatId,
       lastSeenMessageId: id,
       readerId: to,
@@ -48,5 +53,6 @@ export const useViewableChanges = ({ anyAdmin, readerId }: Props) => {
 
   return {
     onViewableItemsChanged: debouncedOnViewableItemsChanged,
+    viewableItemsRef,
   };
 };
