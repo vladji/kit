@@ -39,13 +39,25 @@ export const usePersistentStore = create<PersistentStoreProps>()(
       theme: lightTheme,
       token: null,
       refreshToken: null,
+      chatsMetaData: {},
+      setChatHistory: (chatId, chatHistory) => {
+        set((state) => ({
+          chatsMetaData: {
+            ...state.chatsMetaData,
+            [chatId]: {
+              ...state.chatsMetaData?.[chatId],
+              chatHistory,
+            },
+          },
+        }));
+      },
       setLocale: (locale) => set({ locale }),
       setTheme: (theme) => set({ theme }),
       setToken: (token) => set({ token }),
       setRefreshToken: (refreshToken) => set({ refreshToken }),
     }),
     {
-      name: 'kit---persistent-storage',
+      name: 'kit_persistent-storage',
       storage: createJSONStorage(() => zustandStorage),
     },
   ),
