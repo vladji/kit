@@ -1,10 +1,9 @@
-import { useCallback, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { FlatList, Image, StyleSheet, View } from 'react-native';
 import { useRoute } from '@react-navigation/native';
 import { Send } from 'lucide-react-native';
 import { safeSocket } from 'app/providers/Socket/socket.ts';
 import { useIsAdmin } from 'entities/admin/model/useIsAdmin.ts';
-import { useGetMessagesAround } from 'entities/chat/api/useGetMessagesAround.ts';
 import {
   CHAT_SUPPORT,
   MESSAGES_DEFAULT_LIMIT,
@@ -13,17 +12,13 @@ import {
   MessagesListProps,
   PrivateMessageProps,
 } from 'entities/chat/model/types.ts';
-import { useDeferredMessages } from 'entities/chat/model/useDeferredMessages.ts';
 import { useSelfProfile } from 'entities/chat/model/useSelfProfile.ts';
-import { useFetchMessages } from 'screens/PrivateChat/model/useFetchMessages.ts';
-import { useInitialPosition } from 'screens/PrivateChat/model/useInitialPosition.ts';
+import { useLoadMoreMessages } from 'screens/PrivateChat/model/useLoadMoreMessages.ts';
+import { useMessages } from 'screens/PrivateChat/model/useMessages.ts';
 import { useRenderItem } from 'screens/PrivateChat/model/useRenderItem.tsx';
 import { useSocketListeners } from 'screens/PrivateChat/model/useSocketListeners.ts';
 import { useViewableChanges } from 'screens/PrivateChat/model/useViewableChanges.ts';
-import {
-  ContentMetaRefProps,
-  PrivateChatRouteProp,
-} from 'screens/PrivateChat/types.ts';
+import { PrivateChatRouteProp } from 'screens/PrivateChat/types.ts';
 import { ChatHeader } from 'screens/PrivateChat/ui/Header.tsx';
 import { lightTheme } from 'shared/styles/theme/theme.ts';
 import { SPACING } from 'shared/styles/tokens/spacing.ts';
@@ -33,10 +28,6 @@ import { ScreenLayout } from 'widgets/ScreenLayout';
 
 export const PrivateChatScreen = () => {
   const listRef = useRef<FlatList<MessagesListProps>>(null);
-  const contentMetaRef = useRef<ContentMetaRefProps>({
-    firstRender: true,
-    isReady: false,
-  });
 
   const { anyAdmin } = useIsAdmin();
   const selfProfile = useSelfProfile();
@@ -45,34 +36,23 @@ export const PrivateChatScreen = () => {
 
   const [chatId, setChatId] = useState<string | null>(params.chatId || null);
   const [text, setText] = useState('');
-  const [messages, setMessages] = useState<MessagesListProps[]>([]);
 
-  const deferredMessages = useDeferredMessages(messages);
+  const { deferredMessages, messages, setMessages, setChatHistory } =
+    useMessages({
+      chatId,
+    });
 
-  const {
-    data: { firstUnreadMessageId },
-  } = useGetMessagesAround({
-    chatId,
-    readerId,
-    setMessages,
-  });
+  const { startTransition, onStartReached, onEndReached } = useLoadMoreMessages(
+    {
+      messages,
+      setMessages,
+      chatId,
+    },
+  );
 
-  const { startTransition, onStartReached, onEndReached } = useFetchMessages({
-    messages,
-    setMessages,
-    chatId,
-  });
-
-  const { onViewableItemsChanged } = useViewableChanges({
+  const { onViewableItemsChanged, viewableItemsRef } = useViewableChanges({
     anyAdmin,
     readerId,
-  });
-
-  useInitialPosition({
-    listRef,
-    contentMetaRef,
-    deferredMessages,
-    firstUnreadMessageId,
   });
 
   useSocketListeners({
@@ -83,6 +63,17 @@ export const PrivateChatScreen = () => {
     startTransition,
   });
 
+  useEffect(() => {
+    return () => {
+      if (chatId && viewableItemsRef.current.length) {
+        const lastSeenMessages = viewableItemsRef.current.map(
+          (item) => item.item,
+        );
+        setChatHistory(chatId, lastSeenMessages);
+      }
+    };
+  }, [chatId, viewableItemsRef, setChatHistory]);
+
   const scrollTo = useCallback((index: number) => {
     requestAnimationFrame(() => {
       listRef.current?.scrollToIndex({
@@ -91,10 +82,6 @@ export const PrivateChatScreen = () => {
         viewPosition: 0,
       });
     });
-  }, []);
-
-  const onContentSizeChange = useCallback(() => {
-    contentMetaRef.current.isReady = true;
   }, []);
 
   const sendMessage = () => {
@@ -130,12 +117,11 @@ export const PrivateChatScreen = () => {
               keyExtractor={(item) => item.id}
               data={deferredMessages}
               renderItem={renderItem}
-              onContentSizeChange={onContentSizeChange}
               onStartReachedThreshold={1}
               onStartReached={onStartReached}
               onEndReachedThreshold={1}
               onEndReached={onEndReached}
-              viewabilityConfig={{ viewAreaCoveragePercentThreshold: 80 }}
+              viewabilityConfig={{ viewAreaCoveragePercentThreshold: 95 }}
               onViewableItemsChanged={onViewableItemsChanged}
               onScrollToIndexFailed={(info) => {
                 requestAnimationFrame(() => {
@@ -144,6 +130,9 @@ export const PrivateChatScreen = () => {
                     animated: false,
                   });
                 });
+              }}
+              maintainVisibleContentPosition={{
+                minIndexForVisible: 0,
               }}
             />
             <View style={styles.inputBlock}>

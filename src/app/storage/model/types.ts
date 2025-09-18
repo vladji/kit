@@ -1,5 +1,6 @@
 import { Locales } from 'app/locales/types.ts';
 import { AdminProps } from 'entities/admin/model/types.ts';
+import { MessagesListProps } from 'entities/chat/model/types.ts';
 import { StoreProps } from 'entities/store/model/types.ts';
 import { UserProps, UserRolesProps } from 'entities/user/model/types.ts';
 import { ThemeType } from 'shared/styles/theme/theme.ts';
@@ -15,6 +16,10 @@ export interface SessionStateProps {
   setStoreProfile: (profile: StoreProps | null) => void;
 }
 
+interface ChatMetaData {
+  chatHistory: MessagesListProps[];
+}
+
 export interface PersistentStoreProps {
   locale: Locales | null;
   theme: ThemeType;
@@ -24,4 +29,6 @@ export interface PersistentStoreProps {
   setTheme: (theme: ThemeType) => void;
   setToken: (token: string | null) => void;
   setRefreshToken: (refreshToken: string | null) => void;
+  chatsMetaData: Record<string, ChatMetaData>;
+  setChatHistory: (chatId: string, chatHistory: MessagesListProps[]) => void;
 }

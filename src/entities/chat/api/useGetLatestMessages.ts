@@ -1,47 +1,35 @@
-import { Dispatch, SetStateAction, TransitionStartFunction } from 'react';
+import { Dispatch, SetStateAction } from 'react';
 import { useMutation } from '@tanstack/react-query';
 import { getMessages } from 'entities/chat/api/requests.ts';
 import { GetMessagesRequest } from 'entities/chat/api/types.ts';
-import {
-  Direction,
-  MESSAGES_DEFAULT_LIMIT,
-} from 'entities/chat/model/constants.ts';
+import { MESSAGES_DEFAULT_LIMIT } from 'entities/chat/model/constants.ts';
 import { MessageProps, MessagesListProps } from 'entities/chat/model/types.ts';
 import { useFormatListMessages } from 'entities/chat/model/useFormatListMessages.tsx';
 
 interface Props {
   setMessages: Dispatch<SetStateAction<MessagesListProps[]>>;
-  startTransition: TransitionStartFunction;
 }
 
-export const useGetMessagesAfter = ({
-  setMessages,
-  startTransition,
-}: Props) => {
+export const useGetLatestMessages = ({ setMessages }: Props) => {
   const formatList = useFormatListMessages();
 
   return useMutation<
     MessageProps[],
     unknown,
-    Omit<GetMessagesRequest, 'limit' | 'direction' | 'readerId'>
+    Omit<GetMessagesRequest, 'limit' | 'direction' | 'messageId' | 'readerId'>
   >({
-    mutationFn: ({ chatId, messageId }) =>
+    mutationFn: ({ chatId }) =>
       getMessages({
         chatId,
-        messageId,
+        limit: Math.round(MESSAGES_DEFAULT_LIMIT),
+        messageId: null,
         readerId: null,
-        direction: Direction.After,
-        limit: MESSAGES_DEFAULT_LIMIT,
+        direction: null,
       }),
     onSuccess: (messages) => {
       if (messages?.length) {
-        let list = formatList(messages);
-
-        startTransition(() => {
-          setMessages((prev) => {
-            return [...prev, ...list];
-          });
-        });
+        const list = formatList(messages);
+        setMessages(list);
       }
     },
   });
