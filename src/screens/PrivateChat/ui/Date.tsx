@@ -18,7 +18,7 @@ export const Date = memo(({ date }: Props) => {
         color={lightThemeText.light}
         leading={24}
       >
-        {date}
+        {typeof date === 'string' ? date : 'null'}
       </Typography>
     </View>
   );

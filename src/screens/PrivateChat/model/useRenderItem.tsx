@@ -20,7 +20,6 @@ export const useRenderItem = ({ selfProfile }: Props) => {
         const message = item as ChatMessageProps;
         return (
           <Message
-            id={message.id}
             from={message.from}
             text={message.text}
             createdAt={message.createdAt}

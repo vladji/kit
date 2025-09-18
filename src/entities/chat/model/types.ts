@@ -22,6 +22,8 @@ export interface ChatProps {
   support?: SupportChatProps;
 }
 
+type ChatItemType = 'message' | 'date';
+
 export interface MessageProps {
   id: string;
   chatId: string;
@@ -32,8 +34,6 @@ export interface MessageProps {
   createdAt: string;
   updatedAt: string;
 }
-
-type ChatItemType = 'message' | 'date';
 
 export type ChatMessageProps = MessageProps & { type: ChatItemType };
 
@@ -52,9 +52,14 @@ export interface PrivateMessageProps {
   knownChatId: string | null;
 }
 
-export interface MarkAsReadProps {
+export interface MarkAsReadSocketProps {
   chatId: string;
   lastSeenMessageId: string;
   readerId: string;
   isAdmin: boolean;
+}
+
+export interface MarkedAsReadNotifySocketProps {
+  chatId: string;
+  messageIds: string[];
 }
