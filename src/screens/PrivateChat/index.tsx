@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useRef, useState } from 'react';
 import { FlatList, Image, StyleSheet, View } from 'react-native';
 import { useRoute } from '@react-navigation/native';
 import { Send } from 'lucide-react-native';
@@ -13,6 +13,7 @@ import {
   PrivateMessageProps,
 } from 'entities/chat/model/types.ts';
 import { useSelfProfile } from 'entities/chat/model/useSelfProfile.ts';
+import { useCloseChat } from 'screens/PrivateChat/model/useCloseChat.ts';
 import { useLoadMoreMessages } from 'screens/PrivateChat/model/useLoadMoreMessages.ts';
 import { useMemoizedProps } from 'screens/PrivateChat/model/useMemoizedProps.ts';
 import { useMessages } from 'screens/PrivateChat/model/useMessages.ts';
@@ -44,10 +45,9 @@ export const PrivateChatScreen = () => {
   const [chatId, setChatId] = useState<string | null>(params.chatId || null);
   const [text, setText] = useState('');
 
-  const { deferredMessages, messages, setMessages, setChatHistory } =
-    useMessages({
-      chatId,
-    });
+  const { deferredMessages, messages, setMessages } = useMessages({
+    chatId,
+  });
 
   const { startTransition, onStartReached, onEndReached } = useLoadMoreMessages(
     {
@@ -70,16 +70,7 @@ export const PrivateChatScreen = () => {
     startTransition,
   });
 
-  useEffect(() => {
-    return () => {
-      if (chatId && viewableItemsRef.current.length) {
-        const lastSeenMessages = viewableItemsRef.current.map(
-          (item) => item.item,
-        );
-        setChatHistory(chatId, lastSeenMessages);
-      }
-    };
-  }, [chatId, viewableItemsRef, setChatHistory]);
+  useCloseChat({ chatId, viewableItemsRef });
 
   const sendMessage = () => {
     if (!selfProfile || !params.peer.id || !text) return;
@@ -94,15 +85,6 @@ export const PrivateChatScreen = () => {
     startTransition(() => setText(''));
     metaRef.current.shouldScrollToEnd = true;
   };
-
-  useEffect(() => {
-    if (metaRef.current.shouldScrollToEnd) {
-      metaRef.current.shouldScrollToEnd = false;
-      requestAnimationFrame(() => {
-        listRef.current?.scrollToEnd();
-      });
-    }
-  }, [deferredMessages]);
 
   const renderItem = useRenderItem({ selfProfile });
   const {

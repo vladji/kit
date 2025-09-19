@@ -1,5 +1,4 @@
 import { useDeferredValue, useEffect, useState } from 'react';
-import { useShallow } from 'zustand/react/shallow';
 import { usePersistentStore } from 'app/storage/usePersistentStore.ts';
 import { useGetLatestMessages } from 'entities/chat/api/useGetLatestMessages.ts';
 import { MessagesListProps } from 'entities/chat/model/types.ts';
@@ -9,9 +8,7 @@ interface Props {
 }
 
 export const useMessages = ({ chatId }: Props) => {
-  const [chatsMetaData, setChatHistory] = usePersistentStore(
-    useShallow((store) => [store.chatsMetaData, store.setChatHistory]),
-  );
+  const chatsMetaData = usePersistentStore((store) => store.chatsMetaData);
   const chatHistory = chatId ? chatsMetaData[chatId]?.chatHistory || [] : [];
 
   const [messages, setMessages] = useState<MessagesListProps[]>(chatHistory);
@@ -31,6 +28,5 @@ export const useMessages = ({ chatId }: Props) => {
     deferredMessages,
     messages,
     setMessages,
-    setChatHistory,
   };
 };
