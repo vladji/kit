@@ -7,8 +7,8 @@ import {
   MESSAGES_DEFAULT_LIMIT,
 } from 'entities/chat/model/constants.ts';
 import { MessageProps, MessagesListProps } from 'entities/chat/model/types.ts';
-import { useFormatListMessages } from 'entities/chat/model/useFormatListMessages.tsx';
-import { useStartChatDate } from 'entities/chat/model/useStartChatDate.tsx';
+import { useFormatListMessages } from 'entities/chat/model/useFormatListMessages.ts';
+import { useStartChatDate } from 'entities/chat/model/useStartChatDate.ts';
 
 interface Props {
   messagesState: MessagesListProps[];

@@ -10,7 +10,7 @@ import {
   MarkedAsReadNotifySocketProps,
   MessagesListProps,
 } from 'entities/chat/model/types.ts';
-import { useSetNewLocalMessage } from 'entities/chat/model/useSetNewLocalMessage.tsx';
+import { useSetNewLocalMessage } from 'entities/chat/model/useSetNewLocalMessage.ts';
 
 interface Props {
   chatId: string | null;

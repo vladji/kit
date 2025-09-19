@@ -1,9 +1,7 @@
 import { Dispatch, SetStateAction, useCallback } from 'react';
-import { FormattedMessage } from 'react-intl';
 import { usePersistentStore } from 'app/storage/usePersistentStore.ts';
 import {
   ChatDateProps,
-  ChatMessageProps,
   MessageProps,
   MessagesListProps,
 } from 'entities/chat/model/types.ts';
@@ -26,14 +24,13 @@ export const useSetNewLocalMessage = ({
       const lastMessage = messagesState.at(-1);
 
       if (lastMessage?.type === 'message') {
-        const lastMessageISODate = (lastMessage as ChatMessageProps).createdAt;
-        const lastMessageDate = getDate(locale, lastMessageISODate);
+        const lastMessageDate = getDate(locale, lastMessage.createdAt);
 
         if (lastMessageDate !== todayDate) {
           const date: ChatDateProps = {
             id: todayDate,
             type: 'date',
-            date: <FormattedMessage defaultMessage="Сегодня" />,
+            date: todayDate,
           };
           setMessages((prev) => [
             ...prev,

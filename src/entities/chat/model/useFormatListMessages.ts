@@ -21,7 +21,7 @@ export const useFormatListMessages = () => {
       };
 
       return data
-        .map((message, index) => {
+        .map((message) => {
           const date = getDate(locale, message.createdAt);
 
           if (date !== currentDate.id) {

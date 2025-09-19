@@ -7,7 +7,7 @@ import {
   MESSAGES_DEFAULT_LIMIT,
 } from 'entities/chat/model/constants.ts';
 import { MessageProps, MessagesListProps } from 'entities/chat/model/types.ts';
-import { useFormatListMessages } from 'entities/chat/model/useFormatListMessages.tsx';
+import { useFormatListMessages } from 'entities/chat/model/useFormatListMessages.ts';
 
 interface Props {
   setMessages: Dispatch<SetStateAction<MessagesListProps[]>>;
