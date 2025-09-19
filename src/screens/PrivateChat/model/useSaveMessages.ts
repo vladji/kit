@@ -8,7 +8,7 @@ interface Props {
   viewableItemsRef: RefObject<ViewToken<MessagesListProps>[]>;
 }
 
-export const useCloseChat = ({ chatId, viewableItemsRef }: Props) => {
+export const useSaveMessages = ({ chatId, viewableItemsRef }: Props) => {
   const setChatHistory = usePersistentStore((store) => store.setChatHistory);
   useEffect(() => {
     return () => {

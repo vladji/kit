@@ -37,17 +37,15 @@ export const useSocketListeners = ({
     if (messages.length) {
       requestAnimationFrame(() => {
         const messagesIds = messages?.map((message) => message.id);
-        startTransition(() => {
-          setMessagesIds(new Set(messagesIds));
-        });
+        setMessagesIds(new Set(messagesIds));
       });
     }
-  }, [messages, startTransition]);
+  }, [messages]);
 
   useEffect(() => {
     safeSocket()?.on('private_message', (msg) => {
       if (!chatId) {
-        startTransition(() => setChatId(msg.chatId));
+        setChatId(msg.chatId);
       }
       if (msg.chatId === chatId) {
         setNewLocalMessage(msg);
@@ -57,7 +55,7 @@ export const useSocketListeners = ({
     return () => {
       safeSocket()?.off('private_message');
     };
-  }, [chatId, setChatId, setNewLocalMessage, startTransition]);
+  }, [chatId, setChatId, setNewLocalMessage]);
 
   useEffect(() => {
     safeSocket()?.on(

@@ -1,4 +1,4 @@
-import { useDeferredValue, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { usePersistentStore } from 'app/storage/usePersistentStore.ts';
 import { useGetLatestMessages } from 'entities/chat/api/useGetLatestMessages.ts';
 import { MessagesListProps } from 'entities/chat/model/types.ts';
@@ -22,10 +22,7 @@ export const useMessages = ({ chatId }: Props) => {
     }
   }, [messages, chatId, getLatestMessages, latestMessages]);
 
-  const deferredMessages = useDeferredValue(messages);
-
   return {
-    deferredMessages,
     messages,
     setMessages,
   };

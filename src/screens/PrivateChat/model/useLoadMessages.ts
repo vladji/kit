@@ -11,11 +11,7 @@ interface Props {
   setMessages: Dispatch<SetStateAction<MessagesListProps[]>>;
 }
 
-export const useLoadMoreMessages = ({
-  chatId,
-  messages,
-  setMessages,
-}: Props) => {
+export const useLoadMessages = ({ chatId, messages, setMessages }: Props) => {
   const [isTransition, startTransition] = useTransition();
 
   const { mutate: getMessagesBefore, isPending: messagesBeforeLoading } =

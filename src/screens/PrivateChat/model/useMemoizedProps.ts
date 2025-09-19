@@ -18,7 +18,7 @@ export const useMemoizedProps = ({ listRef }: Props) => {
 
   const viewabilityConfig = useMemo(
     () => ({
-      viewAreaCoveragePercentThreshold: 95,
+      viewAreaCoveragePercentThreshold: 5,
     }),
     [],
   );

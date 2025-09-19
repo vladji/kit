@@ -13,11 +13,11 @@ import {
   PrivateMessageProps,
 } from 'entities/chat/model/types.ts';
 import { useSelfProfile } from 'entities/chat/model/useSelfProfile.ts';
-import { useCloseChat } from 'screens/PrivateChat/model/useCloseChat.ts';
-import { useLoadMoreMessages } from 'screens/PrivateChat/model/useLoadMoreMessages.ts';
+import { useLoadMessages } from 'screens/PrivateChat/model/useLoadMessages.ts';
 import { useMemoizedProps } from 'screens/PrivateChat/model/useMemoizedProps.ts';
 import { useMessages } from 'screens/PrivateChat/model/useMessages.ts';
 import { useRenderItem } from 'screens/PrivateChat/model/useRenderItem.tsx';
+import { useSaveMessages } from 'screens/PrivateChat/model/useSaveMessages.ts';
 import { useSocketListeners } from 'screens/PrivateChat/model/useSocketListeners.ts';
 import { useViewableChanges } from 'screens/PrivateChat/model/useViewableChanges.ts';
 import {
@@ -45,17 +45,15 @@ export const PrivateChatScreen = () => {
   const [chatId, setChatId] = useState<string | null>(params.chatId || null);
   const [text, setText] = useState('');
 
-  const { deferredMessages, messages, setMessages } = useMessages({
+  const { messages, setMessages } = useMessages({
     chatId,
   });
 
-  const { startTransition, onStartReached, onEndReached } = useLoadMoreMessages(
-    {
-      messages,
-      setMessages,
-      chatId,
-    },
-  );
+  const { startTransition, onStartReached, onEndReached } = useLoadMessages({
+    messages,
+    setMessages,
+    chatId,
+  });
 
   const { onViewableItemsChanged, viewableItemsRef } = useViewableChanges({
     anyAdmin,
@@ -70,7 +68,7 @@ export const PrivateChatScreen = () => {
     startTransition,
   });
 
-  useCloseChat({ chatId, viewableItemsRef });
+  useSaveMessages({ chatId, viewableItemsRef });
 
   const sendMessage = () => {
     if (!selfProfile || !params.peer.id || !text) return;
@@ -82,7 +80,7 @@ export const PrivateChatScreen = () => {
       knownChatId: chatId,
     };
     safeSocket()?.emit('private_message', privateMessage);
-    startTransition(() => setText(''));
+    setText('');
     metaRef.current.shouldScrollToEnd = true;
   };
 
@@ -109,7 +107,7 @@ export const PrivateChatScreen = () => {
               contentContainerStyle={styles.scrollContent}
               initialNumToRender={MESSAGES_DEFAULT_LIMIT}
               keyExtractor={keyExtractor}
-              data={deferredMessages}
+              data={messages}
               renderItem={renderItem}
               onStartReachedThreshold={1}
               onStartReached={onStartReached}
@@ -120,6 +118,7 @@ export const PrivateChatScreen = () => {
               onScrollToIndexFailed={onScrollToIndexFailed}
               maintainVisibleContentPosition={maintainVisibleContentPosition}
               keyboardShouldPersistTaps="handled"
+              removeClippedSubviews
             />
             <View style={styles.inputBlock}>
               <TextInputAction
