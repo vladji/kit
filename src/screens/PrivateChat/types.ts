@@ -5,3 +5,7 @@ export type PrivateChatRouteProp = RouteProp<
   RootStackParams,
   RootRouter.PrivateChatRoute
 >;
+
+export interface MetaRefProps {
+  shouldScrollToEnd: boolean;
+}

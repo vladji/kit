@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { FlatList, Image, StyleSheet, View } from 'react-native';
 import { useRoute } from '@react-navigation/native';
 import { Send } from 'lucide-react-native';
@@ -14,11 +14,15 @@ import {
 } from 'entities/chat/model/types.ts';
 import { useSelfProfile } from 'entities/chat/model/useSelfProfile.ts';
 import { useLoadMoreMessages } from 'screens/PrivateChat/model/useLoadMoreMessages.ts';
+import { useMemoizedProps } from 'screens/PrivateChat/model/useMemoizedProps.ts';
 import { useMessages } from 'screens/PrivateChat/model/useMessages.ts';
 import { useRenderItem } from 'screens/PrivateChat/model/useRenderItem.tsx';
 import { useSocketListeners } from 'screens/PrivateChat/model/useSocketListeners.ts';
 import { useViewableChanges } from 'screens/PrivateChat/model/useViewableChanges.ts';
-import { PrivateChatRouteProp } from 'screens/PrivateChat/types.ts';
+import {
+  MetaRefProps,
+  PrivateChatRouteProp,
+} from 'screens/PrivateChat/types.ts';
 import { ChatHeader } from 'screens/PrivateChat/ui/Header.tsx';
 import { lightTheme } from 'shared/styles/theme/theme.ts';
 import { SPACING } from 'shared/styles/tokens/spacing.ts';
@@ -28,6 +32,9 @@ import { ScreenLayout } from 'widgets/ScreenLayout';
 
 export const PrivateChatScreen = () => {
   const listRef = useRef<FlatList<MessagesListProps>>(null);
+  const metaRef = useRef<MetaRefProps>({
+    shouldScrollToEnd: false,
+  });
 
   const { anyAdmin } = useIsAdmin();
   const selfProfile = useSelfProfile();
@@ -74,16 +81,6 @@ export const PrivateChatScreen = () => {
     };
   }, [chatId, viewableItemsRef, setChatHistory]);
 
-  const scrollTo = useCallback((index: number) => {
-    requestAnimationFrame(() => {
-      listRef.current?.scrollToIndex({
-        index,
-        animated: false,
-        viewPosition: 0,
-      });
-    });
-  }, []);
-
   const sendMessage = () => {
     if (!selfProfile || !params.peer.id || !text) return;
 
@@ -95,10 +92,25 @@ export const PrivateChatScreen = () => {
     };
     safeSocket()?.emit('private_message', privateMessage);
     startTransition(() => setText(''));
-    scrollTo(deferredMessages.length - 1);
+    metaRef.current.shouldScrollToEnd = true;
   };
 
+  useEffect(() => {
+    if (metaRef.current.shouldScrollToEnd) {
+      metaRef.current.shouldScrollToEnd = false;
+      requestAnimationFrame(() => {
+        listRef.current?.scrollToEnd();
+      });
+    }
+  }, [deferredMessages]);
+
   const renderItem = useRenderItem({ selfProfile });
+  const {
+    onScrollToIndexFailed,
+    viewabilityConfig,
+    maintainVisibleContentPosition,
+    keyExtractor,
+  } = useMemoizedProps({ listRef });
 
   return (
     <ScreenLayout headerContent={<ChatHeader />} hasBackButton>
@@ -114,26 +126,18 @@ export const PrivateChatScreen = () => {
               ref={listRef}
               contentContainerStyle={styles.scrollContent}
               initialNumToRender={MESSAGES_DEFAULT_LIMIT}
-              keyExtractor={(item) => item.id}
+              keyExtractor={keyExtractor}
               data={deferredMessages}
               renderItem={renderItem}
               onStartReachedThreshold={1}
               onStartReached={onStartReached}
               onEndReachedThreshold={1}
               onEndReached={onEndReached}
-              viewabilityConfig={{ viewAreaCoveragePercentThreshold: 95 }}
+              viewabilityConfig={viewabilityConfig}
               onViewableItemsChanged={onViewableItemsChanged}
-              onScrollToIndexFailed={(info) => {
-                requestAnimationFrame(() => {
-                  listRef.current?.scrollToOffset({
-                    offset: info.averageItemLength * info.index,
-                    animated: false,
-                  });
-                });
-              }}
-              maintainVisibleContentPosition={{
-                minIndexForVisible: 0,
-              }}
+              onScrollToIndexFailed={onScrollToIndexFailed}
+              maintainVisibleContentPosition={maintainVisibleContentPosition}
+              keyboardShouldPersistTaps="handled"
             />
             <View style={styles.inputBlock}>
               <TextInputAction
