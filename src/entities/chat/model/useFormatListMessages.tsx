@@ -5,7 +5,6 @@ import {
   MessageProps,
   MessagesListProps,
 } from 'entities/chat/model/types.ts';
-import { getDateValue } from 'entities/chat/utils/getDateValue.tsx';
 import { getDate } from 'shared/lib/dates.ts';
 
 export const useFormatListMessages = () => {
@@ -15,21 +14,19 @@ export const useFormatListMessages = () => {
     (data: MessageProps[]) => {
       const firstMessage = data[0];
       const date = getDate(locale, firstMessage.createdAt);
-      const dateValue = getDateValue(locale, date);
       const currentDate: ChatDateProps = {
         id: date,
         type: 'date',
-        date: dateValue,
+        date: date,
       };
 
       return data
         .map((message, index) => {
           const date = getDate(locale, message.createdAt);
-          const dateValue = getDateValue(locale, date);
 
           if (date !== currentDate.id) {
             currentDate.id = date;
-            currentDate.date = dateValue;
+            currentDate.date = date;
 
             return [
               {
