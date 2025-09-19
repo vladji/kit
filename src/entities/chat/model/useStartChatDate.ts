@@ -10,10 +10,13 @@ import { getDate } from 'shared/lib/dates.ts';
 
 interface Props {
   setMessages: Dispatch<SetStateAction<MessagesListProps[]>>;
-  startTransition: TransitionStartFunction;
+  startTransitionMessages: TransitionStartFunction;
 }
 
-export const useStartChatDate = ({ setMessages, startTransition }: Props) => {
+export const useStartChatDate = ({
+  setMessages,
+  startTransitionMessages,
+}: Props) => {
   const locale = usePersistentStore((store) => store.locale);
 
   return useCallback(
@@ -29,11 +32,11 @@ export const useStartChatDate = ({ setMessages, startTransition }: Props) => {
           date: date,
         };
 
-        startTransition(() => {
+        startTransitionMessages(() => {
           setMessages((prev) => [chatDate, ...prev]);
         });
       }
     },
-    [locale, setMessages, startTransition],
+    [locale, setMessages, startTransitionMessages],
   );
 };

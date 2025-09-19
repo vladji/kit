@@ -11,12 +11,12 @@ import { useFormatListMessages } from 'entities/chat/model/useFormatListMessages
 
 interface Props {
   setMessages: Dispatch<SetStateAction<MessagesListProps[]>>;
-  startTransition: TransitionStartFunction;
+  startTransitionMessages: TransitionStartFunction;
 }
 
 export const useGetMessagesAfter = ({
   setMessages,
-  startTransition,
+  startTransitionMessages,
 }: Props) => {
   const formatList = useFormatListMessages();
 
@@ -37,7 +37,7 @@ export const useGetMessagesAfter = ({
       if (messages?.length) {
         let list = formatList(messages);
 
-        startTransition(() => {
+        startTransitionMessages(() => {
           setMessages((prev) => {
             return [...prev, ...list];
           });

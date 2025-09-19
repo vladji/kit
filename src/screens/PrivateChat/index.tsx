@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react';
+import { startTransition, useRef, useState, useTransition } from 'react';
 import { FlatList, Image, StyleSheet, View } from 'react-native';
 import { useRoute } from '@react-navigation/native';
 import { Send } from 'lucide-react-native';
@@ -44,15 +44,19 @@ export const PrivateChatScreen = () => {
 
   const [chatId, setChatId] = useState<string | null>(params.chatId || null);
   const [text, setText] = useState('');
+  const [isTransition, startTransitionMessages] = useTransition();
 
   const { messages, setMessages } = useMessages({
     chatId,
+    startTransitionMessages,
   });
 
-  const { startTransition, onStartReached, onEndReached } = useLoadMessages({
+  const { onStartReached, onEndReached } = useLoadMessages({
     messages,
     setMessages,
     chatId,
+    startTransitionMessages,
+    isTransition,
   });
 
   const { onViewableItemsChanged, viewableItemsRef } = useViewableChanges({
@@ -65,7 +69,7 @@ export const PrivateChatScreen = () => {
     setChatId,
     messages,
     setMessages,
-    startTransition,
+    startTransitionMessages,
   });
 
   useSaveMessages({ chatId, viewableItemsRef });
@@ -80,7 +84,7 @@ export const PrivateChatScreen = () => {
       knownChatId: chatId,
     };
     safeSocket()?.emit('private_message', privateMessage);
-    setText('');
+    startTransition(() => setText(''));
     metaRef.current.shouldScrollToEnd = true;
   };
 

@@ -13,17 +13,17 @@ import { useStartChatDate } from 'entities/chat/model/useStartChatDate.ts';
 interface Props {
   messagesState: MessagesListProps[];
   setMessages: Dispatch<SetStateAction<MessagesListProps[]>>;
-  startTransition: TransitionStartFunction;
+  startTransitionMessages: TransitionStartFunction;
 }
 
 export const useGetMessagesBefore = ({
   messagesState,
   setMessages,
-  startTransition,
+  startTransitionMessages,
 }: Props) => {
   const setStartChatDate = useStartChatDate({
     setMessages,
-    startTransition,
+    startTransitionMessages,
   });
   const formatList = useFormatListMessages();
 
@@ -44,7 +44,7 @@ export const useGetMessagesBefore = ({
       if (messages?.length) {
         const list = formatList(messages);
 
-        startTransition(() => {
+        startTransitionMessages(() => {
           setMessages((prev) => {
             return [...list, ...prev];
           });
