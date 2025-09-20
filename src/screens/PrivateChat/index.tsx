@@ -46,7 +46,7 @@ export const PrivateChatScreen = () => {
   const [text, setText] = useState('');
   const [isTransition, startTransitionMessages] = useTransition();
 
-  const { messages, setMessages } = useMessages({
+  const { deferredMessages, messages, setMessages } = useMessages({
     chatId,
     startTransitionMessages,
   });
@@ -72,7 +72,7 @@ export const PrivateChatScreen = () => {
     startTransitionMessages,
   });
 
-  useSaveMessages({ chatId, viewableItemsRef });
+  useSaveMessages({ chatId, viewableItemsRef, messages });
 
   const sendMessage = () => {
     if (!selfProfile || !params.peer.id || !text) return;
@@ -109,13 +109,14 @@ export const PrivateChatScreen = () => {
             <FlatList
               ref={listRef}
               contentContainerStyle={styles.scrollContent}
-              initialNumToRender={MESSAGES_DEFAULT_LIMIT}
+              initialNumToRender={31}
+              maxToRenderPerBatch={MESSAGES_DEFAULT_LIMIT}
               keyExtractor={keyExtractor}
-              data={messages}
+              data={deferredMessages}
               renderItem={renderItem}
-              onStartReachedThreshold={1}
+              onStartReachedThreshold={2}
               onStartReached={onStartReached}
-              onEndReachedThreshold={1}
+              onEndReachedThreshold={2}
               onEndReached={onEndReached}
               viewabilityConfig={viewabilityConfig}
               onViewableItemsChanged={onViewableItemsChanged}

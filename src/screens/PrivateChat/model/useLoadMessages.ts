@@ -6,14 +6,12 @@ import {
 } from 'react';
 import { useGetMessagesAfter } from 'entities/chat/api/useGetMessagesAfter.ts';
 import { useGetMessagesBefore } from 'entities/chat/api/useGetMessagesBefore.ts';
-import { Direction } from 'entities/chat/model/constants.ts';
-import { MessagesListProps } from 'entities/chat/model/types.ts';
-import { getMessageAtIndex } from 'entities/chat/utils/getChatItemAtIndex.ts';
+import { MessageProps } from 'entities/chat/model/types.ts';
 
 interface Props {
   chatId: string | null;
-  messages: MessagesListProps[];
-  setMessages: Dispatch<SetStateAction<MessagesListProps[]>>;
+  messages: MessageProps[];
+  setMessages: Dispatch<SetStateAction<MessageProps[]>>;
   startTransitionMessages: TransitionStartFunction;
   isTransition: boolean;
 }
@@ -27,7 +25,6 @@ export const useLoadMessages = ({
 }: Props) => {
   const { mutate: getMessagesBefore, isPending: messagesBeforeLoading } =
     useGetMessagesBefore({
-      messagesState: messages,
       setMessages,
       startTransitionMessages,
     });
@@ -39,14 +36,16 @@ export const useLoadMessages = ({
     });
 
   const onStartReached = useCallback(() => {
-    const { item } = getMessageAtIndex(0, messages, Direction.Before);
+    const item = messages[0];
+
     if (item?.id && !messagesAfterLoading && !isTransition) {
       getMessagesBefore({ chatId, messageId: item.id });
     }
   }, [chatId, messages, getMessagesBefore, messagesAfterLoading, isTransition]);
 
   const onEndReached = useCallback(async () => {
-    const { item } = getMessageAtIndex(-1, messages);
+    const item = messages.at(-1);
+
     if (item?.id && !messagesBeforeLoading && !isTransition) {
       getMessagesAfter({ chatId, messageId: item.id });
     }

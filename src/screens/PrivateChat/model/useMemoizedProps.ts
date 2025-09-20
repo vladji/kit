@@ -38,7 +38,7 @@ export const useMemoizedProps = ({ listRef }: Props) => {
         });
       });
     },
-    [],
+    [listRef],
   );
 
   return {

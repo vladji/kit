@@ -6,27 +6,17 @@ import {
   Direction,
   MESSAGES_DEFAULT_LIMIT,
 } from 'entities/chat/model/constants.ts';
-import { MessageProps, MessagesListProps } from 'entities/chat/model/types.ts';
-import { useFormatListMessages } from 'entities/chat/model/useFormatListMessages.ts';
-import { useStartChatDate } from 'entities/chat/model/useStartChatDate.ts';
+import { MessageProps } from 'entities/chat/model/types.ts';
 
 interface Props {
-  messagesState: MessagesListProps[];
-  setMessages: Dispatch<SetStateAction<MessagesListProps[]>>;
+  setMessages: Dispatch<SetStateAction<MessageProps[]>>;
   startTransitionMessages: TransitionStartFunction;
 }
 
 export const useGetMessagesBefore = ({
-  messagesState,
   setMessages,
   startTransitionMessages,
 }: Props) => {
-  const setStartChatDate = useStartChatDate({
-    setMessages,
-    startTransitionMessages,
-  });
-  const formatList = useFormatListMessages();
-
   return useMutation<
     MessageProps[],
     unknown,
@@ -42,15 +32,11 @@ export const useGetMessagesBefore = ({
       }),
     onSuccess: (messages) => {
       if (messages?.length) {
-        const list = formatList(messages);
-
         startTransitionMessages(() => {
           setMessages((prev) => {
-            return [...list, ...prev];
+            return [...messages, ...prev];
           });
         });
-      } else {
-        setStartChatDate(messagesState);
       }
     },
   });
