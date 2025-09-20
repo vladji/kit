@@ -1,36 +1,34 @@
-import { Direction } from 'entities/chat/model/constants.ts';
-import {
-  ChatMessageProps,
-  MessagesListProps,
-} from 'entities/chat/model/types.ts';
+import { MessageProps } from 'entities/chat/model/types.ts';
 
 interface ReturnType {
-  item: ChatMessageProps | null;
+  item: MessageProps | null;
   index: number;
-  direction: Direction;
 }
 
 export const getMessageAtIndex = (
   index: number,
-  list: MessagesListProps[],
-  direction = Direction.After,
+  stopIndex: number,
+  list: MessageProps[],
 ): ReturnType => {
-  const item = list.at(index);
-  if (item && item.type !== 'message') {
-    return direction === Direction.After
-      ? getMessageAtIndex(index - 1, list, direction)
-      : getMessageAtIndex(index + 1, list, direction);
+  if (index < 0 && index < stopIndex) {
+    const nextIndex = index + 1;
+    return getMessageAtIndex(nextIndex, stopIndex, list);
   }
-  if (!item || item.type !== 'message') {
+  if (index > list.length - 1 && index > stopIndex) {
+    const nextIndex = index - 1;
+    return getMessageAtIndex(nextIndex, stopIndex, list);
+  }
+
+  const item = list.at(index);
+
+  if (!item) {
     return {
       item: null,
       index,
-      direction,
     };
   }
   return {
-    item: item as ChatMessageProps,
+    item,
     index,
-    direction,
   };
 };
