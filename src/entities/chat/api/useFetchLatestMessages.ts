@@ -8,12 +8,12 @@ interface Props {
 }
 
 export const useFetchLatestMessages = ({ chatId }: Props) => {
-  const { data } = useQuery({
+  const { data, refetch } = useQuery({
     queryKey: [QUERY_KEYS.FETCH_LATEST_MESSAGES, chatId],
     queryFn: () =>
       getMessages({
         chatId,
-        limit: Math.round(MESSAGES_DEFAULT_LIMIT),
+        limit: Math.round(MESSAGES_DEFAULT_LIMIT + 2),
         messageId: null,
         readerId: null,
         direction: null,
@@ -23,5 +23,6 @@ export const useFetchLatestMessages = ({ chatId }: Props) => {
 
   return {
     latestMessages: data,
+    refetch,
   };
 };

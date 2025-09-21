@@ -17,6 +17,7 @@ import { useSelfProfile } from 'entities/chat/model/useSelfProfile.ts';
 import { useLoadMessages } from 'screens/PrivateChat/model/useLoadMessages.ts';
 import { useMemoizedProps } from 'screens/PrivateChat/model/useMemoizedProps.ts';
 import { useMessages } from 'screens/PrivateChat/model/useMessages.ts';
+import { useNavigateToBottom } from 'screens/PrivateChat/model/useNavigateToBottom.ts';
 import { useRenderItem } from 'screens/PrivateChat/model/useRenderItem.tsx';
 import { useSaveMessages } from 'screens/PrivateChat/model/useSaveMessages.ts';
 import { useSocketListeners } from 'screens/PrivateChat/model/useSocketListeners.ts';
@@ -66,12 +67,21 @@ export const PrivateChatScreen = () => {
     readerId,
   });
 
+  const navigateToBottom = useNavigateToBottom({
+    chatId,
+    startTransitionMessages,
+    setMessages,
+    listRef,
+  });
+
   useSocketListeners({
     chatId,
     setChatId,
     messages,
     setMessages,
     startTransitionMessages,
+    navigateToBottom,
+    selfProfile,
   });
 
   useSaveMessages({ chatId, viewableItemsRef, messages });
@@ -87,7 +97,6 @@ export const PrivateChatScreen = () => {
     };
     safeSocket()?.emit('private_message', privateMessage);
     startTransition(() => setText(''));
-    metaRef.current.shouldScrollToEnd = true;
   };
 
   const renderItem = useRenderItem({ selfProfile });

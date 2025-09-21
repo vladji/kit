@@ -13,11 +13,7 @@ interface Props {
   messages: MessageProps[];
 }
 
-export const useSaveMessages = ({
-  chatId,
-  viewableItemsRef,
-  messages,
-}: Props) => {
+export const useSaveMessages = ({ chatId, viewableItemsRef }: Props) => {
   const setChatHistory = usePersistentStore((store) => store.setChatHistory);
   useEffect(() => {
     return () => {

@@ -27,7 +27,6 @@ export const useMessages = ({
 
   const [messages, setMessages] = useState<MessageProps[]>(chatHistory);
 
-  // const { latestMessages } = useFetchLatestMessages({ chatId });
   const { messagesAround } = useGetMessagesAround({
     chatId,
     readerId: selfProfile?.id || null,

@@ -8,17 +8,19 @@ import {
 } from 'react';
 import { safeSocket } from 'app/providers/Socket/socket.ts';
 import {
+  ChatMemberProps,
   MarkedAsReadNotifySocketProps,
-  MessagesListProps,
+  MessageProps,
 } from 'entities/chat/model/types.ts';
-import { useSetNewLocalMessage } from 'screens/PrivateChat/model/useSetNewLocalMessage.ts';
 
 interface Props {
   chatId: string | null;
   setChatId: Dispatch<SetStateAction<string | null>>;
-  messages: MessagesListProps[];
-  setMessages: Dispatch<SetStateAction<MessagesListProps[]>>;
+  messages: MessageProps[];
+  setMessages: Dispatch<SetStateAction<MessageProps[]>>;
   startTransitionMessages: TransitionStartFunction;
+  navigateToBottom: (message: MessageProps) => void;
+  selfProfile: ChatMemberProps | null;
 }
 
 export const useSocketListeners = ({
@@ -27,12 +29,10 @@ export const useSocketListeners = ({
   messages,
   setMessages,
   startTransitionMessages,
+  navigateToBottom,
+  selfProfile,
 }: Props) => {
   const [messagesIds, setMessagesIds] = useState<Set<string> | null>(null);
-  const setNewLocalMessage = useSetNewLocalMessage({
-    messagesState: messages,
-    setMessages,
-  });
 
   useEffect(() => {
     if (messages.length) {
@@ -46,19 +46,21 @@ export const useSocketListeners = ({
   }, [messages]);
 
   useEffect(() => {
-    safeSocket()?.on('private_message', (msg) => {
+    safeSocket()?.on('private_message', (msg: MessageProps) => {
       if (!chatId) {
         startTransition(() => setChatId(msg.chatId));
       }
       if (msg.chatId === chatId) {
-        setNewLocalMessage(msg);
+        if (msg.from === selfProfile?.id) {
+          navigateToBottom(msg);
+        }
       }
     });
 
     return () => {
       safeSocket()?.off('private_message');
     };
-  }, [chatId, setChatId, setNewLocalMessage]);
+  }, [chatId, setChatId, setMessages, selfProfile, navigateToBottom]);
 
   useEffect(() => {
     safeSocket()?.on(
