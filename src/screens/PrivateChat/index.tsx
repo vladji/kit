@@ -5,6 +5,7 @@ import { Send } from 'lucide-react-native';
 import { safeSocket } from 'app/providers/Socket/socket.ts';
 import { useIsAdmin } from 'entities/admin/model/useIsAdmin.ts';
 import {
+  AVERAGE_ITEMS_ON_SCREEN,
   CHAT_SUPPORT,
   MESSAGES_DEFAULT_LIMIT,
 } from 'entities/chat/model/constants.ts';
@@ -48,6 +49,7 @@ export const PrivateChatScreen = () => {
 
   const { deferredMessages, messages, setMessages } = useMessages({
     chatId,
+    selfProfile,
     startTransitionMessages,
   });
 
@@ -109,8 +111,8 @@ export const PrivateChatScreen = () => {
             <FlatList
               ref={listRef}
               contentContainerStyle={styles.scrollContent}
-              initialNumToRender={31}
-              maxToRenderPerBatch={MESSAGES_DEFAULT_LIMIT}
+              initialNumToRender={AVERAGE_ITEMS_ON_SCREEN}
+              maxToRenderPerBatch={MESSAGES_DEFAULT_LIMIT * 3}
               keyExtractor={keyExtractor}
               data={deferredMessages}
               renderItem={renderItem}

@@ -1,8 +1,11 @@
 import { RefObject, useEffect } from 'react';
 import { ViewToken } from 'react-native';
 import { usePersistentStore } from 'app/storage/usePersistentStore.ts';
-import { MessageProps, MessagesListProps } from 'entities/chat/model/types.ts';
-import { getMessageAtIndex } from 'entities/chat/utils/getChatItemAtIndex.ts';
+import {
+  ChatMessageProps,
+  MessageProps,
+  MessagesListProps,
+} from 'entities/chat/model/types.ts';
 
 interface Props {
   chatId: string | null;
@@ -20,32 +23,17 @@ export const useSaveMessages = ({
     return () => {
       try {
         if (chatId && viewableItemsRef.current.length) {
-          const firstViewableIndex = viewableItemsRef.current[0].index;
-          const lastViewableIndex = viewableItemsRef.current?.at(-1)?.index;
+          const list = viewableItemsRef.current
+            ?.map((item) => item.item)
+            ?.filter((item) => item.type === 'message');
 
-          if (
-            typeof firstViewableIndex === 'number' &&
-            typeof lastViewableIndex === 'number'
-          ) {
-            const { index: firstIndex } = getMessageAtIndex(
-              firstViewableIndex - 2,
-              firstViewableIndex,
-              messages,
-            );
-
-            const { index: lastIndex } = getMessageAtIndex(
-              lastViewableIndex + 2,
-              lastViewableIndex,
-              messages,
-            );
-
-            const chunk = messages.slice(firstIndex, lastIndex + 1);
-            setChatHistory(chatId, chunk);
+          if (list.length) {
+            setChatHistory(chatId, list as ChatMessageProps[]);
           }
         }
       } catch (error) {
         console.error(JSON.stringify(error));
       }
     };
-  }, [chatId, viewableItemsRef, setChatHistory, messages]);
+  }, [chatId, viewableItemsRef, setChatHistory]);
 };

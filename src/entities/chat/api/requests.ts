@@ -3,6 +3,7 @@ import { PaginationRequest, PaginationResponse } from 'app/api/types.ts';
 import {
   GetMemberChatsRequest,
   GetMessagesRequest,
+  MessagesAroundResponse,
 } from 'entities/chat/api/types.ts';
 import { ChatProps, MessageProps } from 'entities/chat/model/types.ts';
 
@@ -30,4 +31,14 @@ export const getMessages = ({
     ? `/chat/messages?chatId=${chatId}&messageId=${messageId}&direction=${direction}&limit=${limit}`
     : `/chat/messages?chatId=${chatId}&limit=${limit}`;
   return api({ url });
+};
+
+export const getMessagesAround = ({
+  chatId,
+  readerId,
+  limit,
+}: GetMessagesRequest): Promise<MessagesAroundResponse> => {
+  return api({
+    url: `/chat/messages/around?chatId=${chatId}&readerId=${readerId}&limit=${limit}`,
+  });
 };

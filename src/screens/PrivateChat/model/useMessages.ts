@@ -6,36 +6,46 @@ import {
   useState,
 } from 'react';
 import { usePersistentStore } from 'app/storage/usePersistentStore.ts';
-import { useFetchLatestMessages } from 'entities/chat/api/useFetchLatestMessages.ts';
-import { MessageProps } from 'entities/chat/model/types.ts';
+import { useGetMessagesAround } from 'entities/chat/api/useFetchMessagesAround.ts';
+import { ChatMemberProps, MessageProps } from 'entities/chat/model/types.ts';
 import { useFormatListMessages } from 'entities/chat/model/useFormatListMessages.ts';
 
 interface Props {
   chatId: string | null;
+  selfProfile: ChatMemberProps | null;
   startTransitionMessages: TransitionStartFunction;
 }
 
-export const useMessages = ({ chatId, startTransitionMessages }: Props) => {
+export const useMessages = ({
+  chatId,
+  selfProfile,
+  startTransitionMessages,
+}: Props) => {
   const formatList = useFormatListMessages();
   const chatsMetaData = usePersistentStore((store) => store.chatsMetaData);
   const chatHistory = chatId ? chatsMetaData[chatId]?.chatHistory || [] : [];
 
-  const { latestMessages } = useFetchLatestMessages({ chatId });
-
   const [messages, setMessages] = useState<MessageProps[]>(chatHistory);
 
+  // const { latestMessages } = useFetchLatestMessages({ chatId });
+  const { messagesAround } = useGetMessagesAround({
+    chatId,
+    readerId: selfProfile?.id || null,
+  });
+
   useEffect(() => {
-    if (!chatHistory.length && latestMessages?.length) {
+    if (!chatHistory.length && messagesAround?.length) {
       startTransitionMessages(() => {
-        setMessages(latestMessages);
+        setMessages(messagesAround);
       });
     }
-  }, [chatHistory.length, latestMessages, startTransitionMessages]);
+  }, [chatHistory.length, messagesAround, startTransitionMessages]);
 
   const formattedMessages = useMemo(() => {
     if (messages?.length) {
       return formatList(messages);
     }
+    return [];
   }, [messages, formatList]);
 
   const deferredMessages = useDeferredValue(

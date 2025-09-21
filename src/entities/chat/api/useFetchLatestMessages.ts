@@ -9,7 +9,7 @@ interface Props {
 
 export const useFetchLatestMessages = ({ chatId }: Props) => {
   const { data } = useQuery({
-    queryKey: [QUERY_KEYS.GET_LATEST_MESSAGES, chatId],
+    queryKey: [QUERY_KEYS.FETCH_LATEST_MESSAGES, chatId],
     queryFn: () =>
       getMessages({
         chatId,

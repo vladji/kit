@@ -10,8 +10,9 @@ export const API_URL = `${SERVER_URL}/api`;
 export const QUERY_KEYS = {
   GET_SUPPORT_ALL_CLIENT_CHATS: 'get_support_all_client_chats',
   GET_SUPPORT_ALL_STORE_CHATS: 'get_support_all_store_chats',
-  GET_MEMBER_CHATS: 'get_member_chats',
-  GET_LATEST_MESSAGES: 'get_latest_messages',
+  FETCH_MEMBER_CHATS: 'fetch_member_chats',
+  FETCH_LATEST_MESSAGES: 'fetch_latest_messages',
+  FETCH_MESSAGES_AROUND: 'fetch_messages_around',
 };
 
 export enum STATUS {
