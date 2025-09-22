@@ -1,4 +1,5 @@
 import {
+  RefObject,
   TransitionStartFunction,
   useDeferredValue,
   useEffect,
@@ -9,17 +10,20 @@ import { usePersistentStore } from 'app/storage/usePersistentStore.ts';
 import { useGetMessagesAround } from 'entities/chat/api/useFetchMessagesAround.ts';
 import { ChatMemberProps, MessageProps } from 'entities/chat/model/types.ts';
 import { useFormatListMessages } from 'entities/chat/model/useFormatListMessages.ts';
+import { MetaRefProps } from 'screens/PrivateChat/types.ts';
 
 interface Props {
   chatId: string | null;
   selfProfile: ChatMemberProps | null;
   startTransitionMessages: TransitionStartFunction;
+  metaRef: RefObject<MetaRefProps>;
 }
 
 export const useMessages = ({
   chatId,
   selfProfile,
   startTransitionMessages,
+  metaRef,
 }: Props) => {
   const formatList = useFormatListMessages();
   const chatsMetaData = usePersistentStore((store) => store.chatsMetaData);
@@ -42,10 +46,14 @@ export const useMessages = ({
 
   const formattedMessages = useMemo(() => {
     if (messages?.length) {
+      metaRef.current.loadStartId = null;
+      metaRef.current.loadEndId = null;
       return formatList(messages);
     }
+    metaRef.current.loadStartId = null;
+    metaRef.current.loadEndId = null;
     return [];
-  }, [messages, formatList]);
+  }, [messages, formatList, metaRef]);
 
   const deferredMessages = useDeferredValue(
     formattedMessages,

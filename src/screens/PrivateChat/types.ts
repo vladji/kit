@@ -7,5 +7,6 @@ export type PrivateChatRouteProp = RouteProp<
 >;
 
 export interface MetaRefProps {
-  shouldScrollToEnd: boolean;
+  loadStartId: string | null;
+  loadEndId: string | null;
 }

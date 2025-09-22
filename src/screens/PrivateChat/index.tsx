@@ -36,7 +36,8 @@ import { ScreenLayout } from 'widgets/ScreenLayout';
 export const PrivateChatScreen = () => {
   const listRef = useRef<FlatList<MessagesListProps>>(null);
   const metaRef = useRef<MetaRefProps>({
-    shouldScrollToEnd: false,
+    loadStartId: null,
+    loadEndId: null,
   });
 
   const { anyAdmin } = useIsAdmin();
@@ -46,12 +47,13 @@ export const PrivateChatScreen = () => {
 
   const [chatId, setChatId] = useState<string | null>(params.chatId || null);
   const [text, setText] = useState('');
-  const [isTransition, startTransitionMessages] = useTransition();
+  const [_, startTransitionMessages] = useTransition();
 
   const { deferredMessages, messages, setMessages } = useMessages({
     chatId,
     selfProfile,
     startTransitionMessages,
+    metaRef,
   });
 
   const { onStartReached, onEndReached } = useLoadMessages({
@@ -59,7 +61,7 @@ export const PrivateChatScreen = () => {
     setMessages,
     chatId,
     startTransitionMessages,
-    isTransition,
+    metaRef,
   });
 
   const { onViewableItemsChanged, viewableItemsRef } = useViewableChanges({
