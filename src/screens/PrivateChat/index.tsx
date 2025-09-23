@@ -14,7 +14,7 @@ import { useSelfProfile } from 'entities/chat/model/useSelfProfile.ts';
 import { useLoadMoreMessages } from 'screens/PrivateChat/model/useLoadMoreMessages.ts';
 import { useMemoizedProps } from 'screens/PrivateChat/model/useMemoizedProps.ts';
 import { useMessages } from 'screens/PrivateChat/model/useMessages.ts';
-import { useNavigateToBottom } from 'screens/PrivateChat/model/useNavigateToBottom.ts';
+import { usePastLatestMessage } from 'screens/PrivateChat/model/usePastLatestMessage.ts';
 import { useRenderItem } from 'screens/PrivateChat/model/useRenderItem.tsx';
 import { useSaveMessages } from 'screens/PrivateChat/model/useSaveMessages.ts';
 import { useSocketListeners } from 'screens/PrivateChat/model/useSocketListeners.ts';
@@ -51,6 +51,7 @@ export const PrivateChatScreen = () => {
     chatId,
     selfProfile,
     metaRef,
+    listRef,
   });
 
   const { onStartReached, onEndReached } = useLoadMoreMessages({
@@ -65,11 +66,10 @@ export const PrivateChatScreen = () => {
     readerId,
   });
 
-  const navigateToBottom = useNavigateToBottom({
+  const pastLatestMessage = usePastLatestMessage({
     chatId,
     setMessages,
-    // listRef,
-    // metaRef,
+    metaRef,
   });
 
   useSocketListeners({
@@ -77,7 +77,7 @@ export const PrivateChatScreen = () => {
     setChatId,
     messages,
     setMessages,
-    navigateToBottom,
+    pastLatestMessage,
     selfProfile,
   });
 
@@ -97,8 +97,7 @@ export const PrivateChatScreen = () => {
   };
 
   const renderItem = useRenderItem({ selfProfile });
-  const { viewabilityConfig, maintainVisibleContentPosition, keyExtractor } =
-    useMemoizedProps({ listRef });
+  const { viewabilityConfig, keyExtractor } = useMemoizedProps({ listRef });
 
   return (
     <ScreenLayout headerContent={<ChatHeader />} hasBackButton>
@@ -126,7 +125,6 @@ export const PrivateChatScreen = () => {
               onEndReached={onEndReached}
               viewabilityConfig={viewabilityConfig}
               onViewableItemsChanged={onViewableItemsChanged}
-              // maintainVisibleContentPosition={maintainVisibleContentPosition}
               keyboardShouldPersistTaps="handled"
               keyboardDismissMode="interactive"
               scrollEventThrottle={16}
