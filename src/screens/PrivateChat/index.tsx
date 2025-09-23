@@ -1,20 +1,17 @@
-import { startTransition, useRef, useState, useTransition } from 'react';
-import { FlatList, Image, StyleSheet, View } from 'react-native';
+import { startTransition, useRef, useState } from 'react';
+import { Image, StyleSheet, View } from 'react-native';
 import { useRoute } from '@react-navigation/native';
+import { FlashList, FlashListRef } from '@shopify/flash-list';
 import { Send } from 'lucide-react-native';
 import { safeSocket } from 'app/providers/Socket/socket.ts';
 import { useIsAdmin } from 'entities/admin/model/useIsAdmin.ts';
-import {
-  AVERAGE_ITEMS_ON_SCREEN,
-  CHAT_SUPPORT,
-  MESSAGES_DEFAULT_LIMIT,
-} from 'entities/chat/model/constants.ts';
+import { CHAT_SUPPORT } from 'entities/chat/model/constants.ts';
 import {
   MessagesListProps,
   PrivateMessageProps,
 } from 'entities/chat/model/types.ts';
 import { useSelfProfile } from 'entities/chat/model/useSelfProfile.ts';
-import { useLoadMessages } from 'screens/PrivateChat/model/useLoadMessages.ts';
+import { useLoadMoreMessages } from 'screens/PrivateChat/model/useLoadMoreMessages.ts';
 import { useMemoizedProps } from 'screens/PrivateChat/model/useMemoizedProps.ts';
 import { useMessages } from 'screens/PrivateChat/model/useMessages.ts';
 import { useNavigateToBottom } from 'screens/PrivateChat/model/useNavigateToBottom.ts';
@@ -34,10 +31,12 @@ import { TextInputAction } from 'shared/ui/TextInputAction';
 import { ScreenLayout } from 'widgets/ScreenLayout';
 
 export const PrivateChatScreen = () => {
-  const listRef = useRef<FlatList<MessagesListProps>>(null);
+  const listRef = useRef<FlashListRef<MessagesListProps>>(null);
   const metaRef = useRef<MetaRefProps>({
     loadStartId: null,
     loadEndId: null,
+    shouldSetStartChatDate: false,
+    shouldScrollToBottom: false,
   });
 
   const { anyAdmin } = useIsAdmin();
@@ -47,20 +46,17 @@ export const PrivateChatScreen = () => {
 
   const [chatId, setChatId] = useState<string | null>(params.chatId || null);
   const [text, setText] = useState('');
-  const [_, startTransitionMessages] = useTransition();
 
   const { deferredMessages, messages, setMessages } = useMessages({
     chatId,
     selfProfile,
-    startTransitionMessages,
     metaRef,
   });
 
-  const { onStartReached, onEndReached } = useLoadMessages({
+  const { onStartReached, onEndReached } = useLoadMoreMessages({
     messages,
     setMessages,
     chatId,
-    startTransitionMessages,
     metaRef,
   });
 
@@ -71,9 +67,9 @@ export const PrivateChatScreen = () => {
 
   const navigateToBottom = useNavigateToBottom({
     chatId,
-    startTransitionMessages,
     setMessages,
-    listRef,
+    // listRef,
+    // metaRef,
   });
 
   useSocketListeners({
@@ -81,7 +77,6 @@ export const PrivateChatScreen = () => {
     setChatId,
     messages,
     setMessages,
-    startTransitionMessages,
     navigateToBottom,
     selfProfile,
   });
@@ -102,12 +97,8 @@ export const PrivateChatScreen = () => {
   };
 
   const renderItem = useRenderItem({ selfProfile });
-  const {
-    onScrollToIndexFailed,
-    viewabilityConfig,
-    maintainVisibleContentPosition,
-    keyExtractor,
-  } = useMemoizedProps({ listRef });
+  const { viewabilityConfig, maintainVisibleContentPosition, keyExtractor } =
+    useMemoizedProps({ listRef });
 
   return (
     <ScreenLayout headerContent={<ChatHeader />} hasBackButton>
@@ -119,11 +110,13 @@ export const PrivateChatScreen = () => {
             resizeMode="cover"
           />
           <KeyboardAvoidWrapper style={styles.contentWrapper} includeSafeBottom>
-            <FlatList
+            <FlashList
               ref={listRef}
               contentContainerStyle={styles.scrollContent}
-              initialNumToRender={AVERAGE_ITEMS_ON_SCREEN}
-              maxToRenderPerBatch={MESSAGES_DEFAULT_LIMIT * 3}
+              // drawDistance={windowHeight * 3}
+              // masonry
+              // onCommitLayoutEffect
+              // estimatedItemSize
               keyExtractor={keyExtractor}
               data={deferredMessages}
               renderItem={renderItem}
@@ -133,10 +126,10 @@ export const PrivateChatScreen = () => {
               onEndReached={onEndReached}
               viewabilityConfig={viewabilityConfig}
               onViewableItemsChanged={onViewableItemsChanged}
-              onScrollToIndexFailed={onScrollToIndexFailed}
-              maintainVisibleContentPosition={maintainVisibleContentPosition}
+              // maintainVisibleContentPosition={maintainVisibleContentPosition}
               keyboardShouldPersistTaps="handled"
-              removeClippedSubviews
+              keyboardDismissMode="interactive"
+              scrollEventThrottle={16}
             />
             <View style={styles.inputBlock}>
               <TextInputAction
@@ -165,7 +158,6 @@ const styles = StyleSheet.create({
   },
   scrollContent: {
     gap: SPACING.NANO,
-    paddingVertical: SPACING.MINI,
     paddingHorizontal: SPACING.DEFAULT,
   },
   inputBlock: {

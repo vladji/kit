@@ -1,50 +1,43 @@
 import { RefObject, useCallback, useMemo } from 'react';
-import { FlatList } from 'react-native';
+import { FlashListRef } from '@shopify/flash-list';
 import { MessagesListProps } from 'entities/chat/model/types.ts';
 
 interface Props {
-  listRef: RefObject<FlatList<MessagesListProps> | null>;
+  listRef: RefObject<FlashListRef<MessagesListProps> | null>;
 }
+
+type MaintainVisibleContentPositionProps = {
+  disabled?: boolean | undefined;
+  autoscrollToTopThreshold?: number | undefined;
+  autoscrollToBottomThreshold?: number | undefined;
+  animateAutoScrollToBottom?: boolean | undefined;
+  startRenderingFromBottom?: boolean | undefined;
+};
 
 export const useMemoizedProps = ({ listRef }: Props) => {
   const keyExtractor = useCallback((item: MessagesListProps) => item.id, []);
 
-  const maintainVisibleContentPosition = useMemo(
-    () => ({
-      minIndexForVisible: 0,
-    }),
-    [],
-  );
+  const maintainVisibleContentPosition =
+    useMemo<MaintainVisibleContentPositionProps>(
+      () => ({
+        // disabled: true,
+        // autoscrollToBottomThreshold: 2000,
+        // animateAutoScrollToBottom: true,
+        // startRenderingFromBottom: true,
+      }),
+      [],
+    );
 
   const viewabilityConfig = useMemo(
     () => ({
-      viewAreaCoveragePercentThreshold: 5,
+      viewAreaCoveragePercentThreshold: 1,
     }),
     [],
-  );
-
-  const onScrollToIndexFailed = useCallback(
-    ({
-      averageItemLength,
-      index,
-    }: {
-      averageItemLength: number;
-      index: number;
-    }) => {
-      requestAnimationFrame(() => {
-        listRef.current?.scrollToOffset({
-          offset: averageItemLength * index,
-          animated: true,
-        });
-      });
-    },
-    [listRef],
   );
 
   return {
     keyExtractor,
     maintainVisibleContentPosition,
     viewabilityConfig,
-    onScrollToIndexFailed,
   };
 };

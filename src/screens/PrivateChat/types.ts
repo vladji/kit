@@ -9,4 +9,6 @@ export type PrivateChatRouteProp = RouteProp<
 export interface MetaRefProps {
   loadStartId: string | null;
   loadEndId: string | null;
+  shouldSetStartChatDate: boolean;
+  shouldScrollToBottom: boolean;
 }
