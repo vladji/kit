@@ -1,12 +1,7 @@
-import { RefObject, useCallback, useMemo } from 'react';
-import { FlashListRef } from '@shopify/flash-list';
+import { useCallback, useMemo } from 'react';
 import { MessagesListProps } from 'entities/chat/model/types.ts';
 
-interface Props {
-  listRef: RefObject<FlashListRef<MessagesListProps> | null>;
-}
-
-export const useMemoizedProps = ({ listRef }: Props) => {
+export const useMemoizedProps = () => {
   const keyExtractor = useCallback((item: MessagesListProps) => item.id, []);
 
   const viewabilityConfig = useMemo(

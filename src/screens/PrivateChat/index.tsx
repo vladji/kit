@@ -97,7 +97,7 @@ export const PrivateChatScreen = () => {
   };
 
   const renderItem = useRenderItem({ selfProfile });
-  const { viewabilityConfig, keyExtractor } = useMemoizedProps({ listRef });
+  const { viewabilityConfig, keyExtractor } = useMemoizedProps();
 
   return (
     <ScreenLayout headerContent={<ChatHeader />} hasBackButton>

@@ -1,7 +1,6 @@
 import {
   Dispatch,
   SetStateAction,
-  TransitionStartFunction,
   startTransition,
   useEffect,
   useState,
@@ -18,8 +17,7 @@ interface Props {
   setChatId: Dispatch<SetStateAction<string | null>>;
   messages: MessageProps[];
   setMessages: Dispatch<SetStateAction<MessageProps[]>>;
-  startTransitionMessages: TransitionStartFunction;
-  navigateToBottom: (message: MessageProps) => void;
+  pastLatestMessage: (message: MessageProps) => void;
   selfProfile: ChatMemberProps | null;
 }
 
@@ -28,8 +26,7 @@ export const useSocketListeners = ({
   setChatId,
   messages,
   setMessages,
-  startTransitionMessages,
-  navigateToBottom,
+  pastLatestMessage,
   selfProfile,
 }: Props) => {
   const [messagesIds, setMessagesIds] = useState<Set<string> | null>(null);
@@ -52,7 +49,7 @@ export const useSocketListeners = ({
       }
       if (msg.chatId === chatId) {
         if (msg.from === selfProfile?.id) {
-          navigateToBottom(msg);
+          pastLatestMessage(msg);
         }
       }
     });
@@ -60,7 +57,7 @@ export const useSocketListeners = ({
     return () => {
       safeSocket()?.off('private_message');
     };
-  }, [chatId, setChatId, setMessages, selfProfile, navigateToBottom]);
+  }, [chatId, setChatId, setMessages, selfProfile, pastLatestMessage]);
 
   useEffect(() => {
     safeSocket()?.on(
@@ -76,7 +73,7 @@ export const useSocketListeners = ({
                 }
               }
             });
-            startTransitionMessages(() => {
+            startTransition(() => {
               setMessages((prev) => [...prev]);
             });
           });
@@ -87,5 +84,5 @@ export const useSocketListeners = ({
     return () => {
       safeSocket()?.off('marked_as_read_notify');
     };
-  }, [chatId, messages, messagesIds, setMessages, startTransitionMessages]);
+  }, [chatId, messages, messagesIds, setMessages]);
 };
