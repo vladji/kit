@@ -14,25 +14,22 @@ interface Props {
   chatId: string | null;
   messages: MessageProps[];
   setMessages: Dispatch<SetStateAction<MessageProps[]>>;
-  startTransitionMessages: TransitionStartFunction;
   metaRef: RefObject<MetaRefProps>;
 }
 
-export const useLoadMessages = ({
+export const useLoadMoreMessages = ({
   chatId,
   messages,
   setMessages,
-  startTransitionMessages,
   metaRef,
 }: Props) => {
   const { mutate: getMessagesBefore } = useGetMessagesBefore({
     setMessages,
-    startTransitionMessages,
+    metaRef,
   });
 
   const { mutate: getMessagesAfter } = useGetMessagesAfter({
     setMessages,
-    startTransitionMessages,
   });
 
   const onStartReached = useCallback(() => {

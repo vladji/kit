@@ -1,4 +1,4 @@
-import { Dispatch, SetStateAction, TransitionStartFunction } from 'react';
+import { Dispatch, RefObject, SetStateAction, startTransition } from 'react';
 import { useMutation } from '@tanstack/react-query';
 import { getMessages } from 'entities/chat/api/requests.ts';
 import { GetMessagesRequest } from 'entities/chat/api/types.ts';
@@ -7,16 +7,14 @@ import {
   MESSAGES_DEFAULT_LIMIT,
 } from 'entities/chat/model/constants.ts';
 import { MessageProps } from 'entities/chat/model/types.ts';
+import { MetaRefProps } from 'screens/PrivateChat/types.ts';
 
 interface Props {
   setMessages: Dispatch<SetStateAction<MessageProps[]>>;
-  startTransitionMessages: TransitionStartFunction;
+  metaRef: RefObject<MetaRefProps>;
 }
 
-export const useGetMessagesBefore = ({
-  setMessages,
-  startTransitionMessages,
-}: Props) => {
+export const useGetMessagesBefore = ({ setMessages, metaRef }: Props) => {
   return useMutation<
     MessageProps[],
     unknown,
@@ -31,13 +29,14 @@ export const useGetMessagesBefore = ({
         limit: Math.round(MESSAGES_DEFAULT_LIMIT),
       }),
     onSuccess: (messages) => {
-      if (messages?.length) {
-        startTransitionMessages(() => {
-          setMessages((prev) => {
-            return [...messages, ...prev];
-          });
-        });
+      if (!messages.length) {
+        metaRef.current.shouldSetStartChatDate = true;
       }
+      startTransition(() => {
+        setMessages((prev) => {
+          return [...messages, ...prev];
+        });
+      });
     },
   });
 };

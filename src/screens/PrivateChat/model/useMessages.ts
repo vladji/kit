@@ -1,6 +1,6 @@
 import {
   RefObject,
-  TransitionStartFunction,
+  startTransition,
   useDeferredValue,
   useEffect,
   useMemo,
@@ -8,23 +8,24 @@ import {
 } from 'react';
 import { usePersistentStore } from 'app/storage/usePersistentStore.ts';
 import { useGetMessagesAround } from 'entities/chat/api/useFetchMessagesAround.ts';
-import { ChatMemberProps, MessageProps } from 'entities/chat/model/types.ts';
+import { MESSAGES_DEFAULT_LIMIT } from 'entities/chat/model/constants.ts';
+import {
+  ChatDateProps,
+  ChatMemberProps,
+  MessageProps,
+} from 'entities/chat/model/types.ts';
 import { useFormatListMessages } from 'entities/chat/model/useFormatListMessages.ts';
 import { MetaRefProps } from 'screens/PrivateChat/types.ts';
+import { getDate } from 'shared/lib/dates.ts';
 
 interface Props {
   chatId: string | null;
   selfProfile: ChatMemberProps | null;
-  startTransitionMessages: TransitionStartFunction;
   metaRef: RefObject<MetaRefProps>;
 }
 
-export const useMessages = ({
-  chatId,
-  selfProfile,
-  startTransitionMessages,
-  metaRef,
-}: Props) => {
+export const useMessages = ({ chatId, selfProfile, metaRef }: Props) => {
+  const locale = usePersistentStore((store) => store.locale);
   const formatList = useFormatListMessages();
   const chatsMetaData = usePersistentStore((store) => store.chatsMetaData);
   const chatHistory = chatId ? chatsMetaData[chatId]?.chatHistory || [] : [];
@@ -38,22 +39,41 @@ export const useMessages = ({
 
   useEffect(() => {
     if (!chatHistory.length && messagesAround?.length) {
-      startTransitionMessages(() => {
+      startTransition(() => {
         setMessages(messagesAround);
       });
     }
-  }, [chatHistory.length, messagesAround, startTransitionMessages]);
+  }, [chatHistory.length, messagesAround]);
 
   const formattedMessages = useMemo(() => {
     if (messages?.length) {
       metaRef.current.loadStartId = null;
       metaRef.current.loadEndId = null;
-      return formatList(messages);
+      const formattedMessages = formatList(messages);
+
+      const shouldSetStartChatDate =
+        metaRef.current.shouldSetStartChatDate ||
+        (messagesAround && messagesAround?.length < MESSAGES_DEFAULT_LIMIT);
+      const firstItemIsMessage = formattedMessages[0].type !== 'date';
+
+      if (shouldSetStartChatDate && firstItemIsMessage) {
+        metaRef.current.shouldSetStartChatDate = false;
+        const firstMessage = formattedMessages[0].createdAt;
+        const startChatDate = getDate(locale, firstMessage);
+        const chatDate: ChatDateProps = {
+          id: startChatDate,
+          type: 'date',
+          date: startChatDate,
+        };
+        return [chatDate, ...formattedMessages];
+      }
+
+      return formattedMessages;
     }
     metaRef.current.loadStartId = null;
     metaRef.current.loadEndId = null;
     return [];
-  }, [messages, formatList, metaRef]);
+  }, [messages, formatList, metaRef, locale, messagesAround]);
 
   const deferredMessages = useDeferredValue(
     formattedMessages,

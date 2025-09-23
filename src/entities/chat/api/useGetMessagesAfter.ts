@@ -1,4 +1,4 @@
-import { Dispatch, SetStateAction, TransitionStartFunction } from 'react';
+import { Dispatch, SetStateAction, startTransition } from 'react';
 import { useMutation } from '@tanstack/react-query';
 import { getMessages } from 'entities/chat/api/requests.ts';
 import { GetMessagesRequest } from 'entities/chat/api/types.ts';
@@ -10,13 +10,9 @@ import { MessageProps } from 'entities/chat/model/types.ts';
 
 interface Props {
   setMessages: Dispatch<SetStateAction<MessageProps[]>>;
-  startTransitionMessages: TransitionStartFunction;
 }
 
-export const useGetMessagesAfter = ({
-  setMessages,
-  startTransitionMessages,
-}: Props) => {
+export const useGetMessagesAfter = ({ setMessages }: Props) => {
   return useMutation<
     MessageProps[],
     unknown,
@@ -32,7 +28,7 @@ export const useGetMessagesAfter = ({
       }),
     onSuccess: (messages) => {
       if (messages?.length) {
-        startTransitionMessages(() => {
+        startTransition(() => {
           setMessages((prev) => {
             return [...prev, ...messages];
           });
