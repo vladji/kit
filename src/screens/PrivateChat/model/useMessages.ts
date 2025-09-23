@@ -6,7 +6,6 @@ import {
   useMemo,
   useState,
 } from 'react';
-import { FlashListRef } from '@shopify/flash-list';
 import { usePersistentStore } from 'app/storage/usePersistentStore.ts';
 import { useGetMessagesAround } from 'entities/chat/api/useFetchMessagesAround.ts';
 import { MESSAGES_DEFAULT_LIMIT } from 'entities/chat/model/constants.ts';
@@ -14,7 +13,6 @@ import {
   ChatDateProps,
   ChatMemberProps,
   MessageProps,
-  MessagesListProps,
 } from 'entities/chat/model/types.ts';
 import { useFormatListMessages } from 'entities/chat/model/useFormatListMessages.ts';
 import { MetaRefProps } from 'screens/PrivateChat/types.ts';
@@ -24,15 +22,9 @@ interface Props {
   chatId: string | null;
   selfProfile: ChatMemberProps | null;
   metaRef: RefObject<MetaRefProps>;
-  listRef: RefObject<FlashListRef<MessagesListProps> | null>;
 }
 
-export const useMessages = ({
-  chatId,
-  selfProfile,
-  metaRef,
-  listRef,
-}: Props) => {
+export const useMessages = ({ chatId, selfProfile, metaRef }: Props) => {
   const locale = usePersistentStore((store) => store.locale);
   const formatList = useFormatListMessages();
   const chatsMetaData = usePersistentStore((store) => store.chatsMetaData);
@@ -87,15 +79,6 @@ export const useMessages = ({
     formattedMessages,
     chatHistory.length ? formatList(chatHistory) : [],
   );
-
-  useEffect(() => {
-    if (metaRef.current.shouldScrollToBottom) {
-      setImmediate(() => {
-        listRef.current?.scrollToEnd({ animated: true });
-        metaRef.current.shouldScrollToBottom = false;
-      });
-    }
-  }, [deferredMessages, metaRef, listRef]);
 
   return {
     deferredMessages,

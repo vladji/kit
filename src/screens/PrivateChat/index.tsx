@@ -17,6 +17,7 @@ import { useMessages } from 'screens/PrivateChat/model/useMessages.ts';
 import { usePastLatestMessage } from 'screens/PrivateChat/model/usePastLatestMessage.ts';
 import { useRenderItem } from 'screens/PrivateChat/model/useRenderItem.tsx';
 import { useSaveMessages } from 'screens/PrivateChat/model/useSaveMessages.ts';
+import { useScrollToBottom } from 'screens/PrivateChat/model/useScrollToBottom.ts';
 import { useSocketListeners } from 'screens/PrivateChat/model/useSocketListeners.ts';
 import { useViewableChanges } from 'screens/PrivateChat/model/useViewableChanges.ts';
 import {
@@ -51,8 +52,9 @@ export const PrivateChatScreen = () => {
     chatId,
     selfProfile,
     metaRef,
-    listRef,
   });
+
+  useScrollToBottom({ metaRef, listRef, deferredMessages });
 
   const { onStartReached, onEndReached } = useLoadMoreMessages({
     messages,
