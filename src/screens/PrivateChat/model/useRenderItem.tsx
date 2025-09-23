@@ -14,9 +14,9 @@ interface Props {
 
 export const useRenderItem = ({ selfProfile }: Props) => {
   return useCallback(
-    ({ item }: { item: MessagesListProps }) => {
+    ({ item }: { item?: MessagesListProps }) => {
       if (!selfProfile) return null;
-      if (item.type === 'message') {
+      if (item?.type === 'message') {
         const message = item as ChatMessageProps;
         return (
           <Message
@@ -28,7 +28,7 @@ export const useRenderItem = ({ selfProfile }: Props) => {
           />
         );
       }
-      if (item.type === 'date') {
+      if (item?.type === 'date') {
         const date = (item as ChatDateProps).date;
         return <Date date={date} />;
       }

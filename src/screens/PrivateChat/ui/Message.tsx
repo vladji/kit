@@ -48,6 +48,7 @@ export const Message = memo(
 const styles = StyleSheet.create({
   wrapper: {
     maxWidth: '85%',
+    marginBottom: SPACING.NANO,
     paddingHorizontal: SPACING.MEDIUM,
     paddingVertical: SPACING.MINI_S,
     borderRadius: SPACING.MEDIUM,

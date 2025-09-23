@@ -1,16 +1,16 @@
 import { useRef } from 'react';
 
 export const useDebounce = <T extends unknown>(
-  func: (args: T) => void,
+  func: (...args: T[]) => void,
   delay: number,
 ) => {
   return useRef(
     (() => {
       let timer: ReturnType<typeof setTimeout>;
-      return (args: T) => {
+      return (...args: T[]) => {
         clearTimeout(timer);
         timer = setTimeout(() => {
-          func(args);
+          func(...args);
         }, delay);
       };
     })(),
