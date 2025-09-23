@@ -11,6 +11,7 @@ import {
   PrivateMessageProps,
 } from 'entities/chat/model/types.ts';
 import { useSelfProfile } from 'entities/chat/model/useSelfProfile.ts';
+import { useLoadMessages } from 'screens/PrivateChat/model/useLoadMessages.ts';
 import { useLoadMoreMessages } from 'screens/PrivateChat/model/useLoadMoreMessages.ts';
 import { useMemoizedProps } from 'screens/PrivateChat/model/useMemoizedProps.ts';
 import { useMessages } from 'screens/PrivateChat/model/useMessages.ts';
@@ -48,13 +49,16 @@ export const PrivateChatScreen = () => {
   const [chatId, setChatId] = useState<string | null>(params.chatId || null);
   const [text, setText] = useState('');
 
-  const { deferredMessages, messages, setMessages } = useMessages({
+  const { latestMessages, messagesAround } = useLoadMessages({
     chatId,
     selfProfile,
-    metaRef,
   });
 
-  useScrollToBottom({ metaRef, listRef, deferredMessages });
+  const { deferredMessages, messages, setMessages } = useMessages({
+    chatId,
+    metaRef,
+    messagesAround,
+  });
 
   const { onStartReached, onEndReached } = useLoadMoreMessages({
     messages,
@@ -72,6 +76,7 @@ export const PrivateChatScreen = () => {
     chatId,
     setMessages,
     metaRef,
+    latestMessages,
   });
 
   useSocketListeners({
@@ -83,7 +88,11 @@ export const PrivateChatScreen = () => {
     selfProfile,
   });
 
+  useScrollToBottom({ metaRef, listRef, deferredMessages });
   useSaveMessages({ chatId, viewableItemsRef, messages });
+
+  const renderItem = useRenderItem({ selfProfile });
+  const { viewabilityConfig, keyExtractor } = useMemoizedProps();
 
   const sendMessage = () => {
     if (!selfProfile || !params.peer.id || !text) return;
@@ -97,9 +106,6 @@ export const PrivateChatScreen = () => {
     safeSocket()?.emit('private_message', privateMessage);
     startTransition(() => setText(''));
   };
-
-  const renderItem = useRenderItem({ selfProfile });
-  const { viewabilityConfig, keyExtractor } = useMemoizedProps();
 
   return (
     <ScreenLayout headerContent={<ChatHeader />} hasBackButton>

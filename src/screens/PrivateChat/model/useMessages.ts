@@ -7,35 +7,25 @@ import {
   useState,
 } from 'react';
 import { usePersistentStore } from 'app/storage/usePersistentStore.ts';
-import { useGetMessagesAround } from 'entities/chat/api/useFetchMessagesAround.ts';
 import { MESSAGES_DEFAULT_LIMIT } from 'entities/chat/model/constants.ts';
-import {
-  ChatDateProps,
-  ChatMemberProps,
-  MessageProps,
-} from 'entities/chat/model/types.ts';
+import { ChatDateProps, MessageProps } from 'entities/chat/model/types.ts';
 import { useFormatListMessages } from 'entities/chat/model/useFormatListMessages.ts';
 import { MetaRefProps } from 'screens/PrivateChat/types.ts';
 import { getDate } from 'shared/lib/dates.ts';
 
 interface Props {
   chatId: string | null;
-  selfProfile: ChatMemberProps | null;
   metaRef: RefObject<MetaRefProps>;
+  messagesAround?: MessageProps[];
 }
 
-export const useMessages = ({ chatId, selfProfile, metaRef }: Props) => {
+export const useMessages = ({ chatId, metaRef, messagesAround }: Props) => {
   const locale = usePersistentStore((store) => store.locale);
   const formatList = useFormatListMessages();
   const chatsMetaData = usePersistentStore((store) => store.chatsMetaData);
   const chatHistory = chatId ? chatsMetaData[chatId]?.chatHistory || [] : [];
 
   const [messages, setMessages] = useState<MessageProps[]>(chatHistory);
-
-  const { messagesAround } = useGetMessagesAround({
-    chatId,
-    readerId: selfProfile?.id || null,
-  });
 
   useEffect(() => {
     if (!chatHistory.length && messagesAround?.length) {

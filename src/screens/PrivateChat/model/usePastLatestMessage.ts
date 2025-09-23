@@ -1,5 +1,6 @@
 import { Dispatch, RefObject, SetStateAction, useCallback } from 'react';
-import { useFetchLatestMessages } from 'entities/chat/api/useFetchLatestMessages.ts';
+import { useQueryClient } from '@tanstack/react-query';
+import { QUERY_KEYS } from 'app/api/constants.ts';
 import { MessageProps } from 'entities/chat/model/types.ts';
 import { MetaRefProps } from 'screens/PrivateChat/types.ts';
 
@@ -7,14 +8,16 @@ interface Props {
   chatId: string | null;
   setMessages: Dispatch<SetStateAction<MessageProps[]>>;
   metaRef: RefObject<MetaRefProps>;
+  latestMessages?: MessageProps[];
 }
 
 export const usePastLatestMessage = ({
   chatId,
   setMessages,
   metaRef,
+  latestMessages,
 }: Props) => {
-  const { latestMessages, refetch } = useFetchLatestMessages({ chatId });
+  const queryClient = useQueryClient();
 
   return useCallback(
     (lastMessage: MessageProps) => {
@@ -30,9 +33,11 @@ export const usePastLatestMessage = ({
         });
 
         metaRef.current.shouldScrollToBottom = true;
-        setTimeout(() => refetch());
+        queryClient.invalidateQueries({
+          queryKey: [QUERY_KEYS.FETCH_LATEST_MESSAGES, chatId],
+        });
       }
     },
-    [latestMessages, setMessages, metaRef, refetch],
+    [chatId, latestMessages, setMessages, metaRef, queryClient],
   );
 };
