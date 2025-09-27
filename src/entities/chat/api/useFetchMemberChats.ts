@@ -8,7 +8,12 @@ export const useFetchMemberChats = ({
   support = false,
 }: GetMemberChatsRequest) => {
   const { data, isLoading, refetch } = useQuery({
-    queryKey: [QUERY_KEYS.FETCH_MEMBER_CHATS, memberId, support],
+    queryKey: [
+      QUERY_KEYS.FETCH_CHATS,
+      QUERY_KEYS.FETCH_MEMBER_CHATS,
+      memberId,
+      support,
+    ],
     queryFn: () => getMemberChats({ memberId, support, page: 1, limit: 10 }),
     enabled: !!memberId,
   });

@@ -1,10 +1,7 @@
-import { useGetAllStoreChats } from 'entities/admin/api/useGetAllStoreChats.ts';
+import { useFetchAllStoreChats } from 'entities/admin/api/useFetchAllStoreChats.ts';
 import { ChatsList } from 'entities/chat/ui/ChatsList.tsx';
 
 export const AdminStoresTab = () => {
-  const { isLoading, refetch, data } = useGetAllStoreChats();
-
-  return (
-    <ChatsList loading={isLoading} refetch={refetch} chats={data?.chats} />
-  );
+  const { isLoading, data } = useFetchAllStoreChats();
+  return <ChatsList loading={isLoading} chats={data?.chats} />;
 };

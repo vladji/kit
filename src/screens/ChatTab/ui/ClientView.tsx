@@ -4,13 +4,12 @@ import { ChatsList } from 'entities/chat/ui/ChatsList.tsx';
 import { ScreenLayout } from 'widgets/ScreenLayout';
 
 export const ClientView = () => {
-  const { loading, refetch, data } = useMemberAllChats();
-
+  const { loading, data } = useMemberAllChats();
   return (
     <ScreenLayout
       headerContent={<FormattedMessage defaultMessage="Список чатов" />}
     >
-      <ChatsList loading={loading} refetch={refetch} chats={data?.chats} />
+      <ChatsList loading={loading} chats={data?.chats} />
     </ScreenLayout>
   );
 };
