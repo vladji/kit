@@ -7,6 +7,7 @@ interface Props {
   anyAdmin: boolean;
   readerId: string | null;
   setShowBottomButton: Dispatch<SetStateAction<boolean>>;
+  chatSupport: boolean;
   latestMessages?: MessageProps[];
 }
 
@@ -14,6 +15,7 @@ export const useViewableChanges = ({
   anyAdmin,
   readerId,
   setShowBottomButton,
+  chatSupport,
   latestMessages,
 }: Props) => {
   const viewableItemsRef = useRef<ViewToken<MessagesListProps>[]>([]);
@@ -25,7 +27,7 @@ export const useViewableChanges = ({
   }) => {
     viewableItemsRef.current = viewableItems;
     requestAnimationFrame(() => {
-      markAsRead({ viewableItems, readerId, anyAdmin });
+      markAsRead({ viewableItems, readerId, anyAdmin, chatSupport });
     });
 
     const lastViewableItem = viewableItems.at(-1)?.item;

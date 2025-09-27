@@ -58,6 +58,7 @@ export interface MarkAsReadSocketProps {
   lastSeenMessageId: string;
   readerId: string;
   isAdmin: boolean;
+  chatSupport: boolean;
 }
 
 export interface MarkedAsReadNotifySocketProps {

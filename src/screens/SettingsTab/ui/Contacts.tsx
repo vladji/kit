@@ -17,6 +17,7 @@ export const Contacts = () => {
     navigate(RootRouter.PrivateChatRoute, {
       peer: DEFAULT_ADMIN,
       chatId: supportChatId,
+      chatSupport: true,
     });
   };
 

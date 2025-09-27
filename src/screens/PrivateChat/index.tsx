@@ -73,6 +73,7 @@ export const PrivateChatScreen = () => {
     anyAdmin,
     readerId,
     setShowBottomButton,
+    chatSupport: params.chatSupport,
     latestMessages,
   });
 

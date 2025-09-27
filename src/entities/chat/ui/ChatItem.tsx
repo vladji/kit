@@ -26,6 +26,7 @@ export const ChatItem: FC<Props> = ({
     navigate(RootRouter.PrivateChatRoute, {
       peer,
       chatId,
+      chatSupport: !!support,
     });
   };
 

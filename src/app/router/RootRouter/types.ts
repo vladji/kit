@@ -9,6 +9,7 @@ export enum RootRouter {
 export interface ChatRouteParams {
   peer: ChatMemberProps;
   chatId: string | null;
+  chatSupport: boolean;
 }
 
 export type RootStackParams = {

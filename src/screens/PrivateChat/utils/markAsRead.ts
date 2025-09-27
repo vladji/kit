@@ -11,9 +11,15 @@ interface Props {
   viewableItems: ViewToken<MessagesListProps>[];
   anyAdmin: boolean;
   readerId: string | null;
+  chatSupport: boolean;
 }
 
-export const markAsRead = ({ viewableItems, readerId, anyAdmin }: Props) => {
+export const markAsRead = ({
+  viewableItems,
+  readerId,
+  anyAdmin,
+  chatSupport,
+}: Props) => {
   const filtered = viewableItems.filter(
     (item) =>
       item.item.type === 'message' &&
@@ -32,6 +38,7 @@ export const markAsRead = ({ viewableItems, readerId, anyAdmin }: Props) => {
     lastSeenMessageId: id,
     readerId: to,
     isAdmin: anyAdmin,
+    chatSupport,
   };
 
   safeSocket()?.emit('mark_as_read', markAsReadData);
