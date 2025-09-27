@@ -1,5 +1,5 @@
-import { FC, ReactElement } from 'react';
-import { StyleSheet, TouchableOpacity, View } from 'react-native';
+import { FC, ReactElement, useEffect } from 'react';
+import { BackHandler, StyleSheet, TouchableOpacity, View } from 'react-native';
 import { NavigationProp, useNavigation } from '@react-navigation/native';
 import { ArrowLeft } from 'lucide-react-native';
 import { RootStackParams } from 'app/router/RootRouter/types.ts';
@@ -25,6 +25,18 @@ export const ScreenHeader: FC<Props> = ({
     goBackCallback?.();
     goBack();
   };
+
+  useEffect(() => {
+    const callback = () => {
+      goBackCallback?.();
+      return true;
+    };
+    const backHandler = BackHandler.addEventListener(
+      'hardwareBackPress',
+      callback,
+    );
+    return () => backHandler.remove();
+  }, [goBackCallback]);
 
   return (
     <View style={styles.wrapper}>
