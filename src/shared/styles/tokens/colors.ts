@@ -14,6 +14,7 @@ export const COLORS = {
   MUTED_LIGHT_THEME: '#f3f3f3',
   MUTED_DARK_THEME: '#dadada',
   BORDER: '#c6c6c6',
+  DARK_GRAY: '#8d8c8c',
   MESSAGE_PRIMARY: '#58a5b6',
   MESSAGE_SECONDARY: '#b6ab92',
 };

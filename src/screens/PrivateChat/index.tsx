@@ -146,8 +146,9 @@ export const PrivateChatScreen = () => {
             <BottomButton
               show={showBottomButton}
               listRef={listRef}
-              setMessages={setMessages}
               chatId={chatId}
+              setMessages={setMessages}
+              messages={messages}
             />
             <View style={styles.inputBlock}>
               <TextInputAction

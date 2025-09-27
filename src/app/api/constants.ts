@@ -15,6 +15,9 @@ export const QUERY_KEYS = {
   FETCH_RECENTLY_MESSAGES: 'fetch_recently_messages',
 };
 
+export const FLASH_STALE_TIME = 300;
+export const SHORT_STALE_TIME = 1000;
+
 export enum STATUS {
   SUCCESS = 200,
   CREATED = 201,

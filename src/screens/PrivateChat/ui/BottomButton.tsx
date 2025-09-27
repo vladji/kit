@@ -23,45 +23,55 @@ import { COLORS } from 'shared/styles/tokens/colors.ts';
 interface Props {
   show: boolean;
   listRef: RefObject<FlashListRef<MessagesListProps> | null>;
-  setMessages: Dispatch<SetStateAction<MessageProps[]>>;
   chatId: string | null;
+  setMessages: Dispatch<SetStateAction<MessageProps[]>>;
+  messages: MessageProps[];
 }
 
 export const BottomButton = memo(
-  ({ show, listRef, setMessages, chatId }: Props) => {
+  ({ show, listRef, chatId, setMessages, messages }: Props) => {
     const { latestMessages } = useFetchLatestMessages({ chatId });
 
-    const size = useSharedValue(0);
+    const onPress = () => {
+      const lastMessageId = messages.at(-1)?.id;
+      const latestMessageId = latestMessages?.at(-1)?.id;
+
+      if (lastMessageId !== latestMessageId && latestMessages) {
+        setMessages(latestMessages);
+        setTimeout(() => {
+          listRef.current?.scrollToEnd({ animated: true });
+        });
+      } else {
+        setImmediate(() => {
+          listRef.current?.scrollToEnd({ animated: true });
+        });
+      }
+    };
+
+    const scale = useSharedValue(0);
 
     const animation = useCallback(
       (value: number) => {
-        size.value = withSpring(value, {
+        scale.value = withSpring(value, {
           duration: ANIMATION_DURATION_COMMON,
         });
       },
-      [size],
+      [scale],
     );
 
     useEffect(() => {
-      const value = show ? 38 : 0;
+      const value = show ? 1 : 0;
       animation(value);
     }, [show, animation]);
 
-    const onPress = () => {
-      setImmediate(() => {
-        listRef.current?.scrollToEnd({ animated: true });
-      });
-    };
-
     const animatedStyle = useAnimatedStyle(() => {
       return {
-        width: size.value,
-        height: size.value,
+        transform: [{ scale: scale.value }],
       };
     });
 
     const iconStyle = useAnimatedStyle(() => {
-      const iconOpacity = interpolate(size.value, [0, 39], [0, 1]);
+      const iconOpacity = interpolate(scale.value, [0, 1], [0, 1]);
       return {
         opacity: iconOpacity,
       };
@@ -82,11 +92,15 @@ export const BottomButton = memo(
 const styles = StyleSheet.create({
   wrapper: {
     position: 'absolute',
-    bottom: 52,
-    right: 22,
+    bottom: 58,
+    right: 12,
     justifyContent: 'center',
     alignItems: 'center',
+    width: 38,
+    height: 38,
     borderRadius: 111,
-    backgroundColor: COLORS.ACCENT_LIGHT,
+    borderWidth: 1,
+    borderColor: COLORS.DARK_GRAY,
+    backgroundColor: COLORS.BORDER,
   },
 });
