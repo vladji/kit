@@ -19,7 +19,7 @@ export const Message = memo(
   ({ from, text, createdAt, selfId, read }: Props) => {
     const isSelf = from === selfId;
     const styleMessage = isSelf ? styles.selfMessage : styles.peerMessage;
-    const emptyString = isSelf ? '           .' : '        .';
+    const emptyString = isSelf ? '            .' : '         .';
 
     return (
       <View style={[styles.wrapper, styleMessage]}>

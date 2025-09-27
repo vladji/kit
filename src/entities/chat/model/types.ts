@@ -33,6 +33,7 @@ export interface MessageProps {
   read: boolean;
   createdAt: string;
   updatedAt: string;
+  isInitialMessage?: boolean;
 }
 
 export type ChatMessageProps = MessageProps & { type: ChatItemType };

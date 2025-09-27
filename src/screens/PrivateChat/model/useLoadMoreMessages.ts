@@ -19,7 +19,6 @@ export const useLoadMoreMessages = ({
 }: Props) => {
   const { mutate: getMessagesBefore } = useGetMessagesBefore({
     setMessages,
-    metaRef,
   });
 
   const { mutate: getMessagesAfter } = useGetMessagesAfter({

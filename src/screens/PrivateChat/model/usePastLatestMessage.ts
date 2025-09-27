@@ -11,6 +11,11 @@ interface Props {
   latestMessages?: MessageProps[];
 }
 
+export type PastLatestMessage = (
+  lastMessage: MessageProps,
+  shouldScrollToBottom: boolean,
+) => void;
+
 export const usePastLatestMessage = ({
   chatId,
   setMessages,
@@ -19,8 +24,8 @@ export const usePastLatestMessage = ({
 }: Props) => {
   const queryClient = useQueryClient();
 
-  return useCallback(
-    (lastMessage: MessageProps) => {
+  return useCallback<PastLatestMessage>(
+    (lastMessage, shouldScrollToBottom) => {
       if (latestMessages?.length) {
         setMessages((prev) => {
           const latestLast = latestMessages.at(-1);
@@ -32,7 +37,7 @@ export const usePastLatestMessage = ({
           return [...latestMessages, lastMessage];
         });
 
-        metaRef.current.shouldScrollToBottom = true;
+        metaRef.current.shouldScrollToBottom = shouldScrollToBottom;
         queryClient.invalidateQueries({
           queryKey: [QUERY_KEYS.FETCH_LATEST_MESSAGES, chatId],
         });
