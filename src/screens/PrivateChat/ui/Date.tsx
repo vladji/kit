@@ -17,6 +17,7 @@ export const Date = memo(({ date }: Props) => {
   const todayDate = getTodayDate(locale);
   const dateValue =
     date === todayDate ? <FormattedMessage defaultMessage="Сегодня" /> : date;
+
   return (
     <View style={styles.wrapper}>
       <Typography
@@ -36,7 +37,7 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
     paddingHorizontal: SPACING.MINI,
     marginVertical: SPACING.MINI_S,
-    borderRadius: 888,
+    borderRadius: 111,
     backgroundColor: lightTheme.darkMuted,
   },
 });

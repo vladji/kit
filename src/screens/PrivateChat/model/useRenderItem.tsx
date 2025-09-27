@@ -1,7 +1,6 @@
 import { useCallback } from 'react';
 import {
   ChatDateProps,
-  ChatMemberProps,
   ChatMessageProps,
   MessagesListProps,
 } from 'entities/chat/model/types.ts';
@@ -9,13 +8,13 @@ import { Date } from 'screens/PrivateChat/ui/Date.tsx';
 import { Message } from 'screens/PrivateChat/ui/Message.tsx';
 
 interface Props {
-  selfProfile: ChatMemberProps | null;
+  selfProfileId?: string;
 }
 
-export const useRenderItem = ({ selfProfile }: Props) => {
+export const useRenderItem = ({ selfProfileId }: Props) => {
   return useCallback(
-    ({ item }: { item?: MessagesListProps }) => {
-      if (!selfProfile) return null;
+    ({ item }: { item: MessagesListProps }) => {
+      if (!selfProfileId) return null;
       if (item?.type === 'message') {
         const message = item as ChatMessageProps;
         return (
@@ -23,7 +22,7 @@ export const useRenderItem = ({ selfProfile }: Props) => {
             from={message.from}
             text={message.text}
             createdAt={message.createdAt}
-            selfId={selfProfile.id}
+            selfId={selfProfileId}
             read={message.read}
           />
         );
@@ -34,6 +33,6 @@ export const useRenderItem = ({ selfProfile }: Props) => {
       }
       return null;
     },
-    [selfProfile],
+    [selfProfileId],
   );
 };

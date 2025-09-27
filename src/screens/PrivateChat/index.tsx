@@ -95,8 +95,8 @@ export const PrivateChatScreen = () => {
   useScrollToBottom({ metaRef, listRef, deferredMessages });
   const saveMessages = useSaveMessages({ chatId, messages, viewableItemsRef });
 
-  const renderItem = useRenderItem({ selfProfile });
-  const { viewabilityConfig, keyExtractor } = useMemoizedProps();
+  const renderItem = useRenderItem({ selfProfileId: selfProfile?.id });
+  const { viewabilityConfig, keyExtractor, getItemType } = useMemoizedProps();
 
   const sendMessage = () => {
     if (!selfProfile || !params.peer.id || !text) return;
@@ -117,7 +117,7 @@ export const PrivateChatScreen = () => {
       goBackCallback={saveMessages}
       hasBackButton
     >
-      {!!selfProfile && (
+      {!!selfProfile?.id && !!deferredMessages.length && (
         <View style={styles.wrapper}>
           <Image
             style={StyleSheet.absoluteFill}
@@ -128,13 +128,11 @@ export const PrivateChatScreen = () => {
             <FlashList
               ref={listRef}
               contentContainerStyle={styles.scrollContent}
-              // drawDistance={windowHeight * 3}
-              // masonry
-              // onCommitLayoutEffect
               // estimatedItemSize
               keyExtractor={keyExtractor}
               data={deferredMessages}
               renderItem={renderItem}
+              getItemType={getItemType}
               onStartReachedThreshold={2}
               onStartReached={onStartReached}
               onEndReachedThreshold={2}
