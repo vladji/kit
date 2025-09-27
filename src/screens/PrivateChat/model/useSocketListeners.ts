@@ -64,7 +64,7 @@ export const useSocketListeners = ({
       'marked_as_read_notify',
       (msg: MarkedAsReadNotifySocketProps) => {
         if (msg.chatId === chatId) {
-          requestAnimationFrame(() => {
+          setTimeout(() => {
             msg.messageIds.forEach((id) => {
               if (messagesIds?.has(id)) {
                 const message = messages.find((message) => message.id === id);

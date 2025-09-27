@@ -22,13 +22,13 @@ export const ScreenHeader: FC<Props> = ({
     useNavigation<NavigationProp<RootStackParams>>();
 
   const goBackHandler = () => {
-    goBackCallback?.();
+    setImmediate(() => goBackCallback?.());
     goBack();
   };
 
   useEffect(() => {
     const callback = () => {
-      goBackCallback?.();
+      setImmediate(() => goBackCallback?.());
       return true;
     };
     const backHandler = BackHandler.addEventListener(
