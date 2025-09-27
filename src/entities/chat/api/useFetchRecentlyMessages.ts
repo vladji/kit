@@ -1,6 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
 import { QUERY_KEYS } from 'app/api/constants.ts';
-import { getMessagesAround } from 'entities/chat/api/requests.ts';
+import { getRecentlyMessages } from 'entities/chat/api/requests.ts';
 import { MESSAGES_DEFAULT_LIMIT } from 'entities/chat/model/constants.ts';
 
 interface Props {
@@ -8,11 +8,11 @@ interface Props {
   readerId: string | null;
 }
 
-export const useGetMessagesAround = ({ chatId, readerId }: Props) => {
+export const useFetchRecentlyMessages = ({ chatId, readerId }: Props) => {
   const { data, isLoading } = useQuery({
-    queryKey: [QUERY_KEYS.FETCH_MESSAGES_AROUND, chatId, readerId],
+    queryKey: [QUERY_KEYS.FETCH_RECENTLY_MESSAGES, chatId, readerId],
     queryFn: () =>
-      getMessagesAround({
+      getRecentlyMessages({
         chatId,
         readerId,
         limit: MESSAGES_DEFAULT_LIMIT,
@@ -23,7 +23,7 @@ export const useGetMessagesAround = ({ chatId, readerId }: Props) => {
   });
 
   return {
-    messagesAround: data?.messagesAround,
+    recentlyMessages: data?.messagesAround,
     loading: isLoading,
   };
 };

@@ -33,12 +33,12 @@ export const getMessages = ({
   return api({ url });
 };
 
-export const getMessagesAround = ({
+export const getRecentlyMessages = ({
   chatId,
   readerId,
   limit,
 }: GetMessagesRequest): Promise<MessagesAroundResponse> => {
   return api({
-    url: `/chat/messages/around?chatId=${chatId}&readerId=${readerId}&limit=${limit}`,
+    url: `/chat/messages/recently?chatId=${chatId}&readerId=${readerId}&limit=${limit}`,
   });
 };

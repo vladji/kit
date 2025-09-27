@@ -3,6 +3,7 @@ import { Image, StyleSheet, View } from 'react-native';
 import { useRoute } from '@react-navigation/native';
 import { FlashList, FlashListRef } from '@shopify/flash-list';
 import { Send } from 'lucide-react-native';
+import { IS_IOS } from 'app/config/constants.ts';
 import { safeSocket } from 'app/providers/Socket/socket.ts';
 import { useIsAdmin } from 'entities/admin/model/useIsAdmin.ts';
 import { CHAT_SUPPORT } from 'entities/chat/model/constants.ts';
@@ -25,6 +26,7 @@ import {
   MetaRefProps,
   PrivateChatRouteProp,
 } from 'screens/PrivateChat/types.ts';
+import { BottomButton } from 'screens/PrivateChat/ui/BottomButton.tsx';
 import { ChatHeader } from 'screens/PrivateChat/ui/Header.tsx';
 import { lightTheme } from 'shared/styles/theme/theme.ts';
 import { SPACING } from 'shared/styles/tokens/spacing.ts';
@@ -37,7 +39,6 @@ export const PrivateChatScreen = () => {
   const metaRef = useRef<MetaRefProps>({
     loadStartId: null,
     loadEndId: null,
-    shouldSetStartChatDate: false,
     shouldScrollToBottom: false,
   });
 
@@ -48,8 +49,9 @@ export const PrivateChatScreen = () => {
 
   const [chatId, setChatId] = useState<string | null>(params.chatId || null);
   const [text, setText] = useState('');
+  const [showBottomButton, setShowBottomButton] = useState(false);
 
-  const { latestMessages, messagesAround } = useLoadMessages({
+  const { latestMessages, recentlyMessages } = useLoadMessages({
     chatId,
     selfProfile,
   });
@@ -57,7 +59,7 @@ export const PrivateChatScreen = () => {
   const { deferredMessages, messages, setMessages } = useMessages({
     chatId,
     metaRef,
-    messagesAround,
+    recentlyMessages,
   });
 
   const { onStartReached, onEndReached } = useLoadMoreMessages({
@@ -70,6 +72,8 @@ export const PrivateChatScreen = () => {
   const { onViewableItemsChanged, viewableItemsRef } = useViewableChanges({
     anyAdmin,
     readerId,
+    setShowBottomButton,
+    latestMessages,
   });
 
   const pastLatestMessage = usePastLatestMessage({
@@ -89,7 +93,7 @@ export const PrivateChatScreen = () => {
   });
 
   useScrollToBottom({ metaRef, listRef, deferredMessages });
-  useSaveMessages({ chatId, viewableItemsRef, messages });
+  const saveMessages = useSaveMessages({ chatId, messages, viewableItemsRef });
 
   const renderItem = useRenderItem({ selfProfile });
   const { viewabilityConfig, keyExtractor } = useMemoizedProps();
@@ -108,7 +112,11 @@ export const PrivateChatScreen = () => {
   };
 
   return (
-    <ScreenLayout headerContent={<ChatHeader />} hasBackButton>
+    <ScreenLayout
+      headerContent={<ChatHeader />}
+      goBackCallback={saveMessages}
+      hasBackButton
+    >
       {!!selfProfile && (
         <View style={styles.wrapper}>
           <Image
@@ -135,7 +143,13 @@ export const PrivateChatScreen = () => {
               onViewableItemsChanged={onViewableItemsChanged}
               keyboardShouldPersistTaps="handled"
               keyboardDismissMode="interactive"
-              scrollEventThrottle={16}
+              // scrollEventThrottle={16}
+            />
+            <BottomButton
+              show={showBottomButton}
+              listRef={listRef}
+              setMessages={setMessages}
+              chatId={chatId}
             />
             <View style={styles.inputBlock}>
               <TextInputAction
@@ -167,7 +181,8 @@ const styles = StyleSheet.create({
     paddingHorizontal: SPACING.DEFAULT,
   },
   inputBlock: {
-    paddingVertical: SPACING.MINI_S,
+    paddingTop: SPACING.MINI_S,
+    paddingBottom: IS_IOS ? SPACING.MINI_S : SPACING.MEDIUM,
     paddingHorizontal: SPACING.DEFAULT,
     backgroundColor: lightTheme.main,
   },

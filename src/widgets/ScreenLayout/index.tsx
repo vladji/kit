@@ -12,6 +12,7 @@ interface Props {
   children: ReactNode;
   headerContent?: ReactElement;
   hasBackButton?: boolean;
+  goBackCallback?: () => void;
   loading?: boolean;
 }
 
@@ -19,6 +20,7 @@ export const ScreenLayout: FC<Props> = ({
   children,
   headerContent,
   hasBackButton = false,
+  goBackCallback,
   loading,
 }) => {
   const { top } = useSafeAreaInsets();
@@ -32,7 +34,11 @@ export const ScreenLayout: FC<Props> = ({
         translucent
       />
       {!!headerContent && (
-        <ScreenHeader content={headerContent} hasBackButton={hasBackButton} />
+        <ScreenHeader
+          content={headerContent}
+          hasBackButton={hasBackButton}
+          goBackCallback={goBackCallback}
+        />
       )}
       {loading && <Spinner />}
       {children}

@@ -1,20 +1,21 @@
-import { useRef } from 'react';
+import { Dispatch, SetStateAction, startTransition, useRef } from 'react';
 import { ViewToken } from 'react-native';
-import { safeSocket } from 'app/providers/Socket/socket.ts';
-import { CHAT_SUPPORT } from 'entities/chat/model/constants.ts';
-import {
-  ChatMessageProps,
-  MarkAsReadSocketProps,
-  MessagesListProps,
-} from 'entities/chat/model/types.ts';
-import { useDebounce } from 'shared/lib/useDebounce.ts';
+import { MessageProps, MessagesListProps } from 'entities/chat/model/types.ts';
+import { markAsRead } from 'screens/PrivateChat/utils/markAsRead.ts';
 
 interface Props {
   anyAdmin: boolean;
   readerId: string | null;
+  setShowBottomButton: Dispatch<SetStateAction<boolean>>;
+  latestMessages?: MessageProps[];
 }
 
-export const useViewableChanges = ({ anyAdmin, readerId }: Props) => {
+export const useViewableChanges = ({
+  anyAdmin,
+  readerId,
+  setShowBottomButton,
+  latestMessages,
+}: Props) => {
   const viewableItemsRef = useRef<ViewToken<MessagesListProps>[]>([]);
 
   const onViewableItemsChanged = ({
@@ -23,36 +24,18 @@ export const useViewableChanges = ({ anyAdmin, readerId }: Props) => {
     viewableItems: ViewToken<MessagesListProps>[];
   }) => {
     viewableItemsRef.current = viewableItems;
+    requestAnimationFrame(() => {
+      markAsRead({ viewableItems, readerId, anyAdmin });
+    });
 
-    const filtered = viewableItems.filter(
-      (item) =>
-        item.item.type === 'message' &&
-        !item.item.read &&
-        (item.item.to === readerId ||
-          (anyAdmin && item.item.to === CHAT_SUPPORT)),
-    );
-
-    const lastVisibleItem = filtered.at(-1) as ViewToken<ChatMessageProps>;
-    if (!lastVisibleItem?.item) return;
-
-    const { id, chatId, to } = lastVisibleItem.item;
-
-    const markAsReadData: MarkAsReadSocketProps = {
-      chatId,
-      lastSeenMessageId: id,
-      readerId: to,
-      isAdmin: anyAdmin,
-    };
-
-    safeSocket()?.emit('mark_as_read', markAsReadData);
+    const lastViewableItem = viewableItems.at(-1)?.item;
+    const latestMessage = latestMessages?.at(-1);
+    const showBottomButton = latestMessage?.id !== lastViewableItem?.id;
+    startTransition(() => setShowBottomButton(showBottomButton));
   };
 
-  const debouncedOnViewableItemsChanged = useDebounce<{
-    viewableItems: ViewToken<MessagesListProps>[];
-  }>(onViewableItemsChanged, 300);
-
   return {
-    onViewableItemsChanged: debouncedOnViewableItemsChanged,
+    onViewableItemsChanged,
     viewableItemsRef,
   };
 };

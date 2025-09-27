@@ -19,7 +19,7 @@ import {
 } from 'react-native-safe-area-context';
 import { IS_IOS } from 'app/config/constants.ts';
 import { lightTheme } from 'shared/styles/theme/theme.ts';
-import { ANIMATION_DURATION } from 'shared/styles/tokens/animation.ts';
+import { ANIMATION_DURATION_COMMON } from 'shared/styles/tokens/animation.ts';
 import { SPACING } from 'shared/styles/tokens/spacing.ts';
 import { useKeyboardAvoid } from 'shared/ui/KeyboardAvoid/useKeyboardAvoid.ts';
 import { Spinner } from 'shared/ui/Spinner';
@@ -65,7 +65,7 @@ export const BottomSheet = memo(
         bottom.value = withTiming(
           bottomValue,
           {
-            duration: ANIMATION_DURATION * 1.2,
+            duration: ANIMATION_DURATION_COMMON * 1.2,
           },
           (finished) => {
             if (finished && onClose) {

@@ -12,7 +12,7 @@ import Animated, {
   withTiming,
 } from 'react-native-reanimated';
 import { IS_IOS } from 'app/config/constants.ts';
-import { ANIMATION_DURATION } from 'shared/styles/tokens/animation.ts';
+import { ANIMATION_DURATION_COMMON } from 'shared/styles/tokens/animation.ts';
 import { SPACING } from 'shared/styles/tokens/spacing.ts';
 
 interface ScrollKeyboardAvoidProps extends ScrollViewProps {
@@ -53,7 +53,9 @@ export const ScrollKeyboardAvoid: FC<ScrollKeyboardAvoidProps> = ({
 
   const animation = useCallback(
     (value: number) => {
-      translateY.value = withTiming(value, { duration: ANIMATION_DURATION });
+      translateY.value = withTiming(value, {
+        duration: ANIMATION_DURATION_COMMON,
+      });
     },
     [translateY],
   );

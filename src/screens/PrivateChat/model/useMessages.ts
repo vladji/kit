@@ -7,20 +7,17 @@ import {
   useState,
 } from 'react';
 import { usePersistentStore } from 'app/storage/usePersistentStore.ts';
-import { MESSAGES_DEFAULT_LIMIT } from 'entities/chat/model/constants.ts';
-import { ChatDateProps, MessageProps } from 'entities/chat/model/types.ts';
+import { MessageProps } from 'entities/chat/model/types.ts';
 import { useFormatListMessages } from 'entities/chat/model/useFormatListMessages.ts';
 import { MetaRefProps } from 'screens/PrivateChat/types.ts';
-import { getDate } from 'shared/lib/dates.ts';
 
 interface Props {
   chatId: string | null;
   metaRef: RefObject<MetaRefProps>;
-  messagesAround?: MessageProps[];
+  recentlyMessages?: MessageProps[];
 }
 
-export const useMessages = ({ chatId, metaRef, messagesAround }: Props) => {
-  const locale = usePersistentStore((store) => store.locale);
+export const useMessages = ({ chatId, metaRef, recentlyMessages }: Props) => {
   const formatList = useFormatListMessages();
   const chatsMetaData = usePersistentStore((store) => store.chatsMetaData);
   const chatHistory = chatId ? chatsMetaData[chatId]?.chatHistory || [] : [];
@@ -28,42 +25,24 @@ export const useMessages = ({ chatId, metaRef, messagesAround }: Props) => {
   const [messages, setMessages] = useState<MessageProps[]>(chatHistory);
 
   useEffect(() => {
-    if (!chatHistory.length && messagesAround?.length) {
+    if (!chatHistory.length && recentlyMessages?.length) {
       startTransition(() => {
-        setMessages(messagesAround);
+        setMessages(recentlyMessages);
       });
+      metaRef.current.shouldScrollToBottom = true;
     }
-  }, [chatHistory.length, messagesAround]);
+  }, [chatHistory.length, recentlyMessages, metaRef]);
 
   const formattedMessages = useMemo(() => {
     if (messages?.length) {
       metaRef.current.loadStartId = null;
       metaRef.current.loadEndId = null;
-      const formattedMessages = formatList(messages);
-
-      const shouldSetStartChatDate =
-        metaRef.current.shouldSetStartChatDate ||
-        (messagesAround && messagesAround?.length < MESSAGES_DEFAULT_LIMIT);
-      const firstItemIsMessage = formattedMessages[0].type !== 'date';
-
-      if (shouldSetStartChatDate && firstItemIsMessage) {
-        metaRef.current.shouldSetStartChatDate = false;
-        const firstMessage = formattedMessages[0].createdAt;
-        const startChatDate = getDate(locale, firstMessage);
-        const chatDate: ChatDateProps = {
-          id: startChatDate,
-          type: 'date',
-          date: startChatDate,
-        };
-        return [chatDate, ...formattedMessages];
-      }
-
-      return formattedMessages;
+      return formatList(messages);
     }
     metaRef.current.loadStartId = null;
     metaRef.current.loadEndId = null;
     return [];
-  }, [messages, formatList, metaRef, locale, messagesAround]);
+  }, [messages, formatList, metaRef]);
 
   const deferredMessages = useDeferredValue(
     formattedMessages,

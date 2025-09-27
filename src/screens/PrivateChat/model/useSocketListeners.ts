@@ -11,13 +11,14 @@ import {
   MarkedAsReadNotifySocketProps,
   MessageProps,
 } from 'entities/chat/model/types.ts';
+import { PastLatestMessage } from 'screens/PrivateChat/model/usePastLatestMessage.ts';
 
 interface Props {
   chatId: string | null;
   setChatId: Dispatch<SetStateAction<string | null>>;
   messages: MessageProps[];
   setMessages: Dispatch<SetStateAction<MessageProps[]>>;
-  pastLatestMessage: (message: MessageProps) => void;
+  pastLatestMessage: PastLatestMessage;
   selfProfile: ChatMemberProps | null;
 }
 
@@ -48,9 +49,8 @@ export const useSocketListeners = ({
         startTransition(() => setChatId(msg.chatId));
       }
       if (msg.chatId === chatId) {
-        if (msg.from === selfProfile?.id) {
-          pastLatestMessage(msg);
-        }
+        const shouldScrollToBottom = msg.from === selfProfile?.id;
+        pastLatestMessage(msg, shouldScrollToBottom);
       }
     });
 

@@ -10,17 +10,27 @@ import { Typography } from 'shared/ui/Typography';
 interface Props {
   content: ReactElement;
   hasBackButton?: boolean;
+  goBackCallback?: () => void;
 }
 
-export const ScreenHeader: FC<Props> = ({ content, hasBackButton = false }) => {
+export const ScreenHeader: FC<Props> = ({
+  content,
+  hasBackButton = false,
+  goBackCallback,
+}) => {
   const { goBack, canGoBack } =
     useNavigation<NavigationProp<RootStackParams>>();
+
+  const goBackHandler = () => {
+    goBackCallback?.();
+    goBack();
+  };
 
   return (
     <View style={styles.wrapper}>
       <View style={styles.startBlock}>
         {hasBackButton && canGoBack() && (
-          <TouchableOpacity hitSlop={8} onPress={goBack}>
+          <TouchableOpacity hitSlop={8} onPress={goBackHandler}>
             <ArrowLeft />
           </TouchableOpacity>
         )}

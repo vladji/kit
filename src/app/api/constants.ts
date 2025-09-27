@@ -12,7 +12,7 @@ export const QUERY_KEYS = {
   GET_SUPPORT_ALL_STORE_CHATS: 'get_support_all_store_chats',
   FETCH_MEMBER_CHATS: 'fetch_member_chats',
   FETCH_LATEST_MESSAGES: 'fetch_latest_messages',
-  FETCH_MESSAGES_AROUND: 'fetch_messages_around',
+  FETCH_RECENTLY_MESSAGES: 'fetch_recently_messages',
 };
 
 export enum STATUS {

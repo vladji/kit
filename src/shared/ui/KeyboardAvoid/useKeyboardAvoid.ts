@@ -3,7 +3,7 @@ import { Keyboard } from 'react-native';
 import { SharedValue, withSpring } from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { IS_IOS } from 'app/config/constants.ts';
-import { KEYBOARD_ANIMATION_DURATION } from 'shared/styles/tokens/animation.ts';
+import { ANIMATION_DURATION_KEYBOARD } from 'shared/styles/tokens/animation.ts';
 
 export interface KeyboardAvoidProps {
   translate: SharedValue<number>;
@@ -22,7 +22,7 @@ export const useKeyboardAvoid = ({
   const animation = useCallback(
     (value: number) => {
       translate.value = withSpring(value, {
-        duration: KEYBOARD_ANIMATION_DURATION,
+        duration: ANIMATION_DURATION_KEYBOARD,
       });
     },
     [translate],
