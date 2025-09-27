@@ -23,8 +23,9 @@ export const useFormatListMessages = () => {
       return data
         .map((message) => {
           const date = getDate(locale, message.createdAt);
+          const isInitialMessage = !!message.isInitialMessage;
 
-          if (date !== currentDate.id) {
+          if (date !== currentDate.id || isInitialMessage) {
             currentDate.id = date;
             currentDate.date = date;
 
