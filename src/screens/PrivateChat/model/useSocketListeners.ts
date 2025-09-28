@@ -36,7 +36,7 @@ export const useSocketListeners = ({
   unreadData,
 }: Props) => {
   const unreadInitial = readerId && unreadData ? unreadData[readerId] : 0;
-  const [unreadCount, setUnreadCount] = useState(unreadInitial);
+  const [unreadCounter, setUnreadCounter] = useState(unreadInitial);
   const [messagesIds, setMessagesIds] = useState<Set<string> | null>(null);
 
   useEffect(() => {
@@ -51,13 +51,13 @@ export const useSocketListeners = ({
   }, [messages]);
 
   useEffect(() => {
-    safeSocket()?.on('private_message', (msg: MessageProps) => {
+    safeSocket()?.on('private_message', (message: MessageProps) => {
       if (!chatId) {
-        startTransition(() => setChatId(msg.chatId));
+        startTransition(() => setChatId(message.chatId));
       }
-      if (msg.chatId === chatId) {
-        const shouldScrollToBottom = msg.from === selfProfile?.id;
-        pastLatestMessage(msg, shouldScrollToBottom);
+      if (message.chatId === chatId) {
+        const shouldScrollToBottom = message.from === selfProfile?.id;
+        pastLatestMessage(message, shouldScrollToBottom);
       }
     });
 
@@ -74,7 +74,7 @@ export const useSocketListeners = ({
         data.unreadCount &&
         data.unreadCount[readerId] >= 0
       ) {
-        setUnreadCount(data.unreadCount[readerId]);
+        startTransition(() => setUnreadCounter(data.unreadCount![readerId!]));
       }
 
       if (data.chatId === chatId && !!data.readMessageIds) {
@@ -100,6 +100,6 @@ export const useSocketListeners = ({
   }, [chatId, messages, messagesIds, setMessages, readerId]);
 
   return {
-    unreadCount,
+    unreadCounter,
   };
 };

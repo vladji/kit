@@ -84,7 +84,7 @@ export const PrivateChatScreen = () => {
     latestMessages,
   });
 
-  const { unreadCount } = useSocketListeners({
+  const { unreadCounter } = useSocketListeners({
     chatId,
     setChatId,
     messages,
@@ -151,7 +151,7 @@ export const PrivateChatScreen = () => {
               chatId={chatId}
               setMessages={setMessages}
               messages={messages}
-              unreadCount={unreadCount}
+              unreadCounter={unreadCounter}
             />
             <View style={styles.inputBlock}>
               <TextInputAction
