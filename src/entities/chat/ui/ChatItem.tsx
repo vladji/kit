@@ -17,7 +17,7 @@ import { Typography } from 'shared/ui/Typography';
 type Props = ListRenderItemInfo<ChatProps>;
 
 export const ChatItem: FC<Props> = ({
-  item: { chatId, lastMessage, members, support },
+  item: { chatId, lastMessage, members, support, unreadCount },
 }) => {
   const { navigate } = useNavigation<NavigationProp<RootStackParams>>();
   const peer = usePeerProfile({ members, support });
@@ -27,6 +27,7 @@ export const ChatItem: FC<Props> = ({
       peer,
       chatId,
       chatSupport: !!support,
+      unreadCount,
     });
   };
 

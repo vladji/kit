@@ -18,5 +18,5 @@ export const useChatUpdated = () => {
     return () => {
       safeSocket()?.off('chat_updated', invalidateChatsQuery);
     };
-  }, []);
+  }, [queryClient]);
 };

@@ -84,13 +84,15 @@ export const PrivateChatScreen = () => {
     latestMessages,
   });
 
-  useSocketListeners({
+  const { unreadCount } = useSocketListeners({
     chatId,
     setChatId,
     messages,
     setMessages,
     pastLatestMessage,
     selfProfile,
+    readerId,
+    unreadData: params.unreadCount,
   });
 
   useScrollToBottom({ metaRef, listRef, deferredMessages });
@@ -101,7 +103,6 @@ export const PrivateChatScreen = () => {
 
   const sendMessage = () => {
     if (!selfProfile || !params.peer.id || !text) return;
-
     const privateMessage: PrivateMessageProps = {
       from: selfProfile,
       to: params.peer,
@@ -150,6 +151,7 @@ export const PrivateChatScreen = () => {
               chatId={chatId}
               setMessages={setMessages}
               messages={messages}
+              unreadCount={unreadCount}
             />
             <View style={styles.inputBlock}>
               <TextInputAction

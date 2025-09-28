@@ -4,18 +4,18 @@ import { MessageProps, MessagesListProps } from 'entities/chat/model/types.ts';
 import { markAsRead } from 'screens/PrivateChat/utils/markAsRead.ts';
 
 interface Props {
+  chatSupport: boolean;
   anyAdmin: boolean;
   readerId: string | null;
   setShowBottomButton: Dispatch<SetStateAction<boolean>>;
-  chatSupport: boolean;
   latestMessages?: MessageProps[];
 }
 
 export const useViewableChanges = ({
+  chatSupport,
   anyAdmin,
   readerId,
   setShowBottomButton,
-  chatSupport,
   latestMessages,
 }: Props) => {
   const viewableItemsRef = useRef<ViewToken<MessagesListProps>[]>([]);
@@ -26,9 +26,11 @@ export const useViewableChanges = ({
     viewableItems: ViewToken<MessagesListProps>[];
   }) => {
     viewableItemsRef.current = viewableItems;
-    requestAnimationFrame(() => {
-      markAsRead({ viewableItems, readerId, anyAdmin, chatSupport });
-    });
+    if (readerId) {
+      requestAnimationFrame(() => {
+        markAsRead({ viewableItems, readerId, anyAdmin, chatSupport });
+      });
+    }
 
     const lastViewableItem = viewableItems.at(-1)?.item;
     const latestMessage = latestMessages?.at(-1);

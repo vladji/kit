@@ -1,6 +1,5 @@
 import { ViewToken } from 'react-native';
 import { safeSocket } from 'app/providers/Socket/socket.ts';
-import { CHAT_SUPPORT } from 'entities/chat/model/constants.ts';
 import {
   ChatMessageProps,
   MarkAsReadSocketProps,
@@ -10,22 +9,21 @@ import {
 interface Props {
   viewableItems: ViewToken<MessagesListProps>[];
   anyAdmin: boolean;
-  readerId: string | null;
   chatSupport: boolean;
+  readerId: string;
 }
 
 export const markAsRead = ({
   viewableItems,
-  readerId,
   anyAdmin,
   chatSupport,
+  readerId,
 }: Props) => {
   const filtered = viewableItems.filter(
     (item) =>
       item.item.type === 'message' &&
       !item.item.read &&
-      (item.item.to === readerId ||
-        (anyAdmin && item.item.to === CHAT_SUPPORT)),
+      item.item.to === readerId,
   );
 
   const lastVisibleItem = filtered.at(-1) as ViewToken<ChatMessageProps>;
@@ -37,8 +35,8 @@ export const markAsRead = ({
     chatId,
     lastSeenMessageId: id,
     readerId: to,
-    isAdmin: anyAdmin,
     chatSupport,
+    anyAdmin,
   };
 
   safeSocket()?.emit('mark_as_read', markAsReadData);

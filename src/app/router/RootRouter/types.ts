@@ -1,4 +1,7 @@
-import { ChatMemberProps } from 'entities/chat/model/types.ts';
+import {
+  ChatMemberProps,
+  UnreadCountProps,
+} from 'entities/chat/model/types.ts';
 
 export enum RootRouter {
   BottomTabs = 'BottomTabs',
@@ -10,6 +13,7 @@ export interface ChatRouteParams {
   peer: ChatMemberProps;
   chatId: string | null;
   chatSupport: boolean;
+  unreadCount?: UnreadCountProps;
 }
 
 export type RootStackParams = {

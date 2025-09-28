@@ -8,8 +8,9 @@ import {
 import { safeSocket } from 'app/providers/Socket/socket.ts';
 import {
   ChatMemberProps,
-  MarkedAsReadNotifySocketProps,
+  ChatUpdatedSocketProps,
   MessageProps,
+  UnreadCountProps,
 } from 'entities/chat/model/types.ts';
 import { PastLatestMessage } from 'screens/PrivateChat/model/usePastLatestMessage.ts';
 
@@ -20,6 +21,8 @@ interface Props {
   setMessages: Dispatch<SetStateAction<MessageProps[]>>;
   pastLatestMessage: PastLatestMessage;
   selfProfile: ChatMemberProps | null;
+  readerId: string | null;
+  unreadData?: UnreadCountProps;
 }
 
 export const useSocketListeners = ({
@@ -29,7 +32,11 @@ export const useSocketListeners = ({
   setMessages,
   pastLatestMessage,
   selfProfile,
+  readerId,
+  unreadData,
 }: Props) => {
+  const unreadInitial = readerId && unreadData ? unreadData[readerId] : 0;
+  const [unreadCount, setUnreadCount] = useState(unreadInitial);
   const [messagesIds, setMessagesIds] = useState<Set<string> | null>(null);
 
   useEffect(() => {
@@ -60,29 +67,39 @@ export const useSocketListeners = ({
   }, [chatId, setChatId, setMessages, selfProfile, pastLatestMessage]);
 
   useEffect(() => {
-    safeSocket()?.on(
-      'marked_as_read_notify',
-      (msg: MarkedAsReadNotifySocketProps) => {
-        if (msg.chatId === chatId) {
-          setTimeout(() => {
-            msg.messageIds.forEach((id) => {
-              if (messagesIds?.has(id)) {
-                const message = messages.find((message) => message.id === id);
-                if (message) {
-                  message.read = true;
-                }
+    safeSocket()?.on('chat_updated', (data: ChatUpdatedSocketProps) => {
+      if (
+        data.chatId === chatId &&
+        readerId &&
+        data.unreadCount &&
+        data.unreadCount[readerId] >= 0
+      ) {
+        setUnreadCount(data.unreadCount[readerId]);
+      }
+
+      if (data.chatId === chatId && !!data.readMessageIds) {
+        setTimeout(() => {
+          data.readMessageIds?.forEach((id) => {
+            if (messagesIds?.has(id)) {
+              const message = messages.find((message) => message.id === id);
+              if (message) {
+                message.read = true;
               }
-            });
-            startTransition(() => {
-              setMessages((prev) => [...prev]);
-            });
+            }
           });
-        }
-      },
-    );
+          startTransition(() => {
+            setMessages((prev) => [...prev]);
+          });
+        });
+      }
+    });
 
     return () => {
-      safeSocket()?.off('marked_as_read_notify');
+      safeSocket()?.off('chat_updated');
     };
-  }, [chatId, messages, messagesIds, setMessages]);
+  }, [chatId, messages, messagesIds, setMessages, readerId]);
+
+  return {
+    unreadCount,
+  };
 };

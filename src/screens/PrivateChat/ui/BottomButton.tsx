@@ -6,7 +6,7 @@ import {
   useCallback,
   useEffect,
 } from 'react';
-import { StyleSheet, TouchableOpacity } from 'react-native';
+import { StyleSheet, TouchableOpacity, View } from 'react-native';
 import { FlashListRef } from '@shopify/flash-list';
 import { ChevronDown } from 'lucide-react-native';
 import Animated, {
@@ -17,8 +17,10 @@ import Animated, {
 } from 'react-native-reanimated';
 import { useFetchLatestMessages } from 'entities/chat/api/useFetchLatestMessages.ts';
 import { MessageProps, MessagesListProps } from 'entities/chat/model/types.ts';
+import { lightThemeText } from 'shared/styles/theme/themeText.ts';
 import { ANIMATION_DURATION_COMMON } from 'shared/styles/tokens/animation.ts';
 import { COLORS } from 'shared/styles/tokens/colors.ts';
+import { Typography } from 'shared/ui/Typography';
 
 interface Props {
   show: boolean;
@@ -26,10 +28,11 @@ interface Props {
   chatId: string | null;
   setMessages: Dispatch<SetStateAction<MessageProps[]>>;
   messages: MessageProps[];
+  unreadCount: number;
 }
 
 export const BottomButton = memo(
-  ({ show, listRef, chatId, setMessages, messages }: Props) => {
+  ({ show, listRef, chatId, setMessages, messages, unreadCount }: Props) => {
     const { latestMessages } = useFetchLatestMessages({ chatId });
 
     const onPress = () => {
@@ -79,6 +82,11 @@ export const BottomButton = memo(
 
     return (
       <Animated.View style={[styles.wrapper, animatedStyle]}>
+        {unreadCount && (
+          <View style={styles.badge}>
+            <Typography color={lightThemeText.light}>{unreadCount}</Typography>
+          </View>
+        )}
         <TouchableOpacity onPress={onPress}>
           <Animated.View style={iconStyle}>
             <ChevronDown color={COLORS.DARK} />
@@ -102,5 +110,13 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: COLORS.DARK_GRAY,
     backgroundColor: COLORS.BORDER,
+  },
+  badge: {
+    position: 'absolute',
+    top: -10,
+    minWidth: 24,
+    alignItems: 'center',
+    borderRadius: 12,
+    backgroundColor: COLORS.ACCENT_LIGHT,
   },
 });

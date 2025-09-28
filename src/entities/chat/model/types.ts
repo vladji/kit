@@ -8,6 +8,8 @@ export interface ChatMemberProps {
   avatarUrl: string | null;
 }
 
+export type UnreadCountProps = Record<string, number>;
+
 export interface SupportChatProps {
   closed: boolean;
   admin?: ChatMemberProps;
@@ -16,6 +18,7 @@ export interface SupportChatProps {
 export interface ChatProps {
   chatId: string;
   members: ChatMemberProps[];
+  unreadCount: UnreadCountProps;
   lastMessage: string;
   createdAt: string;
   updatedAt: string;
@@ -57,11 +60,14 @@ export interface MarkAsReadSocketProps {
   chatId: string;
   lastSeenMessageId: string;
   readerId: string;
-  isAdmin: boolean;
   chatSupport: boolean;
+  anyAdmin: boolean;
 }
 
-export interface MarkedAsReadNotifySocketProps {
+export interface ChatUpdatedSocketProps {
   chatId: string;
-  messageIds: string[];
+  lastMessageText?: string;
+  updatedAt?: Date;
+  unreadCount?: UnreadCountProps;
+  readMessageIds?: string[];
 }
