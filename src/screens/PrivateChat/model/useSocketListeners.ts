@@ -8,8 +8,8 @@ import {
 import { safeSocket } from 'app/providers/Socket/socket.ts';
 import {
   ChatMemberProps,
-  ChatUpdatedSocketProps,
   MessageProps,
+  MessagesUpdatedProps,
   UnreadCountProps,
 } from 'entities/chat/model/types.ts';
 import { PastLatestMessage } from 'screens/PrivateChat/model/usePastLatestMessage.ts';
@@ -67,7 +67,7 @@ export const useSocketListeners = ({
   }, [chatId, setChatId, setMessages, selfProfile, pastLatestMessage]);
 
   useEffect(() => {
-    safeSocket()?.on('chat_updated', (data: ChatUpdatedSocketProps) => {
+    safeSocket()?.on('messages_updated', (data: MessagesUpdatedProps) => {
       if (
         data.chatId === chatId &&
         readerId &&
@@ -95,7 +95,7 @@ export const useSocketListeners = ({
     });
 
     return () => {
-      safeSocket()?.off('chat_updated');
+      safeSocket()?.off('messages_updated');
     };
   }, [chatId, messages, messagesIds, setMessages, readerId]);
 

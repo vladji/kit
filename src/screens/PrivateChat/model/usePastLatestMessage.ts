@@ -1,4 +1,10 @@
-import { Dispatch, RefObject, SetStateAction, useCallback } from 'react';
+import {
+  Dispatch,
+  RefObject,
+  SetStateAction,
+  startTransition,
+  useCallback,
+} from 'react';
 import { useQueryClient } from '@tanstack/react-query';
 import { QUERY_KEYS } from 'app/api/constants.ts';
 import { MessageProps } from 'entities/chat/model/types.ts';
@@ -27,14 +33,16 @@ export const usePastLatestMessage = ({
   return useCallback<PastLatestMessage>(
     (lastMessage, shouldScrollToBottom) => {
       if (latestMessages?.length) {
-        setMessages((prev) => {
-          const latestLast = latestMessages.at(-1);
-          const prevLast = prev.at(-1);
+        startTransition(() => {
+          setMessages((prev) => {
+            const latestLast = latestMessages.at(-1);
+            const prevLast = prev.at(-1);
 
-          if (latestLast?.id === prevLast?.id) {
-            return [...prev, lastMessage];
-          }
-          return [...latestMessages, lastMessage];
+            if (latestLast?.id === prevLast?.id) {
+              return [...prev, lastMessage];
+            }
+            return [...latestMessages, lastMessage];
+          });
         });
 
         metaRef.current.shouldScrollToBottom = shouldScrollToBottom;

@@ -6,7 +6,7 @@ export const useMemoizedProps = () => {
   const getItemType = useCallback((item: MessagesListProps) => item?.type, []);
   const viewabilityConfig = useMemo(
     () => ({
-      viewAreaCoveragePercentThreshold: 1,
+      viewAreaCoveragePercentThreshold: 0,
     }),
     [],
   );
