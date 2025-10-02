@@ -16,10 +16,8 @@ export const useScrollToBottom = ({
 }: Props) => {
   useEffect(() => {
     if (metaRef.current.shouldScrollToBottom) {
-      setImmediate(() => {
-        listRef.current?.scrollToEnd({ animated: true });
-        metaRef.current.shouldScrollToBottom = false;
-      });
+      listRef.current?.scrollToEnd({ animated: true });
+      metaRef.current.shouldScrollToBottom = false;
     }
   }, [deferredMessages, metaRef, listRef]);
 };

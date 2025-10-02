@@ -82,6 +82,7 @@ export const PrivateChatScreen = () => {
     chatId,
     listRef,
     metaRef,
+    viewableItemsRef,
     messages,
     setMessages,
     latestMessages,

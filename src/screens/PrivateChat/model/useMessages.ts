@@ -1,23 +1,29 @@
 import {
   RefObject,
-  startTransition,
   useDeferredValue,
   useEffect,
   useMemo,
   useState,
 } from 'react';
+import { FlashListRef } from '@shopify/flash-list';
 import { usePersistentStore } from 'app/storage/usePersistentStore.ts';
-import { MessageProps } from 'entities/chat/model/types.ts';
+import { MessageProps, MessagesListProps } from 'entities/chat/model/types.ts';
 import { useFormatListMessages } from 'entities/chat/model/useFormatListMessages.ts';
 import { MetaRefProps } from 'screens/PrivateChat/types.ts';
 
 interface Props {
   chatId: string | null;
+  listRef: RefObject<FlashListRef<MessagesListProps> | null>;
   metaRef: RefObject<MetaRefProps>;
   recentlyMessages?: MessageProps[];
 }
 
-export const useMessages = ({ chatId, metaRef, recentlyMessages }: Props) => {
+export const useMessages = ({
+  chatId,
+  listRef,
+  metaRef,
+  recentlyMessages,
+}: Props) => {
   const formatList = useFormatListMessages();
   const chatsMetaData = usePersistentStore((store) => store.chatsMetaData);
   const chatHistory = chatId ? chatsMetaData[chatId]?.chatHistory || [] : [];
@@ -26,12 +32,15 @@ export const useMessages = ({ chatId, metaRef, recentlyMessages }: Props) => {
 
   useEffect(() => {
     if (!chatHistory.length && recentlyMessages?.length) {
-      startTransition(() => {
-        setMessages(recentlyMessages);
-      });
+      setMessages(recentlyMessages);
+
+      // metaRef.current.shouldScrollToBottom = true - protection for guaranteed scrolling
       metaRef.current.shouldScrollToBottom = true;
+      requestAnimationFrame(() => {
+        listRef.current?.scrollToEnd({ animated: true });
+      });
     }
-  }, [chatHistory.length, recentlyMessages, metaRef]);
+  }, [chatHistory.length, recentlyMessages, listRef, metaRef]);
 
   const formattedMessages = useMemo(() => {
     if (messages?.length) {

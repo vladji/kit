@@ -5,6 +5,7 @@ import {
   startTransition,
   useCallback,
 } from 'react';
+import { ViewToken } from 'react-native';
 import { FlashListRef } from '@shopify/flash-list';
 import { useQueryClient } from '@tanstack/react-query';
 import { QUERY_KEYS } from 'app/api/constants.ts';
@@ -15,6 +16,7 @@ interface Props {
   chatId: string | null;
   listRef: RefObject<FlashListRef<MessagesListProps> | null>;
   metaRef: RefObject<MetaRefProps>;
+  viewableItemsRef: RefObject<ViewToken<MessagesListProps>[]>;
   messages: MessageProps[];
   setMessages: Dispatch<SetStateAction<MessageProps[]>>;
   latestMessages?: MessageProps[];
@@ -24,6 +26,7 @@ export const usePastLatestMessage = ({
   chatId,
   listRef,
   metaRef,
+  viewableItemsRef,
   messages,
   setMessages,
   latestMessages,
@@ -72,10 +75,19 @@ export const usePastLatestMessage = ({
       if (latestMessages?.length) {
         const latestLast = latestMessages.at(-1);
         const lastMessage = messages.at(-1);
+        const lastViewableId = viewableItemsRef.current?.at(-1)?.item?.id;
+        const shouldScrollToBottom = lastViewableId === lastMessage?.id;
 
         if (latestLast?.id === lastMessage?.id) {
           startTransition(() => {
             setMessages((prev) => [...prev, message]);
+          });
+        }
+
+        if (shouldScrollToBottom) {
+          metaRef.current.shouldScrollToBottom = true;
+          requestAnimationFrame(() => {
+            listRef.current?.scrollToEnd({ animated: true });
           });
         }
 
@@ -84,7 +96,16 @@ export const usePastLatestMessage = ({
         });
       }
     },
-    [latestMessages, messages, setMessages, queryClient, chatId],
+    [
+      latestMessages,
+      messages,
+      setMessages,
+      queryClient,
+      chatId,
+      viewableItemsRef,
+      listRef,
+      metaRef,
+    ],
   );
 
   return {
