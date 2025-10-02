@@ -58,6 +58,7 @@ export const PrivateChatScreen = () => {
 
   const { deferredMessages, messages, setMessages } = useMessages({
     chatId,
+    listRef,
     metaRef,
     recentlyMessages,
   });
@@ -77,10 +78,12 @@ export const PrivateChatScreen = () => {
     latestMessages,
   });
 
-  const pastLatestMessage = usePastLatestMessage({
+  const { pastSelfMessage, pastPeerMessage } = usePastLatestMessage({
     chatId,
-    setMessages,
+    listRef,
     metaRef,
+    messages,
+    setMessages,
     latestMessages,
   });
 
@@ -89,7 +92,8 @@ export const PrivateChatScreen = () => {
     setChatId,
     messages,
     setMessages,
-    pastLatestMessage,
+    pastSelfMessage,
+    pastPeerMessage,
     selfProfile,
     readerId,
     unreadData: params.unreadCount,
@@ -130,7 +134,8 @@ export const PrivateChatScreen = () => {
             <FlashList
               ref={listRef}
               contentContainerStyle={styles.scrollContent}
-              // estimatedItemSize
+              // maxItemsInRecyclePool={500}
+              // onCommitLayoutEffect={}
               keyExtractor={keyExtractor}
               data={deferredMessages}
               renderItem={renderItem}
@@ -143,7 +148,6 @@ export const PrivateChatScreen = () => {
               onViewableItemsChanged={onViewableItemsChanged}
               keyboardShouldPersistTaps="handled"
               keyboardDismissMode="interactive"
-              // scrollEventThrottle={16}
             />
             <BottomButton
               show={showBottomButton}

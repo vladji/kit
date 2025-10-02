@@ -18,14 +18,12 @@ import Animated, {
 import { useFetchLatestMessages } from 'entities/chat/api/useFetchLatestMessages.ts';
 import { MessageProps, MessagesListProps } from 'entities/chat/model/types.ts';
 import { CounterBadge } from 'entities/chat/ui/CounterBadge.tsx';
-import { MetaRefProps } from 'screens/PrivateChat/types.ts';
 import { ANIMATION_DURATION_COMMON } from 'shared/styles/tokens/animation.ts';
 import { COLORS } from 'shared/styles/tokens/colors.ts';
 
 interface Props {
   show: boolean;
   listRef: RefObject<FlashListRef<MessagesListProps> | null>;
-  metaRef: RefObject<MetaRefProps>;
   chatId: string | null;
   setMessages: Dispatch<SetStateAction<MessageProps[]>>;
   messages: MessageProps[];
@@ -33,15 +31,7 @@ interface Props {
 }
 
 export const BottomButton = memo(
-  ({
-    show,
-    listRef,
-    metaRef,
-    chatId,
-    setMessages,
-    messages,
-    unreadCounter,
-  }: Props) => {
+  ({ show, listRef, chatId, setMessages, messages, unreadCounter }: Props) => {
     const { latestMessages } = useFetchLatestMessages({ chatId });
 
     const onPress = () => {

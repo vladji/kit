@@ -56,6 +56,15 @@ export interface PrivateMessageProps {
   knownChatId: string | null;
 }
 
+export interface MessageMetaProps {
+  unreadCount: UnreadCountProps;
+}
+
+export interface PrivateMessageSocketProps {
+  message: MessageProps;
+  meta: MessageMetaProps;
+}
+
 export interface MarkAsReadSocketProps {
   chatId: string;
   lastSeenMessageId: string;
