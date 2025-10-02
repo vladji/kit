@@ -6,7 +6,7 @@ import {
   useCallback,
   useEffect,
 } from 'react';
-import { StyleSheet, TouchableOpacity } from 'react-native';
+import { StyleSheet, TouchableOpacity, View } from 'react-native';
 import { FlashListRef } from '@shopify/flash-list';
 import { ChevronDown } from 'lucide-react-native';
 import Animated, {
@@ -17,13 +17,15 @@ import Animated, {
 } from 'react-native-reanimated';
 import { useFetchLatestMessages } from 'entities/chat/api/useFetchLatestMessages.ts';
 import { MessageProps, MessagesListProps } from 'entities/chat/model/types.ts';
-import { CounterBadge } from 'screens/PrivateChat/ui/CounterBadge.tsx';
+import { CounterBadge } from 'entities/chat/ui/CounterBadge.tsx';
+import { MetaRefProps } from 'screens/PrivateChat/types.ts';
 import { ANIMATION_DURATION_COMMON } from 'shared/styles/tokens/animation.ts';
 import { COLORS } from 'shared/styles/tokens/colors.ts';
 
 interface Props {
   show: boolean;
   listRef: RefObject<FlashListRef<MessagesListProps> | null>;
+  metaRef: RefObject<MetaRefProps>;
   chatId: string | null;
   setMessages: Dispatch<SetStateAction<MessageProps[]>>;
   messages: MessageProps[];
@@ -31,7 +33,15 @@ interface Props {
 }
 
 export const BottomButton = memo(
-  ({ show, listRef, chatId, setMessages, messages, unreadCounter }: Props) => {
+  ({
+    show,
+    listRef,
+    metaRef,
+    chatId,
+    setMessages,
+    messages,
+    unreadCounter,
+  }: Props) => {
     const { latestMessages } = useFetchLatestMessages({ chatId });
 
     const onPress = () => {
@@ -40,14 +50,11 @@ export const BottomButton = memo(
 
       if (lastMessageId !== latestMessageId && latestMessages) {
         setMessages(latestMessages);
-        setTimeout(() => {
-          listRef.current?.scrollToEnd({ animated: true });
-        });
-      } else {
-        setImmediate(() => {
-          listRef.current?.scrollToEnd({ animated: true });
-        });
       }
+
+      requestAnimationFrame(() => {
+        listRef.current?.scrollToEnd({ animated: true });
+      });
     };
 
     const scale = useSharedValue(0);
@@ -81,8 +88,12 @@ export const BottomButton = memo(
 
     return (
       <Animated.View style={[styles.wrapper, animatedStyle]}>
-        {!!unreadCounter && <CounterBadge counter={unreadCounter} />}
-        <TouchableOpacity onPress={onPress}>
+        {!!unreadCounter && (
+          <View style={styles.counter}>
+            <CounterBadge counter={unreadCounter} />
+          </View>
+        )}
+        <TouchableOpacity style={styles.button} onPress={onPress}>
           <Animated.View style={iconStyle}>
             <ChevronDown color={COLORS.DARK} />
           </Animated.View>
@@ -97,13 +108,20 @@ const styles = StyleSheet.create({
     position: 'absolute',
     bottom: 58,
     right: 12,
+  },
+  counter: {
+    position: 'absolute',
+    top: -10,
+    left: '50%',
+    transform: [{ translateX: '-50%' }],
+    zIndex: 1,
+  },
+  button: {
     justifyContent: 'center',
     alignItems: 'center',
     width: 38,
     height: 38,
     borderRadius: 111,
-    borderWidth: 1,
-    borderColor: COLORS.DARK_GRAY,
-    backgroundColor: COLORS.BORDER,
+    backgroundColor: 'rgba(173,201,130,0.59)',
   },
 });

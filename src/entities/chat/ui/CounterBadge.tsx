@@ -19,8 +19,6 @@ export const CounterBadge = ({ counter }: Props) => {
 
 const styles = StyleSheet.create({
   wrapper: {
-    position: 'absolute',
-    top: -10,
     minWidth: 24,
     alignItems: 'center',
     borderRadius: 10,
