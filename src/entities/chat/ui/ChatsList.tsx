@@ -18,10 +18,9 @@ export const ChatsList = ({ loading, chats }: Props) => {
       {!!chats && (
         <FlatList
           style={styles.scroll}
-          contentContainerStyle={styles.scrollContainer}
           data={chats}
-          renderItem={(item) => <ChatItem {...item} />}
           keyExtractor={(chat) => chat.chatId}
+          renderItem={(item) => <ChatItem {...item} />}
         />
       )}
     </>
@@ -31,8 +30,5 @@ export const ChatsList = ({ loading, chats }: Props) => {
 const styles = StyleSheet.create({
   scroll: {
     marginTop: SPACING.DEFAULT,
-  },
-  scrollContainer: {
-    gap: SPACING.DEFAULT,
   },
 });
