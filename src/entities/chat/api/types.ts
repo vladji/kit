@@ -10,8 +10,9 @@ export interface GetMessagesRequest {
   chatId: string | null;
   messageId: string | null;
   readerId: string | null;
-  limit: number;
   direction: Direction | null;
+  limit?: number;
+  includeCurrent?: boolean;
 }
 
 export interface MessagesAroundResponse {

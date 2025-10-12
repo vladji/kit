@@ -8,26 +8,30 @@ import {
 } from 'entities/chat/model/constants.ts';
 import { MessageProps } from 'entities/chat/model/types.ts';
 
-interface Props {
-  setMessages: Dispatch<SetStateAction<MessageProps[]>>;
-}
-
-export const useGetMessagesAfter = ({ setMessages }: Props) => {
+export const useGetMessagesAfter = (
+  setMessages?: Dispatch<SetStateAction<MessageProps[]>>,
+) => {
   return useMutation<
     MessageProps[],
     unknown,
-    Omit<GetMessagesRequest, 'limit' | 'direction' | 'readerId'>
+    Omit<GetMessagesRequest, 'direction' | 'readerId'>
   >({
-    mutationFn: ({ chatId, messageId }) =>
+    mutationFn: ({
+      chatId,
+      messageId,
+      limit = MESSAGES_DEFAULT_LIMIT,
+      includeCurrent = false,
+    }) =>
       getMessages({
         chatId,
         messageId,
         readerId: null,
         direction: Direction.After,
-        limit: MESSAGES_DEFAULT_LIMIT,
+        limit,
+        includeCurrent,
       }),
     onSuccess: (messages) => {
-      if (messages?.length) {
+      if (messages?.length && setMessages) {
         startTransition(() => {
           setMessages((prev) => {
             return [...prev, ...messages];

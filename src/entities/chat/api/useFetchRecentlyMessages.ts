@@ -1,7 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
 import { QUERY_KEYS } from 'app/api/constants.ts';
 import { getRecentlyMessages } from 'entities/chat/api/requests.ts';
-import { MESSAGES_DEFAULT_LIMIT } from 'entities/chat/model/constants.ts';
 
 interface Props {
   chatId: string | null;
@@ -15,7 +14,6 @@ export const useFetchRecentlyMessages = ({ chatId, readerId }: Props) => {
       getRecentlyMessages({
         chatId,
         readerId,
-        limit: MESSAGES_DEFAULT_LIMIT,
         messageId: null,
         direction: null,
       }),

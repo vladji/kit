@@ -17,13 +17,8 @@ export const useLoadMoreMessages = ({
   setMessages,
   metaRef,
 }: Props) => {
-  const { mutate: getMessagesBefore } = useGetMessagesBefore({
-    setMessages,
-  });
-
-  const { mutate: getMessagesAfter } = useGetMessagesAfter({
-    setMessages,
-  });
+  const { mutate: getMessagesBefore } = useGetMessagesBefore(setMessages);
+  const { mutate: getMessagesAfter } = useGetMessagesAfter(setMessages);
 
   const onStartReached = useCallback(() => {
     const item = messages[0];

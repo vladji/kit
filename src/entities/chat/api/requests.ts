@@ -5,6 +5,7 @@ import {
   GetMessagesRequest,
   MessagesAroundResponse,
 } from 'entities/chat/api/types.ts';
+import { MESSAGES_DEFAULT_LIMIT } from 'entities/chat/model/constants.ts';
 import { ChatProps, MessageProps } from 'entities/chat/model/types.ts';
 
 export const getMemberChats = ({
@@ -23,12 +24,13 @@ export const getMemberChats = ({
 
 export const getMessages = ({
   chatId,
-  limit,
   messageId,
   direction,
+  limit = MESSAGES_DEFAULT_LIMIT,
+  includeCurrent = false,
 }: GetMessagesRequest): Promise<MessageProps[]> => {
   const url = messageId
-    ? `/chat/messages?chatId=${chatId}&messageId=${messageId}&direction=${direction}&limit=${limit}`
+    ? `/chat/messages?chatId=${chatId}&messageId=${messageId}&direction=${direction}&limit=${limit}&includeCurrent=${includeCurrent}`
     : `/chat/messages?chatId=${chatId}&limit=${limit}`;
   return api({ url });
 };
@@ -36,7 +38,7 @@ export const getMessages = ({
 export const getRecentlyMessages = ({
   chatId,
   readerId,
-  limit,
+  limit = MESSAGES_DEFAULT_LIMIT,
 }: GetMessagesRequest): Promise<MessagesAroundResponse> => {
   return api({
     url: `/chat/messages/recently?chatId=${chatId}&readerId=${readerId}&limit=${limit}`,
